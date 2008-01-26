@@ -58,21 +58,19 @@ private:
 class c_Error_Socket
 {
 public:
-	c_Error_Socket(int ret,const string &user_message)
+	c_Error_Socket(int ret,const string& user_message)
 	{
-		if(ret<1)
+		if(ret<0)
 		{
-			
 			const char *a=strerror(errno);
 			m_sErrorMessage = new string(a);
 			m_sUserMessage = new string(user_message);
 		}
 		else
 		{
-			m_sErrorMessage = NULL;
+			m_sErrorMessage = new string("--");
 			m_sUserMessage = new string(user_message);
 		}
-
 	};
 
 	~c_Error_Socket()
@@ -82,13 +80,10 @@ public:
 	
 	void PrintError()
 	{
-		if(m_sErrorMessage)
-			cout<<m_sUserMessage<<m_sErrorMessage<<endl;
-		else 
-			cout<<m_sUserMessage<<endl;
-
+		cout<<"Error message :: "<<*m_sUserMessage<<*m_sErrorMessage<<endl;
 	};
-	private:
+
+private:
 	int m_iReturnValue;
 	string *m_sErrorMessage;
 	string *m_sUserMessage;

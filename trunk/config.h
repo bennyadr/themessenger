@@ -4,7 +4,7 @@
 namespace config
 {
 #define PORT	5050
-#define SERVER_ADDRESS	"sgs.yahoo.com"
+#define SERVER_ADDRESS	"192.168.3.2"
 
 
 };

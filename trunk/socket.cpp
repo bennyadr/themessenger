@@ -33,11 +33,14 @@ void c_Socket::Connect()
 	int bind_ret = bind( m_iSocketFd , (struct sockaddr *) &m_tAddress , sizeof(m_tAddress) );
 	if(bind_ret==-1)
 		throw c_Error_Socket(bind_ret , "error binding socket : ");
-
-
+	
 	int status = inet_pton ( AF_INET, m_sAddress->c_str(), &m_tAddress.sin_addr );
-	if(status<1)
+
+	if(status<0)
 		throw c_Error_Socket(status , "error creating network address structure : ");
+	if(status<1)
+		throw c_Error_Socket(status , "error creating network address structure : invalid address ");
+
 
     status = connect ( m_iSocketFd , (sockaddr *) &m_tAddress, sizeof(m_tAddress) );
 	if(status==-1)
