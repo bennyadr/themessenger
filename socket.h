@@ -37,8 +37,11 @@ public:
 	~c_Socket();
 
 	void Connect();
+	void Disconnect();
+	void Write(const string& message);
+	void Read(string& message,const unsigned int count);
 	void Write(const string& message,const int flag);
-	int Read(string &message,const int flag);
+	void Read(string &message,const unsigned int count,const int flag);
 	bool is_Opened()const
 				{ return m_bStatus;	};
 
@@ -68,7 +71,7 @@ public:
 		}
 		else
 		{
-			m_sErrorMessage = new string("--");
+			m_sErrorMessage = new string("");
 			m_sUserMessage = new string(user_message);
 		}
 	};
