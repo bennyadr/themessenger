@@ -1,0 +1,4 @@
+install perl
+run cpan
+type "install POE" <ENTER>
+

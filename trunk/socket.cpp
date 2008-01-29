@@ -28,21 +28,25 @@ void c_Socket::Connect()
 
 	m_tAddress.sin_family = AF_INET;
 	m_tAddress.sin_addr.s_addr = INADDR_ANY;
-    m_tAddress.sin_port = htons ( m_iPort );
+	m_tAddress.sin_port = htons ( m_iPort );
 
-	int bind_ret = bind( m_iSocketFd , (struct sockaddr *) &m_tAddress , sizeof(m_tAddress) );
-	if(bind_ret==-1)
-		throw c_Error_Socket(bind_ret , "error binding socket : ");
+        int on = 1;
+	setsockopt(m_iSocketFd,IPPROTO_TCP,SO_REUSEADDR, &on, sizeof(on));
+
+//	int bind_ret = bind( m_iSocketFd , (struct sockaddr *) &m_tAddress , sizeof(m_tAddress) );
+//	if(bind_ret==-1)
+//		throw c_Error_Socket(bind_ret , "error binding socket : ");
 	
 	int status = inet_pton ( AF_INET, m_sAddress->c_str(), &m_tAddress.sin_addr );
+
+
 
 	if(status<0)
 		throw c_Error_Socket(status , "error creating network address structure : ");
 	if(status<1)
 		throw c_Error_Socket(status , "error creating network address structure : invalid address ");
-
-
-    status = connect ( m_iSocketFd , (sockaddr *) &m_tAddress, sizeof(m_tAddress) );
+	
+	status = connect ( m_iSocketFd , (sockaddr *) &m_tAddress, sizeof(m_tAddress) );
 	if(status==-1)
 		throw c_Error_Socket(status, "error connecting socket : ");
 	
