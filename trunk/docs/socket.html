@@ -1,0 +1,353 @@
+<html>
+
+<head>
+<title>the UNIX course/UNIX programming in C/System programming/Inter-process data
+transfer/Berkeley sockets</title>
+</head>
+
+<body>
+
+<h1>Berkeley sockets </h1>
+
+<p>Whilst the pipe is a very useful facility it is limited to communications between
+related processes, i.e. sharing a common ancestor process. Version 4.2 of BSD-UNIX
+introduced a generalisation known as the socket, so that unrelated processes may
+communicate, e.g. <strong>write, talk</strong>. Even processes on different host may
+communicate if some commonly used protocol (e.g. TCP/UDP) is in use, e.g. <strong>rlogin,
+rwho</strong>. </p>
+
+<p>Sockets are now so fundamental that pipes are actually implemented in sockets with one
+either end of the pipe.</p>
+
+<p>It is beyond the scope of this course to describe in any detail the concepts behind
+sockets since it would be neccessary to go into details about communications and
+protocols. However, the two examples given next should be easy to copy and modify for a
+new application.</p>
+
+<p>The example below shows a simple server daemon program (<strong>server.c</strong>
+becomes <strong>server</strong> when the C-preprocessor definition is <strong>SOCKTYPE=1</strong>)
+for communication between unrelated processes within a single host (i.e. <strong>AF_UNIX</strong>
+as opposed to <strong>AF_INET</strong>).</p>
+
+<p>It begins by creating a stream oriented socket (i.e. <strong>SOCK_STREAM</strong> as
+opposed to <strong>SOCK_DGRAM</strong> or <strong>SOCK_RAW</strong>) for a single host
+system which is then bound to a traditional filename (i.e. <strong>/tmp/.skt_lgm</strong>).</p>
+
+<p>The last initialisation step is to tell UNIX that it will be listening for
+communications on this socket, allowing a backlog of one communication. </p>
+
+<p>The main program (application) then is an infinite loop of testing for the acceptance
+of a communication through this socket. When a connection is made the file descriptor
+returned by the <strong>accept()</strong> routine is used with the standard I/O routines
+for communication with the other process.</p>
+
+<p>The simpler client process (<strong>client.c</strong> becomes <strong>client</strong>)
+begins with the same socket initialisation step and after a successful connection to the
+server process will also communicate using standard I/O routines. </p>
+
+<p>Although, the server in this example is a read-only service, it could have just as
+easily have been a read-write service. Likewise a small amendment to the two programs
+could achieve the same facility across a distributed network (achieved when the
+C-preprocessor definition is <strong>SOCKTYPE=2</strong>) and is demonstrated below.</p>
+
+<pre>
+setup % <strong>mkdir /tmp/Try ; cd /tmp/Try ; chmod 755 . </strong>
+ 
+setup % <strong>cat &gt; server.c</strong>
+#define ENUF(msg, i) { perror(msg); exit(i); }
+</pre>
+
+<pre>#include &lt;stdio.h&gt;</pre>
+
+<pre>#include &lt;sys/types.h&gt;</pre>
+
+<pre>#include &lt;sys/socket.h&gt;</pre>
+
+<pre>
+ 
+/* for Solaris:- link with -lsocket -lucb  -lnsl */
+
+#if SOCKTYPE==1
+#define SOCKET_FILENAME &quot;/tmp/.skt_&quot;
+struct sockaddr sktaddr;
+#elif SOCKTYPE==2</pre>
+
+<pre>#include &lt;netinet/in.h&gt;</pre>
+
+<pre>#include &lt;netdb.h&gt;</pre>
+
+<pre>
+struct sockaddr_in sktaddr;
+struct hostent *hp;
+#endif
+ 
+int slen, skt, fd, ch;
+FILE *fin, *fout;
+ 
+void main(argc, argv)
+int argc;
+char *argv[];
+{
+  char str[256];
+  if (argc != 2) ENUF(&quot;Usage: server filename&quot;, 1);
+  gethostname(str, strlen(str));
+  fprintf(stdout, &quot;SERVER : started by %s on %s\n&quot;, getenv(&quot;USER&quot;), str);
+  fout=fopen(argv[1], &quot;a&quot;);
+  fprintf(stdout, &quot;SERVER : opened file called %s with fd of %d\n&quot;, argv[1],
+ 
+  fileno(fout));
+ 
+  /* socket family and name */
+#if SOCKTYPE==1
+  sktaddr.sa_family = AF_UNIX;          /* AF_UNIX for single hosts */
+  strcpy(sktaddr.sa_data, SOCKET_FILENAME);
+  strcat(sktaddr.sa_data, getenv(&quot;USER&quot;));
+  unlink(sktaddr.sa_data); /* server does not delete socket on exit, thus...  */
+ 
+#elif SOCKTYPE==2
+  bzero(&amp;sktaddr, sizeof(sktaddr));
+  sktaddr.sin_family = AF_INET;         /* AF_INET for the internet */
+  gethostname(str, sizeof(str)); hp=gethostbyname(str);
+  bcopy(hp-&gt;h_addr, &amp;sktaddr.sin_addr, hp-&gt;h_length);
+  sktaddr.sin_port = htons(0);
+#endif
+ 
+ 
+#if SOCKTYPE==1
+  /* create the stream socket for a single host */
+  if((skt=socket(AF_UNIX, SOCK_STREAM, 0))==-1) ENUF(&quot;socket create problem&quot;,2);
+  fprintf(stdout, &quot;SERVER : opened socket called %s with fd of %d\n&quot;, sktaddr.sa_data, skt);
+#elif SOCKTYPE==2
+  /* create the stream socket for multiple hosts */
+  if((skt=socket(AF_INET, SOCK_STREAM, 0))==-1)
+     ENUF(&quot;socket create problem&quot;,3);
+  fprintf(stdout, &quot;SERVER : opened socket with fd of %d\n&quot;, skt);
+#endif
+ 
+  slen = sizeof(sktaddr);
+  /* socket must map into filespace */
+  if (bind(skt,&amp;sktaddr,slen)!=0) ENUF(&quot;socket bind problem&quot;, 4);
+  fprintf(stdout, &quot;SERVER : binding completed\n&quot;);
+ 
+#if SOCKTYPE==2
+  /* get allocated service number */
+    if (getsockname(skt, &amp;sktaddr, &amp;slen) !=0) ENUF(&quot;getsockname error&quot;, 5);
+  fprintf(stdout, &quot;SERVER : Service available on port %d\n&quot;,  
+  ntohs(sktaddr.sin_port));
+#endif
+ 
+  /* prepare for listening */
+  if (listen(skt, 1) !=0) ENUF(&quot;socket listen problem&quot;, 6);
+  fprintf(stdout, &quot;SERVER : listening for clients\n&quot;);
+ 
+  /* await connections from clients */
+  for (;;) { 
+        fd = accept(skt, NULL, NULL);
+        if (fd == -1) ENUF(&quot;socket accept problem&quot;, 7);
+        fprintf(stdout, &quot;SERVER : client contacted\n&quot;);
+        
+        fin = fdopen(fd, &quot;r&quot;);
+        if (fin == NULL) ENUF(&quot;Can not create file pointer&quot;, 8);
+       
+        /* get data from client, FormFeed acts as a seperator */
+        ch = '\f';
+        do {
+                putc(ch, fout); ch = getc(fin);
+                } while (ch != EOF);
+        fclose(fin); fclose(fout); fflush(stdout); fflush(stdout);
+        }
+ }
+
+setup % <strong>cat &gt; client.c</strong>
+</pre>
+
+<pre>#include &lt;stdio.h&gt;</pre>
+
+<pre>#include &lt;sys/types.h&gt;</pre>
+
+<pre>#include &lt;sys/socket.h&gt;</pre>
+
+<pre>
+
+/* for Solaris:- link with -lsocket -lucb -lnsl */
+ 
+#define ENUF(msg, i) { perror(msg); exit(i); }
+ 
+#if SOCKTYPE==1
+#define SOCKET_FILENAME &quot;/tmp/.skt_&quot;
+struct sockaddr sktaddr;
+#elif SOCKTYPE==2</pre>
+
+<pre>#include &lt;netinet/in.h&gt;</pre>
+
+<pre>#include &lt;netdb.h&gt;</pre>
+
+<pre>
+struct sockaddr_in sktaddr;
+struct hostent *hp;
+#endif
+int skt, ch;
+FILE *fp;
+ 
+void main(argc, argv)
+int argc;
+char *argv[];
+{
+  char str[256];
+ 
+#if SOCKTYPE==1
+  if (argc != 2) ENUF(&quot;Usage: client username&quot;, 1);
+#elif SOCKTYPE==2
+  if (argc != 3) ENUF(&quot;Usage: client portnumber hostname&quot;, 2);
+#endif
+  gethostname(str, strlen(str));
+  fprintf(stdout, &quot;CLIENT : started by %s on %s\n&quot;, getenv(&quot;USER&quot;), str);
+ 
+  /* socket family and name */
+#if SOCKTYPE==1
+  sktaddr.sa_family = AF_UNIX;          /* AF_UNIX for single hosts */
+  strcpy(sktaddr.sa_data, SOCKET_FILENAME);
+  strcat(sktaddr.sa_data, argv[1]);
+#elif SOCKTYPE==2
+  bzero(&amp;sktaddr, sizeof(sktaddr));
+  sktaddr.sin_family = AF_INET;          /* AF_INET for multiple hosts */
+  if ((hp = gethostbyname(argv[2])) == NULL) ENUF(&quot;no such computer&quot;, 3);
+  bcopy(hp-&gt;h_addr, &amp;sktaddr.sin_addr, hp-&gt;h_length);
+  sktaddr.sin_port = htons(atoi(argv[1]));
+#endif
+ 
+#if SOCKTYPE==1
+  /* create the stream socket for a single host */
+  if((skt=socket(AF_UNIX, SOCK_STREAM, 0))==-1) ENUF(&quot;socket create problem&quot;,
+4);
+  fprintf(stdout, &quot;CLIENT : opened socket called %s with fd of %d\n&quot;, sktaddr.sa_data, skt);
+#elif SOCKTYPE==2
+  /* create the stream socket for multiple hosts */
+  if ((skt=socket(AF_INET, SOCK_STREAM,0))==-1) ENUF(&quot;socket create problem&quot;, 5);
+  fprintf(stdout, &quot;CLIENT : opened socket with fd of %d\n&quot;, skt);
+#endif
+ 
+  /* connect to server */
+  if (connect(skt,&amp;sktaddr,sizeof(sktaddr))!=0) ENUF(&quot;socket connect&quot;, 6);
+  fprintf(stdout, &quot;CLIENT : server contacted\n&quot;);
+ 
+  fp = fdopen(skt, &quot;w&quot;);
+  if (fp == NULL) ENUF(&quot;can not create file pointer&quot;, 7);
+   
+  /* send data to socket */
+  fprintf(fp, &quot;Message :- &quot;);
+  fprintf(stdout, &quot;CLIENT : now enter your message\n&quot;);
+  while ( (ch = getchar()) != EOF) putc (ch, fp);
+  fprintf(fp, &quot;---------------------------------------------------------\n&quot;);
+  fclose(fp);
+ }
+
+
+% <strong>acc -o server  server.c -DSOCKTYPE=1 ; acc -o client client.c -DSOCKTYPE=1 </strong>
+% <strong>chmod 755 client server</strong>
+ 
+% <strong>server /tmp/Try/messages &amp;</strong>
+ [1] 7139
+ 
+ SERVER : started by lgm on watt
+ SERVER : opened file called messages with fd of 3
+ SERVER : opened socket called /tmp/.skt_lgm with fd of 4
+ SERVER : binding completed
+ SERVER : listening for clients
+    
+% <strong>su - demonstr</strong>
+ Password: ******
+ 
+% <strong>/tmp/Try/client lgm</strong>
+ CLIENT : started by demonstr on watt
+ CLIENT : opened socket called /tmp/.skt_lgm with fd of 3
+ SERVER : client contacted
+ CLIENT : server contacted
+ CLIENT : now enter your message
+<strong> socket 2 u man !
+^D</strong>
+ 
+% <strong>ls -l /tmp/.skt*</strong>
+ srwxrwxrwx  1 lgm             0 Mar 22 14:21 /tmp/.skt_lgm
+
+% <strong>cat /tmp/Try/messages</strong>
+cat: /tmp/Try/messages: Permission denied
+ 
+% <strong>exit</strong>
+
+% <strong>cat /tmp/Try/messages</strong>
+ Message :-      socket 2 u man !
+--------------------------------------------------------
+ 
+% <strong>kill -9 `ps aux | grep 'tmp/Try/message' | grep -v grep | awk '{print $2}'`</strong>
+[1]    Killed               server /tmp/Try/messages
+
+Killed
+</pre>
+
+<hr>
+
+<p>A small amount of modification to the initialisation sections of the last two programs
+can transform the utility into a networking program as is demonstrated by the script
+below.</p>
+
+<pre>
+setup % <strong>mkdir /tmp/Try2 ; cd /tmp/Try2 ; chmod 755 . </strong>
+setup % <strong>cp ../Try/*.c .</strong>
+% <strong>acc -o server  server.c -DSOCKTYPE=2 ; acc -o client client.c -DSOCKTYPE=2 </strong>
+% <strong>chmod 755 client server</strong>
+ 
+% <strong>server /tmp/Try2/messages &amp;</strong>
+[1] 7185
+ 
+ SERVER : started by lgm on siemens
+ SERVER : opened file called messages with fd of 3
+ SERVER : opened socket with fd of 5
+ SERVER : binding completed
+ SERVER : Service available on port 3783
+ SERVER : listening for clients
+ 
+%<strong> rcp client henry:/tmp</strong>
+%<strong> rsh henry chmod 755 /tmp/client</strong>
+
+% <strong>su - demonstr</strong>
+ Password: <strong>******</strong>
+ 
+% <strong>rsh henry /tmp/client 3783 siemens</strong>
+ SERVER : client contacted
+ CLIENT : started by demonstr on henry
+ CLIENT : opened socket with fd of 4
+ CLIENT : server contacted
+ CLIENT : now enter your message
+<strong>The last demo in this session - Yippee!
+^D</strong>
+% <strong>exit</strong>
+ 
+% <strong>cat /tmp/Try2/messages</strong>
+Message :-      The last demo in this session - Yippee!
+--------------------------------------------------------
+ 
+% <strong>kill -9 `ps aux | grep 'tmp/Try2/message' | grep -v grep | awk '{print $2}'`</strong>
+ Killed
+ 
+</pre>
+
+<p>In this instance instead of binding to a filename it requires 
+
+<ul>
+  <li>a network domain (i.e. <strong>AF_UNIX</strong>) </li>
+  <li>a network address (derived from <strong>/etc/hosts</strong>) and </li>
+  <li>a port number for the particular service and its associated protocol (derived from <strong>/etc/services</strong>).
+  </li>
+</ul>
+
+<pre>In the example the port number is not
+predetermined but allocated dynamically by the <strong>server</strong>
+ and then specified by the <strong>client</strong> program.
+</pre>
+
+<hr>
+
+<p align="center">[ <a href="../transfer.html">Back</a> ]</p>
+</body>
+</html>
