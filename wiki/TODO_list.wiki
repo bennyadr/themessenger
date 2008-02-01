@@ -13,6 +13,11 @@ The protocol for yahoo messenger seems to be proprietary
   * is there any encryption envolved ?
   * how to get the "buddy list"
 
+[http://search.cpan.org/src/VARUNK/Net-YMSG-1.2/YMSG/CRAM.pm authentication scheme code]
+[http://search.cpan.org/src/VARUNK/Net-YMSG-1.2/YMSG.pm src1]
+[http://libyahoo2.sourceforge.net/ymsg-9.txt protocol described in 2004]
+
+
 === Constructing a configuration file ===
 
 It's very obvious why this is very *URGENT!!!*
