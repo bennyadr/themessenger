@@ -70,7 +70,8 @@ void c_Socket::Disconnect()
 
 void c_Socket::Write(const string& data)
 {
-	int ret_write = write(m_iSocketFd,data.c_str(),data.size());
+	string data_end=data+"\r\n";
+	int ret_write = write(m_iSocketFd,data_end.c_str(),data_end.size());
 	if(ret_write==-1)
 		throw c_Error_Socket(ret_write,"error sending data : ");
 
