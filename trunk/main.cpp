@@ -1,6 +1,7 @@
 #include "socket.h"
+#include "ypacket.h"
 
-
+using namespace YPacket;
 
 int main()
 {
@@ -8,7 +9,10 @@ int main()
 	try
 	{
 		socket.Connect();
-		socket.Write("stuff!!");// for testing
+		string andrei("dsadsada");
+		socket.Write(andrei);// for testing
+		c_YPacket packet1(20);
+		socket.Write(packet1);
 	}
 	catch(c_Error_Socket &socket_error)
 	{

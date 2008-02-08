@@ -10,7 +10,14 @@ namespace unix_std_space
 #include <unistd.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
-};
+ 
+//proc type
+#ifdef LITLE_END
+
+#else
+
+#endif
+ };
 
 
 #endif
