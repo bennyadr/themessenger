@@ -4,9 +4,9 @@
 
 c_Socket::c_Socket()
 	:m_iPort(PORT),
-	m_sAddress(SERVER_ADDRESS),
  	m_iSocketFd(-1)
  {
+ 	m_sAddress = new string(SERVER_ADDRESS);
 	memset( &m_tAddress , 0 , sizeof(m_tAddress) );
 	m_bStatus = false;
 };
