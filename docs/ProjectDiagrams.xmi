@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<XMI xmlns:UML="http://schema.omg.org/spec/UML/1.3" verified="false" timestamp="2008-02-10T15:57:07" xmi.version="1.2" >
+<XMI xmlns:UML="http://schema.omg.org/spec/UML/1.3" verified="false" timestamp="2008-02-10T16:45:31" xmi.version="1.2" >
  <XMI.header>
   <XMI.documentation>
    <XMI.exporter>umbrello uml modeller http://uml.sf.net</XMI.exporter>
@@ -90,7 +90,7 @@
         </UML:Operation>
         <UML:Operation isSpecification="false" isLeaf="false" visibility="public" xmi.id="4jWDdRfNtMCo" isRoot="false" isAbstract="false" isQuery="true" name="isOpened" >
          <UML:BehavioralFeature.parameter>
-          <UML:Parameter kind="return" xmi.id="AwUMOGWSUmyR" type="LiMEaeZYX3Lj" />
+          <UML:Parameter kind="return" xmi.id="UXrIShJOMDlQ" type="LiMEaeZYX3Lj" />
          </UML:BehavioralFeature.parameter>
         </UML:Operation>
        </UML:Classifier.feature>
@@ -139,30 +139,30 @@
         </UML:Operation>
         <UML:Operation isSpecification="false" isLeaf="false" visibility="public" xmi.id="AqwipRySFiEh" isRoot="false" isAbstract="false" isQuery="false" name="operator=" >
          <UML:BehavioralFeature.parameter>
-          <UML:Parameter kind="return" xmi.id="Cc3fdPZrZZWc" type="dHCRkeLUBgU3" />
+          <UML:Parameter kind="return" xmi.id="Karx3XX6HWJO" type="dHCRkeLUBgU3" />
           <UML:Parameter isSpecification="false" visibility="private" xmi.id="u4lVGci09tWO" value="" type="dHCRkeLUBgU3" name="message" />
          </UML:BehavioralFeature.parameter>
         </UML:Operation>
         <UML:Operation isSpecification="false" isLeaf="false" visibility="public" xmi.id="KW7y6HP5NIHB" isRoot="false" isAbstract="false" isQuery="false" name="operator=" >
          <UML:BehavioralFeature.parameter>
-          <UML:Parameter kind="return" xmi.id="N70R84BJyffM" type="dHCRkeLUBgU3" />
+          <UML:Parameter kind="return" xmi.id="DsRavG7NnygG" type="dHCRkeLUBgU3" />
           <UML:Parameter isSpecification="false" visibility="private" xmi.id="oIjHD57sYyPT" value="" type="0mjrHUy7VvMp" name="message" />
          </UML:BehavioralFeature.parameter>
         </UML:Operation>
         <UML:Operation isSpecification="false" isLeaf="false" visibility="public" xmi.id="q90qifu1wigz" isRoot="false" isAbstract="false" isQuery="false" name="operator==" >
          <UML:BehavioralFeature.parameter>
-          <UML:Parameter kind="return" xmi.id="t9mMvjn8Lqly" type="LiMEaeZYX3Lj" />
+          <UML:Parameter kind="return" xmi.id="excy8NORwDOx" type="LiMEaeZYX3Lj" />
           <UML:Parameter isSpecification="false" visibility="private" xmi.id="mUnaXH9Gfguk" value="" type="GEM74TYYqPwC" name="message" />
          </UML:BehavioralFeature.parameter>
         </UML:Operation>
         <UML:Operation isSpecification="false" isLeaf="false" visibility="public" xmi.id="5eUg6jRwDdKa" isRoot="false" isAbstract="false" isQuery="true" name="GetBuffer" >
          <UML:BehavioralFeature.parameter>
-          <UML:Parameter kind="return" xmi.id="EJpnsJOGRMfZ" type="0mjrHUy7VvMp" />
+          <UML:Parameter kind="return" xmi.id="iw10QKOdAoC4" type="0mjrHUy7VvMp" />
          </UML:BehavioralFeature.parameter>
         </UML:Operation>
         <UML:Operation isSpecification="false" isLeaf="false" visibility="public" xmi.id="HeHvEnUUjnkw" isRoot="false" isAbstract="false" isQuery="true" name="GetSize" >
          <UML:BehavioralFeature.parameter>
-          <UML:Parameter kind="return" xmi.id="OqqMUTiNcSjY" type="T0t5VCHc2yGt" />
+          <UML:Parameter kind="return" xmi.id="4HRpE55s0go9" type="T0t5VCHc2yGt" />
          </UML:BehavioralFeature.parameter>
         </UML:Operation>
         <UML:Operation isSpecification="false" isLeaf="false" visibility="public" xmi.id="ii8QOLddVa1s" isRoot="false" isAbstract="false" isQuery="true" name="PrintAsHex" />
@@ -191,17 +191,17 @@
         </UML:Operation>
         <UML:Operation isSpecification="false" isLeaf="false" visibility="public" xmi.id="MYbqeabcIcJs" isRoot="false" isAbstract="false" isQuery="true" name="GetPriority" >
          <UML:BehavioralFeature.parameter>
-          <UML:Parameter kind="return" xmi.id="BVeWJPTXiIJb" type="T0t5VCHc2yGt" />
+          <UML:Parameter kind="return" xmi.id="1CaxNws6qt4H" type="T0t5VCHc2yGt" />
          </UML:BehavioralFeature.parameter>
         </UML:Operation>
         <UML:Operation isSpecification="false" isLeaf="false" visibility="public" xmi.id="Pzow6LAJ6EGq" isRoot="false" isAbstract="false" isQuery="true" name="GetData" >
          <UML:BehavioralFeature.parameter>
-          <UML:Parameter kind="return" xmi.id="cfp11UYPKPlm" type="DSX1wPkIDmPV" />
+          <UML:Parameter kind="return" xmi.id="BQsKE2OGKn6Y" type="DSX1wPkIDmPV" />
          </UML:BehavioralFeature.parameter>
         </UML:Operation>
         <UML:Operation isSpecification="false" isLeaf="false" visibility="public" xmi.id="wB5JAmlh4AcF" isRoot="false" isAbstract="false" isQuery="false" name="operator=" >
          <UML:BehavioralFeature.parameter>
-          <UML:Parameter kind="return" xmi.id="sRATrr13MfXg" type="wtPCjbmNtx8l" />
+          <UML:Parameter kind="return" xmi.id="r9OrpC0rMYmh" type="wtPCjbmNtx8l" />
           <UML:Parameter isSpecification="false" visibility="private" xmi.id="Lq6TyYs2mhRD" value="" type="wtPCjbmNtx8l" name="packet" />
          </UML:BehavioralFeature.parameter>
         </UML:Operation>
@@ -215,7 +215,7 @@
         <UML:Attribute isSpecification="false" visibility="private" xmi.id="8F5r6P4Tafip" type="T0t5VCHc2yGt" name="status" />
         <UML:Operation isSpecification="false" isLeaf="false" visibility="public" xmi.id="rQzWluoMds4S" isRoot="false" isAbstract="false" isQuery="true" name="GetStatus" >
          <UML:BehavioralFeature.parameter>
-          <UML:Parameter kind="return" xmi.id="20BjHUKr97s8" type="T0t5VCHc2yGt" />
+          <UML:Parameter kind="return" xmi.id="VdlLUpaeETyQ" type="T0t5VCHc2yGt" />
          </UML:BehavioralFeature.parameter>
         </UML:Operation>
         <UML:Operation isSpecification="false" isLeaf="false" visibility="public" xmi.id="lTzKBTzL2Of1" isRoot="false" isAbstract="false" isQuery="false" name="SetStatus" >
@@ -225,7 +225,7 @@
         </UML:Operation>
         <UML:Operation isSpecification="false" isLeaf="false" visibility="public" xmi.id="WKIXKumhgrBT" isRoot="false" isAbstract="false" isQuery="true" name="GetActionType" >
          <UML:BehavioralFeature.parameter>
-          <UML:Parameter kind="return" xmi.id="ZQVrnGeefo7X" type="T0t5VCHc2yGt" />
+          <UML:Parameter kind="return" xmi.id="VKhn7lJyuhqi" type="T0t5VCHc2yGt" />
          </UML:BehavioralFeature.parameter>
         </UML:Operation>
         <UML:Operation isSpecification="false" isLeaf="false" visibility="public" xmi.id="C0IruF9zliJk" isRoot="false" isAbstract="false" isQuery="false" name="SetActionType" >
@@ -396,13 +396,13 @@
          <classwidget usesdiagramfillcolor="0" width="143" showattsigs="601" x="133" fillcolor="#ffffc0" y="906" showopsigs="601" linewidth="none" height="56" usefillcolor="1" showpubliconly="0" showattributes="1" isinstance="0" xmi.id="bCZBwwbQiUKx" showoperations="1" showpackage="0" showscope="1" usesdiagramusefillcolor="0" font="Sans Serif,10,-1,5,75,0,0,0,0,0" linecolor="#ff0000" />
          <classwidget usesdiagramfillcolor="0" width="323" showattsigs="601" x="603" fillcolor="#ffffc0" y="259" showopsigs="601" linewidth="none" height="182" usefillcolor="1" showpubliconly="0" showattributes="1" isinstance="0" xmi.id="OxcjdEvWB9vN" showoperations="1" showpackage="0" showscope="1" usesdiagramusefillcolor="0" font="Sans Serif,10,-1,5,75,0,0,0,0,0" linecolor="#ff0000" />
          <classwidget usesdiagramfillcolor="0" width="246" showattsigs="601" x="457" fillcolor="#ffffc0" y="602" showopsigs="601" linewidth="none" height="98" usefillcolor="1" showpubliconly="0" showattributes="1" isinstance="0" xmi.id="K6wsDourIMSD" showoperations="1" showpackage="0" showscope="1" usesdiagramusefillcolor="0" font="Sans Serif,10,-1,5,75,0,0,0,0,0" linecolor="#ff0000" />
-         <classwidget usesdiagramfillcolor="0" width="193" showattsigs="601" x="167" fillcolor="#ffffc0" y="189" drawascircle="0" showopsigs="601" linewidth="none" height="112" usefillcolor="1" showpubliconly="0" showattributes="1" isinstance="0" xmi.id="KCZbbAMKqBfK" showoperations="1" showpackage="0" showscope="1" usesdiagramusefillcolor="0" font="Sans Serif,10,-1,5,75,1,0,0,0,0" linecolor="#ff0000" />
+         <classwidget usesdiagramfillcolor="0" width="193" showattsigs="601" x="167" fillcolor="#ffffc0" y="189" drawascircle="0" showopsigs="601" linewidth="none" height="112" usefillcolor="1" showpubliconly="0" showattributes="1" isinstance="0" xmi.id="KCZbbAMKqBfK" showoperations="1" showpackage="0" showscope="1" usesdiagramusefillcolor="0" font="Sans Serif,10,-1,5,50,1,0,0,0,0" linecolor="#ff0000" />
          <classwidget usesdiagramfillcolor="0" width="53" showattsigs="601" x="14" fillcolor="#ffffc0" y="400" showopsigs="601" linewidth="none" height="28" usefillcolor="1" showpubliconly="0" showattributes="1" isinstance="0" xmi.id="ur74Z1i4Ud4J" showoperations="1" showpackage="0" showscope="1" usesdiagramusefillcolor="0" font="Sans Serif,10,-1,5,75,0,0,0,0,0" linecolor="#ff0000" />
          <classwidget usesdiagramfillcolor="1" width="62" showattsigs="601" x="107" fillcolor="none" y="396" showopsigs="601" linewidth="none" height="28" usefillcolor="1" showpubliconly="0" showattributes="1" isinstance="0" xmi.id="O9Oo0o1UiE44" showoperations="1" showpackage="0" showscope="1" usesdiagramusefillcolor="1" font="Sans Serif,10,-1,0,75,0,0,0,0,0" linecolor="none" />
          <classwidget usesdiagramfillcolor="1" width="99" showattsigs="601" x="466" fillcolor="none" y="399" showopsigs="601" linewidth="none" height="28" usefillcolor="1" showpubliconly="0" showattributes="1" isinstance="0" xmi.id="SwosnvobJeUQ" showoperations="1" showpackage="0" showscope="1" usesdiagramusefillcolor="1" font="Sans Serif,10,-1,0,75,0,0,0,0,0" linecolor="none" />
          <classwidget usesdiagramfillcolor="1" width="79" showattsigs="601" x="335" fillcolor="none" y="398" showopsigs="601" linewidth="none" height="28" usefillcolor="1" showpubliconly="0" showattributes="1" isinstance="0" xmi.id="1UKr692xbZhE" showoperations="1" showpackage="0" showscope="1" usesdiagramusefillcolor="1" font="Sans Serif,10,-1,0,75,0,0,0,0,0" linecolor="none" />
          <classwidget usesdiagramfillcolor="1" width="80" showattsigs="601" x="214" fillcolor="none" y="397" showopsigs="601" linewidth="none" height="28" usefillcolor="1" showpubliconly="0" showattributes="1" isinstance="0" xmi.id="Hec0VQdxRxZd" showoperations="1" showpackage="0" showscope="1" usesdiagramusefillcolor="1" font="Sans Serif,10,-1,0,75,0,0,0,0,0" linecolor="none" />
-         <classwidget usesdiagramfillcolor="1" width="63" showattsigs="601" x="22" fillcolor="none" y="85" showopsigs="601" linewidth="none" height="28" usefillcolor="1" showpubliconly="0" showattributes="1" isinstance="0" xmi.id="5XbuX9xdZUDG" showoperations="1" showpackage="0" showscope="1" usesdiagramusefillcolor="1" font="Sans Serif,10,-1,0,75,0,0,0,0,0" linecolor="none" />
+         <classwidget usesdiagramfillcolor="1" width="63" showattsigs="601" x="162" fillcolor="none" y="95" showopsigs="601" linewidth="none" height="28" usefillcolor="1" showpubliconly="0" showattributes="1" isinstance="0" xmi.id="5XbuX9xdZUDG" showoperations="1" showpackage="0" showscope="1" usesdiagramusefillcolor="1" font="Sans Serif,10,-1,0,75,0,0,0,0,0" linecolor="none" />
          <classwidget usesdiagramfillcolor="1" width="87" showattsigs="601" x="45" fillcolor="none" y="15" showopsigs="601" linewidth="none" height="28" usefillcolor="1" showpubliconly="0" showattributes="1" isinstance="0" xmi.id="2B3SzLKuRvnL" showoperations="1" showpackage="0" showscope="1" usesdiagramusefillcolor="1" font="Sans Serif,10,-1,0,75,0,0,0,0,0" linecolor="none" />
         </widgets>
         <messages/>
@@ -511,14 +511,14 @@
          </assocwidget>
          <assocwidget totalcounta="2" indexa="1" totalcountb="2" indexb="1" linewidth="none" widgetbid="KCZbbAMKqBfK" widgetaid="5XbuX9xdZUDG" xmi.id="L35090P7oveE" type="510" linecolor="none" >
           <linepath>
-           <startpoint startx="53" starty="113" />
+           <startpoint startx="193" starty="123" />
            <endpoint endx="263" endy="189" />
           </linepath>
          </assocwidget>
          <assocwidget totalcounta="2" indexa="1" totalcountb="2" indexb="1" linewidth="none" widgetbid="5XbuX9xdZUDG" widgetaid="2B3SzLKuRvnL" xmi.id="v0wlPuHe4vXX" type="510" linecolor="none" >
           <linepath>
            <startpoint startx="88" starty="43" />
-           <endpoint endx="53" endy="85" />
+           <endpoint endx="193" endy="95" />
           </linepath>
          </assocwidget>
         </associations>
@@ -542,7 +542,7 @@
   </UML:Model>
  </XMI.content>
  <XMI.extensions xmi.extender="umbrello" >
-  <docsettings viewid="o3BrhimlV5tu" documentation="" uniqueid="ZQVrnGeefo7X" />
+  <docsettings viewid="o3BrhimlV5tu" documentation="" uniqueid="VKhn7lJyuhqi" />
   <listview>
    <listitem open="1" type="800" label="Views" >
     <listitem open="1" type="801" id="Logical View" >
