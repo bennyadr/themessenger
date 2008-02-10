@@ -44,10 +44,10 @@ public:
 	void Read(string& message,const unsigned int count);
 	void Write(const string& message,const int flag);
 	void Read(string &message,const unsigned int count,const int flag);
-	void Write(const c_Message& );
-	void Read(c_Message& ,const unsigned int count);
+	void Write(const c_Message& message );
+	void Read(c_Message& message,const unsigned int count);
 	void Write(const c_Message& ,const int flag);
-	void Read(c_Message& ,const unsigned int count,const int flag);
+	void Read(c_Message& message,const unsigned int count,const int flag);
 
 	bool is_Opened()const
 				{ return m_bStatus;	};
