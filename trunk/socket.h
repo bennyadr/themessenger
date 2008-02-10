@@ -69,8 +69,8 @@ class c_Error_Socket
 {
 public:
 	c_Error_Socket(int ret,const string& user_message)
-	:m_sUserMessage(user_message)
 	{
+		m_sUserMessage = new string(user_message);
 		if(ret<0)
 		{
 			m_sErrorMessage = new string(strerror(errno));
