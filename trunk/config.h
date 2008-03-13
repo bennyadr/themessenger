@@ -3,9 +3,8 @@
 
 namespace config
 {
-#define PORT	23000
-//#define SERVER_ADDRESS	"192.168.3.2"
-#define SERVER_ADDRESS	"127.0.0.1"
+#define PORT	5050
+#define SERVER_ADDRESS	"216.155.193.136"
 
 
 };

@@ -36,18 +36,18 @@ class c_Socket
 {
 public:
 	 c_Socket();
-	~c_Socket();
+	virtual ~c_Socket();
 
-	void Connect();
+	virtual	void Connect();
 	void Disconnect();
-	void Write(const string& message);
-	void Read(string& message,const unsigned int count);
-	void Write(const string& message,const int flag);
-	void Read(string &message,const unsigned int count,const int flag);
+
+	void Write(const c_Message* message);
+	void Send(const c_Message* message,const int flag);
 	void Write(const c_Message& message );
+	void Send(const c_Message& ,const int flag);
+
 	void Read(c_Message& message,const unsigned int count);
-	void Write(const c_Message& ,const int flag);
-	void Read(c_Message& message,const unsigned int count,const int flag);
+	void Recv(c_Message& message,const unsigned int count,const int flag);
 
 	bool is_Opened()const
 				{ return m_bStatus;	};
