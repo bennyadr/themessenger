@@ -64,43 +64,12 @@ void c_Socket::Disconnect()
 
 /*****************************************/
 
-void c_Socket::Write(const string& data)
+void c_Socket::Write(const c_Message *data)
 {
-	int ret_write = write(m_iSocketFd,data.c_str(),data.size());
+	int ret_write = write(m_iSocketFd,data->GetBuffer(),data->GetSize());
 	if(ret_write==-1)
 		throw c_Error_Socket(ret_write,"error sending data : ");
 
-};
-
-/*****************************************/
-
-void c_Socket::Read(string& data,const unsigned int count)
-{
-	char buffer[count];
-	int ret_read=read(m_iSocketFd,buffer,count);
-	if (ret_read==-1)
-		throw c_Error_Socket(ret_read,"error reading data");
-	data = buffer;
-};
-
-/*****************************************/
-
-void c_Socket::Write(const string &data,const int flag)
-{
-	int ret_send = send(m_iSocketFd,data.c_str(),data.size(),flag);
-	if(ret_send==-1)
-		throw c_Error_Socket(ret_send, "error sending data : ");
-};
-
-/*****************************************/
-
-void c_Socket::Read(string &data,const unsigned int count,const int flag)
-{
-	char buffer[count];
-	int ret_recv = recv(m_iSocketFd,buffer,count,flag);
-	if(ret_recv==-1)
-		throw c_Error_Socket(ret_recv, "error receiving data");
-	data = buffer;
 };
 
 /*****************************************/
@@ -111,6 +80,24 @@ void c_Socket::Write(const c_Message& data)
 	if(ret_write==-1)
 		throw c_Error_Socket(ret_write,"error sending data : ");
 
+};
+
+/*****************************************/
+
+void c_Socket::Send(const c_Message* data,const int flag)
+{
+	int ret_write = send(m_iSocketFd,data->GetBuffer(),data->GetSize(),flag);
+	if(ret_write==-1)
+		throw c_Error_Socket(ret_write,"error sending data : ");
+};
+
+/*****************************************/
+
+void c_Socket::Send(const c_Message& data,const int flag)
+{
+	int ret_write = send(m_iSocketFd,data.GetBuffer(),data.GetSize(),flag);
+	if(ret_write==-1)
+		throw c_Error_Socket(ret_write,"error sending data : ");
 };
 
 /*****************************************/
@@ -126,16 +113,7 @@ void c_Socket::Read(c_Message& data,const unsigned int count)
 
 /*****************************************/
 
-void c_Socket::Write(const c_Message &data,const int flag)
-{
-	int ret_send = send(m_iSocketFd,data.GetBuffer(),data.GetSize(),flag);
-	if(ret_send==-1)
-		throw c_Error_Socket(ret_send, "error sending data : ");
-};
-
-/*****************************************/
-
-void c_Socket::Read(c_Message &data,const unsigned int count,const int flag)
+void c_Socket::Recv(c_Message &data,const unsigned int count,const int flag)
 {
 	char buffer[count];
 	int ret_recv = recv(m_iSocketFd,buffer,count,flag);

@@ -107,21 +107,11 @@ class c_Message
 		{
 			if( this == &msg )
 				return true;
-			if( m_iSize == msg.GetSize() )
-			{
-				unsigned int *int_buffer = reinterpret_cast<unsigned int*> (m_sBuffer);
-				unsigned int *int_msg_buffer = reinterpret_cast<unsigned int*> (msg.GetBuffer());
-				unsigned int i;
-				for( i=0 ; i<m_iSize/4 ; i++)
-					if(int_buffer[i]!=int_msg_buffer[i])
-						return false;
-				for( i=0 ; i<m_iSize%4 ; i++ )
-					if( m_sBuffer[int(m_iSize/4)*4+i] != msg.GetBuffer()[int(m_iSize/4)*4+i] )
-						return false;
-			}
+			if(memcmp(m_sBuffer,msg.GetBuffer(),m_iSize))
+				return true;
 			else
 				return false;
-			return true;
+				
 		};
 
 		/*****************************************/
