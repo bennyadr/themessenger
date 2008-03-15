@@ -55,11 +55,16 @@ class c_Message
 		const c_Message& operator=(const char* msg)
 		{
 			delete [] m_sBuffer;
-			m_iSize=strlen(msg);
+			m_iSize=sizeof(msg);//strlen(msg);
 			m_sBuffer = new unsigned char[m_iSize];
 			memcpy(m_sBuffer,msg,m_iSize);
 			return *this;
 		
+		};
+	
+		void SetBuffer(unsigned char *buf,unsigned int size)
+		{
+			memcpy(m_sBuffer,buf,size);
 		};
 
 		/*****************************************/
@@ -90,8 +95,9 @@ class c_Message
 		
 		virtual void PrintAsHex()
 		{
-			cout.setf( ios_base::hex );
-			cout<<m_sBuffer<<endl;
+			for(unsigned int i=0;i<m_iSize;i++)
+				fprintf(stdout, "%02X ", m_sBuffer[i]);
+			cout<<endl;
 		};
 
 		/*****************************************/

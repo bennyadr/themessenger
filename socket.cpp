@@ -108,7 +108,7 @@ void c_Socket::Read(c_Message& data,const unsigned int count)
 	int ret_read=read(m_iSocketFd,buffer,count);
 	if (ret_read==-1)
 		throw c_Error_Socket(ret_read,"error reading data");
-	data = buffer;
+	data.SetBuffer(reinterpret_cast<unsigned char*>(buffer),ret_read);
 };
 
 /*****************************************/
@@ -119,7 +119,7 @@ void c_Socket::Recv(c_Message &data,const unsigned int count,const int flag)
 	int ret_recv = recv(m_iSocketFd,buffer,count,flag);
 	if(ret_recv==-1)
 		throw c_Error_Socket(ret_recv, "error receiving data");
-	data = buffer;
+	data.SetBuffer(reinterpret_cast<unsigned char*>(buffer),ret_recv);
 };
 
 /*****************************************/

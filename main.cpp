@@ -9,7 +9,7 @@ int main()
 	try
 	{
 		socket.Connect();
-		c_Login login(&socket);
+		c_Login login(&socket,"mileandrei","thorium");
 		login.Execute();
 	
 	}
