@@ -1,10 +1,11 @@
 #include "login.h"
-#include "ypacket.h"
 #include "bits.h"
-c_Login::c_Login(c_Socket *socket)
+c_Login::c_Login(c_Socket *socket,char* username,char* password)
 	:m_cSocket(socket),
 	m_cPacket(NULL)
 {
+	m_sUsername = strdup(username);
+	m_sPassword = strdup(password);
 	
 };
 
@@ -13,10 +14,10 @@ c_Login::~c_Login()
 	delete (m_cPacket);
 };
 
-void c_Login::CreateAuthPacket(char* yahoo_username)
+void c_Login::CreateAuthPacket()
 {
 
-	unsigned int user_name_size = strlen(yahoo_username);
+	unsigned int user_name_size = strlen(m_sUsername);
 	m_cPacket = new c_YPacket(35,YAHOO_SERVICE_AUTH,YAHOO_STATUS_AVAILABLE,0);
 	
 	unsigned char data[14];
@@ -27,7 +28,7 @@ void c_Login::CreateAuthPacket(char* yahoo_username)
 	Bits::memset_short(data+1,YAHOO_STD_SEPARATOR,2);
 
 	//add username
-	memcpy(data+3,yahoo_username,user_name_size);
+	memcpy(data+3,m_sUsername,user_name_size);
 
 	//add separator
 	Bits::memset_short(data+3+user_name_size,YAHOO_STD_SEPARATOR,2);	
@@ -46,15 +47,20 @@ void c_Login::SendAuthPacket()
 };
 void c_Login::RecvAndSendAuthResponse()
 {
-	c_YPacket receive_packet(120);
-	m_cSocket->Read(receive_packet,120);
-	m_cSocket->Write(receive_packet);
+	c_YPacket receive_packet(117);
+	m_cSocket->Read(receive_packet,117);
+	
+	//debug	
+	//receive_packet.PrintAsHex();
+	//m_cSocket->Write(receive_packet);
+
+	
 
 };
 
 void c_Login::Execute()
 {
-	CreateAuthPacket("mileandrei");
+	CreateAuthPacket();
 	m_cPacket->PrintAsHex();
 	SendAuthPacket();
 	RecvAndSendAuthResponse();
