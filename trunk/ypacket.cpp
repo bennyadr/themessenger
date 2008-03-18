@@ -34,7 +34,7 @@ c_YPacket::c_YPacket(const unsigned int size)
 :c_Message(size),
 m_iPriority(0)
 {
-	
+	m_sData = m_sBuffer + YAHOO_HEADER_SIZE;
 };
 
 /*****************************************/

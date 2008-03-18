@@ -19,7 +19,11 @@ class c_Login : public c_Action
 		inline void CreateAuthPacket();
 		inline void SendAuthPacket();
 		inline void RecvAndSendAuthResponse();
-		void 		CreateAuthResponse();
+		inline void	CreateAuthResponse(c_YPacket& packet);
+
+		//magic shit
+		inline void MagicShit(unsigned char*,unsigned char *);
+
 	private:
 		c_Socket *m_cSocket;
 		c_YPacket *m_cPacket;
