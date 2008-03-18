@@ -100,16 +100,26 @@ class  c_YPacket : public c_Message
 		c_YPacket(const unsigned int size);
 		c_YPacket(const c_YPacket&);
 		virtual ~c_YPacket();
+
 		void SetPriority(const unsigned int priority)
 		{	m_iPriority = priority;	 };
 		unsigned int GetPriority()const
 		{	return m_iPriority;   };
+
 		unsigned char* GetData()const
 		{	return m_sData;   };  
-
 		void SetData(const unsigned char *data,unsigned int data_size);
 
+		unsigned short GetService()const
+		{	return *(reinterpret_cast<unsigned short*>(m_sData+10));	};
+		unsigned int GetStatus()const
+		{	return *(reinterpret_cast<unsigned int*>(m_sData+12));	};
+		unsigned int GetId()const
+		{	return *(reinterpret_cast<unsigned int*>(m_sData+16));	};
+
 		const c_YPacket& operator=(const c_YPacket&);
+
+
 
 	private:
 		unsigned int m_iPriority ;

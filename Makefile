@@ -2,7 +2,7 @@ CFLAGS=-c -Wall
 CPPFLAGS = -g -c -Wall
 CC=g++
 #LDFLAGS=
-SOURCES= socket.cpp ypacket.cpp login.cpp main.cpp 
+SOURCES= sha.c md5.c magic_shit.cpp socket.cpp ypacket.cpp login.cpp main.cpp 
 OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=ymess
 
