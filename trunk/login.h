@@ -22,7 +22,7 @@ class c_Login : public c_Action
 		inline void	CreateAuthResponse(c_YPacket& packet);
 
 		//magic shit
-		inline void MagicShit(unsigned char*,unsigned char *);
+		inline void MagicShit(unsigned char*,unsigned char *,unsigned char *);
 
 	private:
 		c_Socket *m_cSocket;

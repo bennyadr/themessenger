@@ -9,8 +9,8 @@ int main()
 	try
 	{
 		socket.Connect();
-		c_Login login(&socket,"mileandrei","thorium");
-		login.Execute();
+		c_Login login(&socket,"mileandrei","t1h2o3r4i5u6m72455");
+ 		login.Execute();
 	
 	}
 	catch(c_Error_Socket &socket_error)
