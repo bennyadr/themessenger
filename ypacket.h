@@ -109,6 +109,7 @@ class  c_YPacket : public c_Message
 		unsigned char* GetData()const
 		{	return m_sData;   };  
 		void SetData(const unsigned char *data,unsigned int data_size);
+		void SetHeader(enum yahoo_service,enum yahoo_status,int id);		
 
 		unsigned short GetService()const
 		{	return *(reinterpret_cast<unsigned short*>(m_sData+10));	};
@@ -118,7 +119,7 @@ class  c_YPacket : public c_Message
 		{	return *(reinterpret_cast<unsigned int*>(m_sData+16));	};
 
 		const c_YPacket& operator=(const c_YPacket&);
-
+		
 
 
 	private:

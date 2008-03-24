@@ -67,6 +67,30 @@ void c_YPacket::SetData(const unsigned char *data,unsigned int data_size)
 	memcpy(m_sData,data,data_size);
 };
 
+void c_YPacket::SetHeader(enum yahoo_service service,enum yahoo_status status,int id)
+{
+	Bits::memset_int(m_sBuffer,YAHOO_PROTOCOL,4);
+	
+	//set yahoo version
+	Bits::memset_int(m_sBuffer+4,YAHOO_VERSION,4);
+	
+	//set message size
+	unsigned short packet_size = m_iSize - YAHOO_HEADER_SIZE;
+	Bits::memset_short(m_sBuffer+8,packet_size,2);
+
+	//set yahoo service type
+	Bits::memset_short(m_sBuffer+10,service,2);
+
+	//set yahoo status type
+	Bits::memset_int(m_sBuffer+12,status,4);
+
+	//set yahoo id
+	Bits::memset_int(m_sBuffer+16,id,4);	
+	
+	m_sData = m_sBuffer + YAHOO_HEADER_SIZE;
+
+};
+
 /*****************************************/
 
 c_YPacket::~c_YPacket()

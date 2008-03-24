@@ -55,31 +55,99 @@ void c_Login::RecvAndSendAuthResponse()
 	c_YPacket receive_packet(117);
 	m_cSocket->Read(receive_packet,117);
 	CreateAuthResponse(receive_packet);
-	receive_packet.PrintAsHex();
+	c_YPacket receive_packet_final(200);
+	m_cSocket->Read(receive_packet_final,200);
+	c_YPacket receive_packet_final1(200);
+	m_cSocket->Read(receive_packet_final1,200);
 
 };
 
 void c_Login::CreateAuthResponse(c_YPacket& packet)
 {
-	unsigned char *data = packet.GetData();
+	unsigned char *data_recv = packet.GetData();
 	unsigned char *seed = NULL;
-	if(*(data+15) == '9' && *(data+16) == '4')
+	int isUsername = memcmp(data_recv+3,m_sUsername,strlen(m_sUsername));
+	if(*(data_recv+15) == '9' && *(data_recv+16) == '4' && *(data_recv)=='1' && !isUsername )
 	{
-		seed = data+19;
-	}
+		seed = data_recv+19;
+		unsigned char magic_shit6[128];
+		unsigned char magic_shit96[128];
+		MagicShit(seed,magic_shit6,magic_shit96);
+
+		unsigned char data[256];
+		unsigned int username_len = strlen(m_sUsername);
+		c_YPacket auth_packet(2*username_len+150+20,YAHOO_SERVICE_AUTHRESP,YAHOO_STATUS_AVAILABLE,0);
+
+		//add first 1 byte -- pidgin style :)
+		memset(data,0x31,1);
+
+		//add separator
+		Bits::memset_short(data+1,YAHOO_STD_SEPARATOR,2);
+
+		//add username
+		memcpy(data+3,m_sUsername,username_len);
+
+		//add separator
+		Bits::memset_short(data+3+username_len,YAHOO_STD_SEPARATOR,2);	
+
+		memset(data+3+username_len+2,0x36,1);
+	
+		//add separator
+		Bits::memset_short(data+6+username_len,YAHOO_STD_SEPARATOR,2);
+
+		memcpy(data+8+username_len,magic_shit6,50);
+
+		//add separator
+		Bits::memset_short(data+58+username_len,YAHOO_STD_SEPARATOR,2);
+
+		Bits::memset_short(data+username_len+60,0x3936,2);		
+
+		//add separator
+		Bits::memset_short(data+62+username_len,YAHOO_STD_SEPARATOR,2);
+
+		memcpy(data+username_len+64,magic_shit96,50);				
+		
+		//add separator
+		Bits::memset_short(data+114+username_len,YAHOO_STD_SEPARATOR,2);
+	
+		memset(data+username_len+116,0x31,1);
+
+		//add separator
+		Bits::memset_short(data+117+username_len,YAHOO_STD_SEPARATOR,2);
+	
+		//add username again
+		memcpy(data+username_len+119,m_sUsername,username_len);
+	
+		//add separator
+		Bits::memset_short(data+119+2*username_len,YAHOO_STD_SEPARATOR,2);	
+
+
+		//the ending shit
+		unsigned char funky_shit[29] = {0x32,0x34,0x34,0xC0,0x80,0x32,0x30,0x39,0x37,0x30,0x38,0x37,0xC0,
+		0x80,0x31,0x33,0x35,0xC0,0x80,0x2E,0x31,0x2E,0x30,0x2E,0x34,0x32,0x31,0xC0,0x80};
+		memcpy(data+121+2*username_len,funky_shit,29);
+				
+		auth_packet.SetData(data,150+2*username_len);
+		
+		auth_packet.PrintAsHex();	
+		
+		if(m_cSocket->is_Opened())
+		{
+			m_cSocket->Write(auth_packet);
+		}
+
+    }
 	else
 		cout<<"CreateAuthResponse::invalid authentication method"<<endl;
 	
-	unsigned char magic_shit[128];
-	MagicShit(seed,magic_shit);
 };
 
 void c_Login::Execute()
 {
 	CreateAuthPacket();
-	//m_cPacket->PrintAsHex();
 	SendAuthPacket();
 	RecvAndSendAuthResponse();
+	
 };
 
 /*this wrapps arround the libyahoo2 auth function;
@@ -88,7 +156,7 @@ using it it's the only solution for now*/
 // i couldn't find a full dscription of the auth method 'till now
 // and i'm not willing to spend time understanding this deprecated c code
 // if you know one let me know	
-void c_Login::MagicShit(unsigned char* seed,unsigned char *magic_shit)
+void c_Login::MagicShit(unsigned char* seed,unsigned char *magic_shit,unsigned char *magic_shit1)
 {
 	md5_byte_t         result[16];
 	md5_state_t        ctx;
@@ -488,6 +556,14 @@ void c_Login::MagicShit(unsigned char* seed,unsigned char *magic_shit)
 		sprintf(byte, "%c", delimit_lookup[lookup]);
 		strcat(resp_96, byte);
 	}
+	/*	for(unsigned int i=0;i<100;i++)
+				fprintf(stdout, "%02X ", resp_6[i]);
+			cout<<endl;
+		for(unsigned int i=0;i<100;i++)
+			fprintf(stdout,"%02X ",resp_96[i]);
+			cout<<endl;*/
+		memcpy(magic_shit,resp_6,50);
+		memcpy(magic_shit1,resp_96,50);
 /*
 	pack = yahoo_packet_new(YAHOO_SERVICE_AUTHRESP, yd->initial_status, yd->session_id);
 	yahoo_packet_hash(pack, 0, sn);
