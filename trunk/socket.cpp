@@ -124,7 +124,35 @@ void c_Socket::Recv(c_Message &data,const unsigned int count,const int flag)
 
 /*****************************************/
 
+void c_Socket::Recv(c_YPacket& packet,const int flag)
+{
+	char buffer[20];
+	int ret_recv = recv(m_iSocketFd,buffer,20,flag);
+	if(ret_recv<=0)
+		throw c_Error_Socket(ret_recv,"error receiving data");
+	unsigned short size = (short) buffer[8];
+	char buffer_1[size+20];
+	memcpy(buffer_1,buffer,20);
+	int ret_recv = recv(m_iSocketFd,(buffer_1+20),size,flag);
+	if(ret_recv<=0)
+		throw c_Error_Socket(ret_recv,"error receiving data");
+	packet.SetBuffer(reinterpret_cast<unsigned char*>(buffer_1),size+20);	
+}
+/*****************************************/
 
-
+void c_Socket::Read(c_YPacket& packet)
+{
+	char buffer[20];
+	int ret_read = read(m_iSocketFd,buffer,20);
+	if(ret_read<=0)
+		throw c_Error_Socket(ret_recv,"error receiving data");
+	unsigned short size = (short) buffer[8];
+	char buffer_1[size+20];
+	memcpy(buffer_1,buffer,20);
+	int ret_read = read(m_iSocketFd,(buffer_1+20),size);
+	if(ret_read<=0)
+		throw c_Error_Socket(ret_recv,"error receiving data");
+	packet.SetBuffer(reinterpret_cast<unsigned char*>(buffer_1),size+20);	
+}
 
 

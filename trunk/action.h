@@ -20,14 +20,20 @@ class c_Action
 		/*****************************************/
 		virtual void Execute() = 0;
 		/*****************************************/
+		void SetPriority(const unsigned int priority)
+		{	m_iPriority = priority;	  }
+		/*****************************************/
+		unsigned int GetPriority()const
+		{	return m_iPriority   };
 
 	protected:
+		unsigned int m_iPriority;
 		unsigned int m_iStatus;
 		unsigned int m_iType;
 		
 };
 
-enum ActionStatus 
+enum  ActionStatus 
 {
 	CREATED = 0,
 	DONE,
