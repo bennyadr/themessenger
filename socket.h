@@ -48,6 +48,9 @@ public:
 
 	void Read(c_Message& message,const unsigned int count);
 	void Recv(c_Message& message,const unsigned int count,const int flag);
+	
+	void Read(c_YPacket& packet);
+	void Recv(c_YPacket& packet,const int flag);
 
 	bool is_Opened()const
 				{ return m_bStatus;	};

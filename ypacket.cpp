@@ -37,6 +37,13 @@ m_iPriority(0)
 	m_sData = m_sBuffer + YAHOO_HEADER_SIZE;
 };
 
+c_YPacket::c_YPacket()
+:m_sBuffer(NULL),
+:m_sData(NULL),
+m_iPriority(0)
+{
+};
+
 /*****************************************/
 
 c_YPacket::c_YPacket(const c_YPacket& packet)
@@ -64,6 +71,8 @@ const c_YPacket& c_YPacket::operator=(const c_YPacket& packet)
 
 void c_YPacket::SetData(const unsigned char *data,unsigned int data_size)
 {
+	if(m_sData == NULL)
+		c_Message(data_size);
 	memcpy(m_sData,data,data_size);
 };
 

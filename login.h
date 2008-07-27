@@ -16,8 +16,7 @@ class c_Login : public c_Action
 		void Execute();
 
 	private:
-		inline void CreateAuthPacket();
-		inline void SendAuthPacket();
+		inline void Create&SendFirstAuthPacket();
 		inline void RecvAndSendAuthResponse();
 		inline void	CreateAuthResponse(c_YPacket& packet);
 
@@ -26,7 +25,6 @@ class c_Login : public c_Action
 
 	private:
 		c_Socket *m_cSocket;
-		c_YPacket *m_cPacket;
 		char* m_sUsername;
 		char* m_sPassword;
 };

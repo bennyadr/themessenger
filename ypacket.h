@@ -98,6 +98,7 @@ class  c_YPacket : public c_Message
 	public:
 		c_YPacket(const unsigned int size,enum yahoo_service,enum yahoo_status,int id);
 		c_YPacket(const unsigned int size);
+		c_YPacket();
 		c_YPacket(const c_YPacket&);
 		virtual ~c_YPacket();
 

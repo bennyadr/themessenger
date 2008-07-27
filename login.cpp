@@ -7,7 +7,8 @@
 
 c_Login::c_Login(c_Socket *socket,char* username,char* password)
 	:m_cSocket(socket),
-	m_cPacket(NULL)
+	m_iStatus(CREATED),
+	m_iType(LOGIN)
 {
 	m_sUsername = strdup(username);
 	m_sPassword = strdup(password);
@@ -16,14 +17,13 @@ c_Login::c_Login(c_Socket *socket,char* username,char* password)
 
 c_Login::~c_Login()
 {
-	delete (m_cPacket);
 };
 
-void c_Login::CreateAuthPacket()
+void c_Login::Create&SendFirstAuthPacket()
 {
 
 	unsigned int user_name_size = strlen(m_sUsername);
-	m_cPacket = new c_YPacket(35,YAHOO_SERVICE_AUTH,YAHOO_STATUS_AVAILABLE,0);
+	c_YPacket first_packet(35,YAHOO_SERVICE_AUTH,YAHOO_STATUS_AVAILABLE,0);
 	
 	unsigned char data[14];
 
@@ -38,28 +38,20 @@ void c_Login::CreateAuthPacket()
 	//add separator
 	Bits::memset_short(data+3+user_name_size,YAHOO_STD_SEPARATOR,2);	
 
-	m_cPacket->SetData(data,15);
+	first_packet->SetData(data,15);
+	if(m_cSocket->is_Opened())
+	{		
+		m_cSocket->Write(first_packet);
+	}
+
 	
 };
 
-void c_Login::SendAuthPacket()
-{
-	if(m_cSocket->is_Opened())
-	{
-		
-		m_cSocket->Write(m_cPacket);
-	}
-};
 void c_Login::RecvAndSendAuthResponse()
 {
-	c_YPacket receive_packet(117);
-	m_cSocket->Read(receive_packet,117);
+	c_YPacket receive_packet();
+	m_cSocket->Read(receive_packet);
 	CreateAuthResponse(receive_packet);
-	c_YPacket receive_packet_final(200);
-	m_cSocket->Read(receive_packet_final,200);
-	c_YPacket receive_packet_final1(200);
-	m_cSocket->Read(receive_packet_final1,200);
-
 };
 
 void c_Login::CreateAuthResponse(c_YPacket& packet)
@@ -144,10 +136,9 @@ void c_Login::CreateAuthResponse(c_YPacket& packet)
 
 void c_Login::Execute()
 {
-	CreateAuthPacket();
-	SendAuthPacket();
+	Create&SendFirstAuthPacket();
 	RecvAndSendAuthResponse();
-	
+	m_iStatus = DONE ;	
 };
 
 /*this wrapps arround the libyahoo2 auth function;
