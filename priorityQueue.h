@@ -3,6 +3,9 @@
 
 class c_Action;
 
+/*****************************************
+ * Queue template class
+*****************************************/
 template <class T>
 class Queue
 {
@@ -27,6 +30,11 @@ private:
 
 };
 
+
+/*****************************************
+ * Priority Queue class -- implemets
+ * the templatized class Queue
+ *****************************************/
 class PriorityQueue
 {
 public:
@@ -40,7 +48,6 @@ private:
 	Queue <c_Action> *m_Queue;
 	short int m_Priorities;
 };
-
 
 
 #endif
