@@ -2,6 +2,12 @@
 #define _THREAD_H
 
 #include <pthread.h>
+#include <string>
+#include <iostream>
+#include <errno.h>
+
+using namespace std;
+
 class c_Action; 
 
 
@@ -54,7 +60,7 @@ public:
 
 	~c_Error_Thread()
 	{
-		delete(m_sErrorMessage);
+		delete m_sErrorMessage;
 	};
 	
 	void PrintError()

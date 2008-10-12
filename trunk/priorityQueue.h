@@ -1,7 +1,10 @@
 #ifndef _PRIORITY_QUEUE_H
 #define _PRIORITY_QUEUE_H
 
-class c_Action;
+#include <cstdio>
+#include "action.h"
+
+using namespace Action;
 
 /*****************************************
  * Queue template class
@@ -13,7 +16,7 @@ public:
 	Queue();	
 	~Queue();
 	void Insert(T &Data);
-	T* Remove();
+	T& Remove();
 	
 	/*****************************************/
 	bool isEmpty()const
@@ -21,10 +24,10 @@ public:
 
 
 private:
-	struct element
+	typedef struct element
 	{
 		T Data;
-		element *next;
+		element *Next;
 	}Element;
 	Element *m_Head,*m_Tail;
 
@@ -41,11 +44,11 @@ public:
 	PriorityQueue(short int priorities);
 	~PriorityQueue();
 	
-	void Insert(c_Action &job);
-	c_Action& Remove();
+	void Insert(c_Action *job);
+	c_Action* Remove();
 
 private:
-	Queue <c_Action> *m_Queue;
+	Queue <c_Action*> *m_Queue;
 	short int m_Priorities;
 };
 

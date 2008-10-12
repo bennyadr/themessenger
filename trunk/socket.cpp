@@ -1,5 +1,6 @@
 #include "socket.h"
 
+
 /*****************************************/
 
 c_Socket::c_Socket()
@@ -64,31 +65,12 @@ void c_Socket::Disconnect()
 
 /*****************************************/
 
-void c_Socket::Write(const c_Message *data)
-{
-	int ret_write = write(m_iSocketFd,data->GetBuffer(),data->GetSize());
-	if(ret_write==-1)
-		throw c_Error_Socket(ret_write,"error sending data : ");
-
-};
-
-/*****************************************/
-
 void c_Socket::Write(const c_Message& data)
 {
 	int ret_write = write(m_iSocketFd,data.GetBuffer(),data.GetSize());
 	if(ret_write==-1)
 		throw c_Error_Socket(ret_write,"error sending data : ");
 
-};
-
-/*****************************************/
-
-void c_Socket::Send(const c_Message* data,const int flag)
-{
-	int ret_write = send(m_iSocketFd,data->GetBuffer(),data->GetSize(),flag);
-	if(ret_write==-1)
-		throw c_Error_Socket(ret_write,"error sending data : ");
 };
 
 /*****************************************/
@@ -133,7 +115,7 @@ void c_Socket::Recv(c_YPacket& packet,const int flag)
 	unsigned short size = (short) buffer[8];
 	char buffer_1[size+20];
 	memcpy(buffer_1,buffer,20);
-	int ret_recv = recv(m_iSocketFd,(buffer_1+20),size,flag);
+	ret_recv = recv(m_iSocketFd,(buffer_1+20),size,flag);
 	if(ret_recv<=0)
 		throw c_Error_Socket(ret_recv,"error receiving data");
 	packet.SetBuffer(reinterpret_cast<unsigned char*>(buffer_1),size+20);	
@@ -145,13 +127,13 @@ void c_Socket::Read(c_YPacket& packet)
 	char buffer[20];
 	int ret_read = read(m_iSocketFd,buffer,20);
 	if(ret_read<=0)
-		throw c_Error_Socket(ret_recv,"error receiving data");
+		throw c_Error_Socket(ret_read,"error receiving data");
 	unsigned short size = (short) buffer[8];
 	char buffer_1[size+20];
 	memcpy(buffer_1,buffer,20);
-	int ret_read = read(m_iSocketFd,(buffer_1+20),size);
+	ret_read = read(m_iSocketFd,(buffer_1+20),size);
 	if(ret_read<=0)
-		throw c_Error_Socket(ret_recv,"error receiving data");
+		throw c_Error_Socket(ret_read,"error receiving data");
 	packet.SetBuffer(reinterpret_cast<unsigned char*>(buffer_1),size+20);	
 }
 

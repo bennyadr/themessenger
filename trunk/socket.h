@@ -26,11 +26,14 @@
 #include "unix_std_space.h"
 #include "config.h"
 #include "message_base.h"
+#include "ypacket.h"
 
 using namespace unix_std_space;
 using namespace std;
 using namespace config;
 
+
+using namespace YPacket;
 
 class c_Socket
 {
@@ -41,8 +44,6 @@ public:
 	virtual	void Connect();
 	void Disconnect();
 
-	void Write(const c_Message* message);
-	void Send(const c_Message* message,const int flag);
 	void Write(const c_Message& message );
 	void Send(const c_Message& ,const int flag);
 

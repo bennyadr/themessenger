@@ -1,16 +1,23 @@
 
-#include "PriorityQueue.h"
+#include "priorityQueue.h"
 #include "action.h"
 
 
-Queue::Queue()
+
+/*****************************************
+ * generic queue implementation
+*****************************************/
+
+template <class T>
+Queue<T>::Queue()
 {
 	m_Head = new Element;
 	m_Head->Next = NULL;
 	m_Tail = m_Head;
 };
 
-Queue::~Queue()
+template <class T>
+Queue<T>::~Queue()
 {
 	Element *node;
 	while(m_Tail != NULL)
@@ -21,7 +28,8 @@ Queue::~Queue()
 	}
 };
 
-void Queue::Insert(T &Data)
+template <class T>
+void Queue<T>::Insert(T &Data)
 {
 	m_Head->Data = Data;
 	m_Head->Next = new Element;
@@ -29,10 +37,11 @@ void Queue::Insert(T &Data)
 	m_Head->Next = NULL;
 };
 
-Data& Queue::Remove()
+template <class T>
+T& Queue<T>::Remove()
 {
 	Element *node;
-	Data info;
+	T info;
 	node = m_Tail;
 	m_Tail = m_Tail->Next;
 	info = node->Data;
@@ -40,31 +49,37 @@ Data& Queue::Remove()
 	return info;
 };
 
-void PriorityQueue::PriorityQueue(short int priorities)
+
+
+/*****************************************
+ * priority queue implementation 
+*****************************************/
+
+
+PriorityQueue::PriorityQueue(short int priorities)
 	:m_Priorities(priorities)
 {
-	m_Queue = new Queue<c_Action>[priorities];
+	m_Queue = new Queue<c_Action*> [m_Priorities];
 };
 
-void PriorityQueue::~PriorityQueue()
+PriorityQueue::~PriorityQueue()
 {
 	delete [] m_Queue;
 };
 
-void PriorityQueue::Insert(c_Action &job)
+void PriorityQueue::Insert(c_Action *job)
 {
-	m_Queue[job.GetPriority()].Insert(job);
+	m_Queue[job->GetPriority()].Insert(job);
 };
 
-c_Action PriorityQueue::Remove()
+c_Action* PriorityQueue::Remove()
 {
 	for(short int index = m_Priorities;index >= 0;index--)
 	{
-		if(!m_Queue[index]->isEmpty())
-			return m_Queue[index]->Remove();
+		if(!m_Queue[index].isEmpty())
+			return m_Queue[index].Remove();
 	}
 	return NULL;
-
 };
 
 
