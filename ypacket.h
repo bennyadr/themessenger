@@ -93,6 +93,16 @@ enum yahoo_status {
 	YAHOO_STATUS_NOTIFY = 0x16
 };
 
+typedef struct ypack
+{
+	unsigned int size;
+	unsigned short service;
+	unsigned int status;
+	unsigned int id;
+	unsigned char* ydata;
+} ypacket;
+
+
 class  c_YPacket : public c_Message
 {
 	public:
@@ -102,30 +112,41 @@ class  c_YPacket : public c_Message
 		c_YPacket(const c_YPacket&);
 		virtual ~c_YPacket();
 
+		void SetData(unsigned char* data) 
+		{	m_ypack.ydata = strdup(data);	};
+
+		unsigned char* GetData()const
+		{	return m_ypack.ydata;   }
+
+		void Serialize();
+
+		void Deserialize(unsigned char* buffer);
+
+		const bool isSerialized()const
+		{	return m_bSerialized;	};
+
 		void SetPriority(const unsigned int priority)
 		{	m_iPriority = priority;	 };
+
 		unsigned int GetPriority()const
 		{	return m_iPriority;   };
 
-		unsigned char* GetData()const
-		{	return m_sData;   };  
-		void SetData(const unsigned char *data,unsigned int data_size);
-		void SetHeader(enum yahoo_service,enum yahoo_status,int id);		
-
 		unsigned short GetService()const
-		{	return *(reinterpret_cast<unsigned short*>(m_sData+10));	};
+		{	return m_ypack.service;   };
+
 		unsigned int GetStatus()const
-		{	return *(reinterpret_cast<unsigned int*>(m_sData+12));	};
+		{	return m_ypack.status;   };
+
 		unsigned int GetId()const
-		{	return *(reinterpret_cast<unsigned int*>(m_sData+16));	};
+		{	return m_ypack.id;   };
 
 		const c_YPacket& operator=(const c_YPacket&);
-		
-
 
 	private:
 		unsigned int m_iPriority ;
-		unsigned char* m_sData;
+		ypacket m_ypack;
+		bool m_bSerialized;
+
  
 };
 

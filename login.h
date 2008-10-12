@@ -16,7 +16,7 @@ class c_Login : public c_Action
 		void Execute();
 
 	private:
-		inline void Create&SendFirstAuthPacket();
+		inline void CreateSendFirstAuthPacket();
 		inline void RecvAndSendAuthResponse();
 		inline void	CreateAuthResponse(c_YPacket& packet);
 

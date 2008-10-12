@@ -12,7 +12,7 @@ class c_Message
 
 		/*****************************************/
 
-		c_Message(const unsigned int sz)
+		c_Message(const unsigned int sz = 0)
 		:m_iSize(sz)
 		{
 			m_sBuffer = new  unsigned char[m_iSize];

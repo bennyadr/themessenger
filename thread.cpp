@@ -2,9 +2,9 @@
 #include "action.h"
 
 template <class job,class parameter>
-c_Thread::c_Thread()
+c_Thread<job,parameter>::c_Thread()
 	:m_Id(0),
-	m_Function(NULL),
+	m_Action(NULL),
 	m_Attribute(NULL),
 	m_Parameter(NULL),
 	m_iReturnValue(0)
@@ -12,30 +12,30 @@ c_Thread::c_Thread()
 };
 
 template <class job,class parameter>
-c_Thread::~c_Thread()
+c_Thread<job,parameter>::~c_Thread()
 {
 
 };
 
 template <class job,class parameter>
-void c_Thread::Start()
+void c_Thread<job,parameter>::Start()
 {
 
 	int ret_val = pthread_create(&m_Id,m_Attribute,&m_Action->Execute(),m_Parameter);
 	if(ret_val != 0)
 	{
-		throw c_Error_Thread(ret_val,"error creating socket : "); 
+		throw c_Error_Thread(ret_val,"error creating thread : "); 
 	}
 };
 
 template <class job,class parameter>
-void c_Thread::AddParameter(parameter *param)
+void c_Thread<job,parameter>::AddParameter(const parameter *param)
 {
 	m_Parameter = param;
 };
 
 template <class job,class parameter>
-void c_Thread::Join()
+void c_Thread<job,parameter>::Join()
 {
 	int ret_val = pthread_join(m_Id,(void*)&m_iReturnValue);
 	if(ret_val != 0)
@@ -46,7 +46,7 @@ void c_Thread::Join()
 };
 
 template <class job,class parameter>
-void c_Thread::Cancel()
+void c_Thread<job,parameter>::Cancel()
 {
 	int ret_val = pthread_cancel(m_Id);
 	if(ret_val != 0)
