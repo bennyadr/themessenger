@@ -72,7 +72,9 @@ enum yahoo_service
 	YAHOO_SERVICE_CHATEXIT = 0x9b,
 	YAHOO_SERVICE_CHATLOGOUT = 0xa0,
 	YAHOO_SERVICE_CHATPING,
-	YAHOO_SERVICE_COMMENT = 0xa8
+	YAHOO_SERVICE_COMMENT = 0xa8,
+	YAHOO_SERVICE_BUDDYLIST = 0xf1,
+	YAHOO_SERVICE_BUDDYLIST_ONLINE = 0xf0
 };
 
 //yahoo status
@@ -116,6 +118,8 @@ class  c_YPacket : public c_Message
 		c_YPacket();
 		virtual ~c_YPacket();
 
+		void Clear();
+	
 		void SetData(unsigned char* data) 
 		{	m_ypack.ydata = reinterpret_cast<unsigned char*> (strdup( reinterpret_cast<const char*>(data) ));	};
 
@@ -156,7 +160,7 @@ class  c_YPacket : public c_Message
 		unsigned int m_iPriority ;
 		ypacket m_ypack;
 		mutable bool m_bSerialized;
-		unsigned int m_iByteIterator;
+		mutable unsigned int m_iByteIterator;
 
  
 };
@@ -164,14 +168,14 @@ class  c_YPacket : public c_Message
 class c_Error_YPacket
 {
 public:
-	c_Error_Socket(const string& user_message)
+	c_Error_YPacket(const string& user_message)
 	{
 		m_sUserMessage = new string(user_message);
 	};
 
-	~c_Error_Socket()
+	~c_Error_YPacket()
 	{
-		delete(m_sErrorMessage);
+		delete(m_sUserMessage);
 	};
 	
 	void PrintError()
