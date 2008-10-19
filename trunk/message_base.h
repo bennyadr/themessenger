@@ -114,8 +114,9 @@ class c_Message
 
 
 	protected:
-		unsigned char* m_sBuffer;
-		unsigned int m_iSize;
+		//TODO -- need to find another way
+		mutable unsigned char* m_sBuffer;
+		mutable unsigned int m_iSize;
 };
 
 

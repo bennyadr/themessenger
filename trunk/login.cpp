@@ -18,14 +18,13 @@ c_Login::~c_Login()
 {
 	delete [] m_sUsername;
 	delete [] m_sPassword;
-	delete m_cSocket;
 };
 
 void c_Login::CreateSendFirstAuthPacket()
 {
 
 	unsigned int user_name_size = strlen(m_sUsername);
-	c_YPacket first_packet(35,YAHOO_SERVICE_AUTH,YAHOO_STATUS_AVAILABLE,0);
+	c_YPacket first_packet(15,YAHOO_SERVICE_AUTH,YAHOO_STATUS_AVAILABLE,0);
 	
 	unsigned char data[14];
 
@@ -40,7 +39,7 @@ void c_Login::CreateSendFirstAuthPacket()
 	//add separator
 	Bits::memset_short(data+3+user_name_size,YAHOO_STD_SEPARATOR,2);	
 
-	first_packet.SetData(data,15);
+	first_packet.SetData(data);
 		
 	m_cSocket->Write(first_packet);
 	
@@ -67,7 +66,7 @@ void c_Login::CreateAuthResponse(c_YPacket& packet)
 
 		unsigned char data[256];
 		unsigned int username_len = strlen(m_sUsername);
-		c_YPacket auth_packet(2*username_len+150+20,YAHOO_SERVICE_AUTHRESP,YAHOO_STATUS_AVAILABLE,0);
+		c_YPacket auth_packet(2*username_len+150,YAHOO_SERVICE_AUTHRESP,YAHOO_STATUS_AVAILABLE,0);
 
 		//add first 1 byte -- pidgin style :)
 		memset(data,0x31,1);
@@ -118,9 +117,7 @@ void c_Login::CreateAuthResponse(c_YPacket& packet)
 		0x80,0x31,0x33,0x35,0xC0,0x80,0x2E,0x31,0x2E,0x30,0x2E,0x34,0x32,0x31,0xC0,0x80};
 		memcpy(data+121+2*username_len,funky_shit,29);
 				
-		auth_packet.SetData(data,150+2*username_len);
-		
-		auth_packet.PrintAsHex();	
+		auth_packet.SetData(data);
 		
 		if(m_cSocket->is_Opened())
 		{
@@ -137,15 +134,31 @@ void c_Login::Execute()
 {
 	CreateSendFirstAuthPacket();
 	RecvAndSendAuthResponse();
+	GetBuddyList();
 	m_iStatus = DONE;
+};
+
+void c_Login::GetBuddyList()
+{
+	c_YPacket list_pack;
+	c_BuddyList &buddylist = new c_BuddyList();
+	bool list_loaded = false;
+	while(!buddlist.isListLoaded())	
+	{
+		m_cSocket->Read(list_pack);	
+		if(list_pack.GetService == YPacket::yahoo_service.YAHOO_SERVICE_LIST || )
+		{
+			buddylist.GetBuddyList(list_pack);
+		}
+	}
 };
 
 /*this wrapps arround the libyahoo2 auth function;
  even if I find this code obfuscated and kind of stupid,
 using it it's the only solution for now*/
-// i couldn't find a full dscription of the auth method 'till now
+// I couldn't find a full description of the auth method 'till now
 // and i'm not willing to spend time understanding this deprecated c code
-// if you know one let me know	
+// if you know one let me know!!	
 void c_Login::MagicShit(unsigned char* seed,unsigned char *magic_shit,unsigned char *magic_shit1)
 {
 	md5_byte_t         result[16];

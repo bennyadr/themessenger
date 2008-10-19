@@ -47,6 +47,8 @@ public:
 	void Write(const c_Message& message );
 	void Send(const c_Message& ,const int flag);
 
+	void Write(const c_YPacket& data);
+
 	void Read(c_Message& message,const unsigned int count);
 	void Recv(c_Message& message,const unsigned int count,const int flag);
 	

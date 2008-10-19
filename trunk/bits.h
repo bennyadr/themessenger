@@ -5,7 +5,7 @@
 class Bits
 {
 public:
-
+//swap bytes only for LITTLE ENDIAN
 static inline unsigned short SwapBytes(unsigned short buf)
 {
 	return ((buf>>8)&0xff) | ((buf << 8)&0xff00);

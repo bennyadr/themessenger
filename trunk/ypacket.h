@@ -2,11 +2,12 @@
 #define _YPACKET_H
 
 #include "message_base.h"
+#include "bits.h"
 namespace YPacket
 {
 
 #define YAHOO_STD_SEPARATOR 0xC080
-#define YAHOO_VERSION 0x000C0000
+#define YAHOO_VERSION 0x000F0000
 #define YAHOO_HEADER_SIZE 20
 #define YAHOO_PROTOCOL 0x594D5347
 
@@ -102,6 +103,10 @@ typedef struct ypack
 	unsigned char* ydata;
 } ypacket;
 
+inline unsigned short GetYPackSize(unsigned char *buffer)
+{
+	return Bits::SwapBytes( *((unsigned short*) (buffer+8)));
+};
 
 class  c_YPacket : public c_Message
 {
@@ -109,16 +114,22 @@ class  c_YPacket : public c_Message
 		c_YPacket(const unsigned int size,enum yahoo_service,enum yahoo_status,int id);
 		c_YPacket(const unsigned int size);
 		c_YPacket();
-		c_YPacket(const c_YPacket&);
 		virtual ~c_YPacket();
 
 		void SetData(unsigned char* data) 
-		{	m_ypack.ydata = strdup(data);	};
+		{	m_ypack.ydata = reinterpret_cast<unsigned char*> (strdup( reinterpret_cast<const char*>(data) ));	};
 
 		unsigned char* GetData()const
-		{	return m_ypack.ydata;   }
+		{	return m_ypack.ydata;   };
 
-		void Serialize();
+		unsigned int GetDataSize()const
+		{	return m_ypack.size;	};
+
+		void AddDataPair(unsigned char* key,unsigned char* value);
+
+		void GetDataPair(unsigned char* key,unsigned char* value)const; 
+
+		void Serialize()const;
 
 		void Deserialize(unsigned char* buffer);
 
@@ -140,14 +151,36 @@ class  c_YPacket : public c_Message
 		unsigned int GetId()const
 		{	return m_ypack.id;   };
 
-		const c_YPacket& operator=(const c_YPacket&);
 
 	private:
 		unsigned int m_iPriority ;
 		ypacket m_ypack;
-		bool m_bSerialized;
+		mutable bool m_bSerialized;
+		unsigned int m_iByteIterator;
 
  
+};
+
+class c_Error_YPacket
+{
+public:
+	c_Error_Socket(const string& user_message)
+	{
+		m_sUserMessage = new string(user_message);
+	};
+
+	~c_Error_Socket()
+	{
+		delete(m_sErrorMessage);
+	};
+	
+	void PrintError()
+	{
+		cout<<"Error message :: YPacket error"<<*m_sUserMessage<<endl;
+	};
+
+private:
+	string *m_sUserMessage;
 };
 
 };
