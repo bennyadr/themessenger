@@ -11,7 +11,7 @@ class c_Buddy
 public:
 
 	c_Buddy(const string &name,const string& group,const unsigned int order,const string status = "",
-			const unsigned int ystatus = yahoo_status.YAHOO_STATUS_OFFLINE)
+			yahoo_status ystatus = YAHOO_STATUS_OFFLINE)
 		:m_iOrder(order),
 		m_sGroup(group),
 		m_sName(name),
@@ -25,13 +25,13 @@ public:
 	void SetName(const string& name)
 	{	m_sName = name;	  };
 
-	string& GetName()const
+	const string& GetName()const
 	{	return m_sName;	  };
 
 	void SetGroup(const string& group)
 	{	m_sGroup = group;	};
 
-	string& GetGroup()const
+	const string& GetGroup()const
 	{	return m_sGroup;	};
 
 	unsigned int GetOrder()const
@@ -41,10 +41,10 @@ public:
 	{	m_iOrder = order;	};
 
 	void SetYStatus(yahoo_status  status)
-	{	m_iStatus = status;	  };
+	{	m_iYStatus = status;	  };
 
 	yahoo_status GetYahooStatus()const
-	{	return m_iStatus;	};
+	{	return m_iYStatus;	};
 
 
 private:

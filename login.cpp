@@ -142,15 +142,23 @@ void c_Login::GetBuddyList()
 {
 	c_YPacket list_pack;
 	c_BuddyList &buddylist = new c_BuddyList();
-	bool list_loaded = false;
-	while(!buddlist.isListLoaded())	
+	//read buddies
+	do
 	{
 		m_cSocket->Read(list_pack);	
-		if(list_pack.GetService == YPacket::yahoo_service.YAHOO_SERVICE_LIST || )
+		if(list_pack.GetService() == yahoo_service.YAHOO_SERVICE_BUDDYLIST)
 		{
 			buddylist.GetBuddyList(list_pack);
+			list_pack.Clear();
 		}
 	}
+	while(list_pack.GetService == yahoo_service.YAHOO_SERVICE_BUDDYLIST)	
+	//get online buddies
+	if(list_pack.GetService()==yahoo_service.YAHOO_SERVICE_BUDDYLIST_ONLINE)
+	{
+		//TODO
+	}
+
 };
 
 /*this wrapps arround the libyahoo2 auth function;

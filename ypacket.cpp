@@ -60,24 +60,26 @@ c_YPacket::~c_YPacket()
 
 void c_YPacket::AddDataPair(unsigned char* key,unsigned char* value)
 {
-	memcpy(m_ypack.ydata+m_iByteIterator,key,strlen(key));
-	m_iByteIterator += strlen(key);
+	int size = strlen(reinterpret_cast<const char*>(key));
+	memcpy(m_ypack.ydata+m_iByteIterator,key,size);
+	m_iByteIterator += size;
 	Bits::memset_short(m_ypack.ydata+m_iByteIterator,YAHOO_STD_SEPARATOR,2);
 	m_iByteIterator += 2;
-	memcpy(m_ypack.ydata+m_iByteIterator,value,strlen(value));
-	m_iByteIterator += strlen(value);
+	int value_size = strlen(reinterpret_cast<const char*>(value));
+	memcpy(m_ypack.ydata+m_iByteIterator,value,value_size);
+	m_iByteIterator += value_size;
 };
 
-void c_Ypacket::GetDataPair(unsigned char* const key,unsigned char* const data)const
+void c_YPacket::GetDataPair(unsigned char* const key,unsigned char* const value)const
 {
 	bool foundkey = false;
 	bool foundvalue = false;
 	while( m_iByteIterator != m_ypack.size && !foundvalue)
 	{
-		if(YAHOO_STD_SEPARATOR == reinterpret_cast<short>key[m_iByteIterator])
+		if(YAHOO_STD_SEPARATOR == int(Bits::GetShortInt(key+m_iByteIterator)))
 		{
 			m_iByteIterator += 2;
-			if(!foudkey)
+			if(!foundkey)
 				foundkey = true;
 			else
 				foundvalue = true;
@@ -142,5 +144,15 @@ void c_YPacket::Deserialize(unsigned char* buffer)
 	m_ypack.ydata = new unsigned char[m_ypack.size+YAHOO_HEADER_SIZE];
 	memcpy(m_ypack.ydata,buffer+YAHOO_HEADER_SIZE,m_ypack.size);
 	m_bSerialized = false;
+};
+void c_YPacket::Clear()
+{
+	c_Message::Clear();
+	m_ypack.size = 0;
+	m_ypack.service = 0;
+	m_ypack.status = 0;
+	m_ypack.id = 0;
+	delete [] m_ypack.ydata;
+
 };
 

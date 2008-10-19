@@ -1,34 +1,22 @@
 #include "BuddyList.h"
 
-c_Buddy& c_BuddyList::operator[](unsigned int number)const
-{
-	if(number<=m_iNumber)
-		return m_aBuddies[number];
-	else
-		throw number;	
-};
-
 void c_BuddyList::GetBuddyList(const c_YPacket& recvpack)
 {
-	if(recvpack.GetService() == YPacket::yahoo_service.YAHOO_SERVICE_LIST)
+	if(recvpack.GetService() == YAHOO_SERVICE_BUDDYLIST)
 	{
 		unsigned char key[100];
 		unsigned char value[1024];
-		recvpack.GetDataPair(&key,&value);
-		int ikey =atoi(key);
-		switch(ikei)
+		memset(key,0,100*sizeof(unsigned char));
+		memset(value,0,1024*sizeof(unsigned char));
+		recvpack.GetDataPair(key,value);
+		int ikey =atoi(reinterpret_cast<const char*>(key));
+		switch(ikey)
 		{
 			case 89:
 				//username
 				break;
 			case 58:
 				//cookie
-				break;
-			case 216:
-				//name
-				break;
-			case 254:
-				//surename
 				break;
 			case 302:
 				//check for ignore list
@@ -38,14 +26,12 @@ void c_BuddyList::GetBuddyList(const c_YPacket& recvpack)
 				//value = 319 means a buddy will follow
 				break;
 			case 65:
-				AddGroup(value);
+				AddGroup(reinterpret_cast<const char*>(value));
 				break;
 			case 7:
-				AddBuddy(value);
+				AddBuddy(reinterpret_cast<const char*>(value));
 				break;
-			default:
-				//unknown
-		};
+		}
 	}
 	else
 		throw c_Error_YPacket("GetBuddyList :: invalid buddy packet");
@@ -53,12 +39,12 @@ void c_BuddyList::GetBuddyList(const c_YPacket& recvpack)
 };
 
 //qsort
-void c_BuddyList::Sort(SortBy sortmethod)
+void c_BuddyList::Sort(SortBy sortmethod)const
 {
-
+	//TODO
 };
 
-void c_BuddyList::AddGroup(char* group)
+void c_BuddyList::AddGroup(const char* group)
 {
 	delete [] (m_sAddedGroup);	
 	int size = strlen(group)+1;
@@ -66,10 +52,10 @@ void c_BuddyList::AddGroup(char* group)
 	strncpy(m_sAddedGroup,group,size);
 };
 
-void c_BuddyList::AddBuddy(char* buddy)
+void c_BuddyList::AddBuddy(const char* buddy)
 {
 	const string name(buddy);
-	const tring groupname(m_sAddedGroup);
+	const string groupname(m_sAddedGroup);
 
 	c_Buddy &buddy = new c_Buddy(name,groupname,m_iNumber);
 	m_aBuddies.Insert(m_aBuddies.end(),buddy);
