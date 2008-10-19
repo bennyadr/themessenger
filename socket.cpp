@@ -1,10 +1,11 @@
 #include "socket.h"
-
+#include "bits.h"
 
 /*****************************************/
 
 c_Socket::c_Socket()
 	:m_iPort(PORT),
+	m_sAddress(NULL),
  	m_iSocketFd(-1)
  {
  	m_sAddress = new string(SERVER_ADDRESS);
@@ -42,7 +43,6 @@ void c_Socket::Connect()
 		throw c_Error_Socket(status , "error creating network address structure : ");
 	if(status<1)
 		throw c_Error_Socket(status , "error creating network address structure : invalid address ");
-	
 	status = connect ( m_iSocketFd , (sockaddr *) &m_tAddress, sizeof(m_tAddress) );
 	if(status==-1)
 		throw c_Error_Socket(status, "error connecting socket : ");
@@ -72,6 +72,21 @@ void c_Socket::Write(const c_Message& data)
 		throw c_Error_Socket(ret_write,"error sending data : ");
 
 };
+
+
+/*****************************************/
+
+void c_Socket::Write(const c_YPacket& data)
+{
+	if(!data.isSerialized())
+	{
+		data.Serialize();
+	}
+	int ret_write = write(m_iSocketFd,data.GetBuffer(),data.GetSize());
+	if(ret_write==-1)
+		throw c_Error_Socket(ret_write,"error sending data : ");
+};
+
 
 /*****************************************/
 
@@ -108,33 +123,38 @@ void c_Socket::Recv(c_Message &data,const unsigned int count,const int flag)
 
 void c_Socket::Recv(c_YPacket& packet,const int flag)
 {
-	char buffer[20];
+	unsigned char buffer[20];
 	int ret_recv = recv(m_iSocketFd,buffer,20,flag);
 	if(ret_recv<=0)
 		throw c_Error_Socket(ret_recv,"error receiving data");
-	unsigned short size = (short) buffer[8];
+	unsigned short size = GetYPackSize(buffer);
 	char buffer_1[size+20];
 	memcpy(buffer_1,buffer,20);
 	ret_recv = recv(m_iSocketFd,(buffer_1+20),size,flag);
 	if(ret_recv<=0)
 		throw c_Error_Socket(ret_recv,"error receiving data");
-	packet.SetBuffer(reinterpret_cast<unsigned char*>(buffer_1),size+20);	
+	packet.Deserialize(reinterpret_cast<unsigned char*>(buffer_1));	
 }
+
 /*****************************************/
 
 void c_Socket::Read(c_YPacket& packet)
 {
-	char buffer[20];
+	unsigned char buffer[20];
 	int ret_read = read(m_iSocketFd,buffer,20);
 	if(ret_read<=0)
 		throw c_Error_Socket(ret_read,"error receiving data");
-	unsigned short size = (short) buffer[8];
+	unsigned short size = GetYPackSize(buffer);
 	char buffer_1[size+20];
 	memcpy(buffer_1,buffer,20);
-	ret_read = read(m_iSocketFd,(buffer_1+20),size);
+	ret_read = 1;
+	while( ret_read!=size && ret_read>0 )
+	{
+		ret_read = read(m_iSocketFd,(buffer_1+20),size);
+	}
 	if(ret_read<=0)
 		throw c_Error_Socket(ret_read,"error receiving data");
-	packet.SetBuffer(reinterpret_cast<unsigned char*>(buffer_1),size+20);	
+	packet.Deserialize(reinterpret_cast<unsigned char*>(buffer_1));	
 }
 
 

@@ -10,30 +10,24 @@ using namespace YPacket;
 /*******************************************/
 int main()
 {
-	int state = 0;
-	state = IGetState();
-
-	if(a)
+	c_Socket socket;
+	try
 	{
-		c_Socket socket;
-		try
+		socket.Connect();
+		c_Login login(&socket,"mileandrei","t1h2o3r4i5u6m72455");
+ 		login.Execute();
+
+		if(login.GetStatus() == DONE)
 		{
-			socket.Connect();
-			c_Login login(&socket,"mileandrei","t1h2o3r4i5u6m72455");
- 			login.Execute();
-		}
-		catch(c_Error_Socket &socket_error)
-		{
-			socket_error.PrintError();
+			cout<<"finished login\n";	 	
 		}
 	}
-	if(login.GetStatus() == DONE)
+	catch(c_Error_Socket &socket_error)
 	{
-	 	
+		cout<<"eroare cu socketi\n";
+		socket_error.PrintError();
 	}
 		
-	};
-
 	return 1;
 };
 
