@@ -60,7 +60,7 @@ static inline void memset_short(unsigned char* dest,unsigned short shortint,unsi
 	};
 };
 
-static inline short GetShortInt(unsigned char *adress)
+static inline unsigned short GetShortInt(unsigned char *adress)
 {
 	return *(reinterpret_cast<short*>(adress));
 };
