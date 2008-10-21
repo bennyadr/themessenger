@@ -1,4 +1,5 @@
 #include "BuddyList.h"
+#include <assert.h>
 
 void c_BuddyList::GetBuddyList(const c_YPacket& recvpack)
 {
@@ -52,13 +53,13 @@ void c_BuddyList::AddGroup(const char* group)
 	strncpy(m_sAddedGroup,group,size);
 };
 
-void c_BuddyList::AddBuddy(const char* buddy)
+void c_BuddyList::AddBuddy(const char* buddy_name)
 {
-	const string name(buddy);
+	const string name(buddy_name);
 	const string groupname(m_sAddedGroup);
 
-	c_Buddy &buddy = new c_Buddy(name,groupname,m_iNumber);
-	m_aBuddies.Insert(m_aBuddies.end(),buddy);
+	c_Buddy *buddy = new c_Buddy(name,groupname,m_iNumber);
+	m_aBuddies.insert(m_aBuddies.end(),buddy);
 	assert(m_aBuddies.size() == m_iNumber);
 };
 

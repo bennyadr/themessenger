@@ -76,7 +76,7 @@ void c_YPacket::GetDataPair(unsigned char* const key,unsigned char* const value)
 	bool foundvalue = false;
 	while( m_iByteIterator != m_ypack.size && !foundvalue)
 	{
-		if(YAHOO_STD_SEPARATOR == int(Bits::GetShortInt(key+m_iByteIterator)))
+		if(Bits::GetShortInt(key+m_iByteIterator) == YAHOO_STD_SEPARATOR)
 		{
 			m_iByteIterator += 2;
 			if(!foundkey)

@@ -3,6 +3,7 @@
 #include "md5.h"
 #include "sha.h"
 #include "magic_shit.h"
+#include "BuddyList.h"
 
 
 c_Login::c_Login(c_Socket *socket,char* username,char* password)
@@ -141,20 +142,20 @@ void c_Login::Execute()
 void c_Login::GetBuddyList()
 {
 	c_YPacket list_pack;
-	c_BuddyList &buddylist = new c_BuddyList();
+	c_BuddyList *buddylist = new c_BuddyList();
 	//read buddies
 	do
 	{
 		m_cSocket->Read(list_pack);	
-		if(list_pack.GetService() == yahoo_service.YAHOO_SERVICE_BUDDYLIST)
+		if(list_pack.GetService() == YAHOO_SERVICE_BUDDYLIST)
 		{
-			buddylist.GetBuddyList(list_pack);
+			buddylist->GetBuddyList(list_pack);
 			list_pack.Clear();
 		}
 	}
-	while(list_pack.GetService == yahoo_service.YAHOO_SERVICE_BUDDYLIST)	
+	while(list_pack.GetService() == YAHOO_SERVICE_BUDDYLIST);	
 	//get online buddies
-	if(list_pack.GetService()==yahoo_service.YAHOO_SERVICE_BUDDYLIST_ONLINE)
+	if(list_pack.GetService() == YAHOO_SERVICE_BUDDYLIST_ONLINE)
 	{
 		//TODO
 	}

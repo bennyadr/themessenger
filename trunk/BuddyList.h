@@ -36,7 +36,7 @@ public:
 
 private:
 	void AddGroup(const char* group);
-	void AddBuddy(const char* buddy);	
+	void AddBuddy(const char* buddy_name);	
 
 private:
 	vector<c_Buddy*> m_aBuddies;
