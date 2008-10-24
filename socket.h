@@ -74,27 +74,35 @@ private:
 class c_Error_Socket
 {
 public:
-	c_Error_Socket(int ret,const string& user_message)
+	c_Error_Socket(int ret,const string user_message)
+		:m_sErrorMessage(NULL),
+		 m_sUserMessage(NULL)
 	{
 		m_sUserMessage = new string(user_message);
 		if(ret<0)
 		{
 			m_sErrorMessage = new string(strerror(errno));
-					}
-		else
-		{
-			m_sErrorMessage = new string("");
 		}
 	};
 
 	~c_Error_Socket()
 	{
 		delete(m_sErrorMessage);
+		delete(m_sUserMessage);
 	};
 	
 	void PrintError()
 	{
-		cout<<"Error message :: "<<*m_sUserMessage<<*m_sErrorMessage<<endl;
+		if(m_sErrorMessage)
+		{	
+			cout<<"bunica\n";
+			cout<<"Error message :: "<<*m_sUserMessage<<*m_sErrorMessage<<endl;
+		}
+		else
+		{
+			cout<<"bunica2\n";
+			cout<<"Error message :: "<<*m_sUserMessage;
+		}
 	};
 
 private:

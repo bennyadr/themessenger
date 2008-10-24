@@ -2,6 +2,7 @@
 #define _BUDDYLYST_H
 
 #include <vector>
+#include <assert.h>
 #include "buddy.h"
 
 using namespace std;
@@ -33,6 +34,16 @@ public:
 	void GetBuddyList(const c_YPacket& recvpack);
 
 	void Sort(SortBy sortmethod)const;
+
+	c_Buddy* GetBuddy(unsigned int order)const
+	{
+		return m_aBuddies[order]; 
+	}
+	unsigned int GetSize()const
+	{
+		assert(m_aBuddies.size() == m_iNumber);
+		return m_aBuddies.size();
+	}
 
 private:
 	void AddGroup(const char* group);

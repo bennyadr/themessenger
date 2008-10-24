@@ -107,7 +107,7 @@ typedef struct ypack
 
 inline unsigned short GetYPackSize(unsigned char *buffer)
 {
-	return Bits::SwapBytes( *((unsigned short*) (buffer+8)));
+	return Bits::GetUShortInt(buffer+8);
 };
 
 class  c_YPacket : public c_Message
@@ -131,7 +131,7 @@ class  c_YPacket : public c_Message
 
 		void AddDataPair(unsigned char* key,unsigned char* value);
 
-		void GetDataPair(unsigned char* key,unsigned char* value)const; 
+		unsigned int GetDataPair(unsigned char* key,unsigned char* value)const; 
 
 		void Serialize()const;
 
