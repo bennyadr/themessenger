@@ -16,3 +16,5 @@ $(EXECUTABLE): $(OBJECTS)
 
 clean:
 	-rm printenv *~ *.o *.bak core tags
+tags:
+	-etags *.cpp *.h

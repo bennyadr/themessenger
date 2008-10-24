@@ -13,9 +13,11 @@ class c_Message
 		/*****************************************/
 
 		c_Message(const unsigned int sz = 0)
-		:m_iSize(sz)
+		:m_sBuffer(NULL),
+		m_iSize(sz)
 		{
-			m_sBuffer = new  unsigned char[m_iSize];
+			if(m_iSize != 0)
+				m_sBuffer = new  unsigned char[m_iSize];
 		};
 	
 		/*****************************************/
@@ -94,7 +96,7 @@ class c_Message
 
 		void Clear()
 		{
-			memset(m_sBuffer,0,m_iSize);
+			delete [] (m_sBuffer);
 		};
 
 		/*****************************************/

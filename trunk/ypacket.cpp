@@ -70,13 +70,15 @@ void c_YPacket::AddDataPair(unsigned char* key,unsigned char* value)
 	m_iByteIterator += value_size;
 };
 
-void c_YPacket::GetDataPair(unsigned char* const key,unsigned char* const value)const
+unsigned int c_YPacket::GetDataPair(unsigned char* const key,unsigned char* const value)const
 {
 	bool foundkey = false;
 	bool foundvalue = false;
+	unsigned int i = 0;
+	unsigned int j = 0;
 	while( m_iByteIterator != m_ypack.size && !foundvalue)
 	{
-		if(Bits::GetShortInt(key+m_iByteIterator) == YAHOO_STD_SEPARATOR)
+		if(Bits::GetUShortInt(m_ypack.ydata+m_iByteIterator) == YAHOO_STD_SEPARATOR)
 		{
 			m_iByteIterator += 2;
 			if(!foundkey)
@@ -87,11 +89,19 @@ void c_YPacket::GetDataPair(unsigned char* const key,unsigned char* const value)
 		else
 		{
 			if(!foundkey)
-				key[m_iByteIterator] = m_ypack.ydata[m_iByteIterator];
+			{
+				key[i] = m_ypack.ydata[m_iByteIterator];
+				i++;
+			}
 			else
-				value[m_iByteIterator] = m_ypack.ydata[m_iByteIterator];
+			{
+				value[j] = m_ypack.ydata[m_iByteIterator];
+				j++;
+			}
+			m_iByteIterator++;
 		}
 	}
+	return m_iByteIterator;
 };
 
 
@@ -138,10 +148,11 @@ void c_YPacket::Deserialize(unsigned char* buffer)
 {
 	m_ypack.size = GetYPackSize(buffer);
 	m_iSize = m_ypack.size+YAHOO_HEADER_SIZE;
-	m_ypack.service = (short) m_sBuffer[10];
-	m_ypack.status = (unsigned int) m_sBuffer[12];
-	m_ypack.id = (unsigned int) m_sBuffer[16];
-	m_ypack.ydata = new unsigned char[m_ypack.size+YAHOO_HEADER_SIZE];
+	m_ypack.service = Bits::GetUShortInt(buffer+10);
+	m_ypack.status = Bits::GetUInt(buffer+12);
+	m_ypack.id = Bits::GetUInt(buffer+16);
+	m_ypack.ydata = new unsigned char[m_ypack.size+1];
+	memset(m_ypack.ydata,0,m_ypack.size+1);
 	memcpy(m_ypack.ydata,buffer+YAHOO_HEADER_SIZE,m_ypack.size);
 	m_bSerialized = false;
 };

@@ -1,6 +1,8 @@
 #ifndef _BITS_H
 #define _BITS_H
 
+#include <algorithm>
+#include <string.h>
 
 class Bits
 {
@@ -14,6 +16,17 @@ static inline unsigned short SwapBytes(unsigned short buf)
 static inline unsigned int SwapBytes(unsigned int buf)
 {
 	return((buf & 0xff)<<24) | ((buf & 0xff00)<<8) | ((buf & 0xff0000)>>8) | ((buf >> 24) & 0xff);
+};
+
+static inline void SwapBytes(unsigned char* start,unsigned int number)
+{
+	register int i = 0;
+   	register int j = number-1;
+   	while (i<j)
+  	{
+   		std::swap(start[i], start[j]);
+      	i++, j--;
+   	}
 };
 
 static inline void SetBit(unsigned char buf, const unsigned int pos)
@@ -60,9 +73,20 @@ static inline void memset_short(unsigned char* dest,unsigned short shortint,unsi
 	};
 };
 
-static inline unsigned short GetShortInt(unsigned char *adress)
+static inline unsigned short GetUShortInt(unsigned char *address)
 {
-	return *(reinterpret_cast<short*>(adress));
+	unsigned char _address[2];
+	memcpy(_address,address,2);
+	SwapBytes(_address,2);
+	return *(reinterpret_cast<unsigned short*>(_address));
+};
+
+static inline unsigned int GetUInt(unsigned char* address)
+{
+	unsigned char _address[4];
+	memcpy(_address,address,4);
+	SwapBytes(address,4);
+	return *(reinterpret_cast<unsigned int*>(address));
 };
 
 };

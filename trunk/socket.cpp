@@ -1,5 +1,6 @@
 #include "socket.h"
 #include "bits.h"
+#include <assert.h>
 
 /*****************************************/
 
@@ -144,16 +145,23 @@ void c_Socket::Read(c_YPacket& packet)
 	int ret_read = read(m_iSocketFd,buffer,20);
 	if(ret_read<=0)
 		throw c_Error_Socket(ret_read,"error receiving data");
-	unsigned short size = GetYPackSize(buffer);
-	char buffer_1[size+20];
-	memcpy(buffer_1,buffer,20);
-	ret_read = 1;
-	while( ret_read!=size && ret_read>0 )
+	if(0 != strncmp(reinterpret_cast<const char*>(buffer),"YMSG",4))
 	{
-		ret_read = read(m_iSocketFd,(buffer_1+20),size);
+		throw c_Error_Socket(1,"wrong yahoo packet");
 	}
-	if(ret_read<=0)
-		throw c_Error_Socket(ret_read,"error receiving data");
+	unsigned short size = GetYPackSize(buffer);
+	char buffer_1[size+YAHOO_HEADER_SIZE];
+	memcpy(buffer_1,buffer,YAHOO_HEADER_SIZE);
+	int offset = YAHOO_HEADER_SIZE;
+	while(size>0)
+	{
+		ret_read = read(m_iSocketFd,(buffer_1+offset),size);
+		if(ret_read<0)
+			throw c_Error_Socket(ret_read,"error receiving data");
+		size -= ret_read;
+		offset += ret_read;
+	}
+	assert(size==0);
 	packet.Deserialize(reinterpret_cast<unsigned char*>(buffer_1));	
 }
 

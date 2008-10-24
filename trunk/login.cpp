@@ -146,18 +146,23 @@ void c_Login::GetBuddyList()
 	//read buddies
 	do
 	{
+		list_pack.Clear();
 		m_cSocket->Read(list_pack);	
 		if(list_pack.GetService() == YAHOO_SERVICE_BUDDYLIST)
 		{
 			buddylist->GetBuddyList(list_pack);
-			list_pack.Clear();
 		}
 	}
-	while(list_pack.GetService() == YAHOO_SERVICE_BUDDYLIST);	
+	while(list_pack.GetService() == YAHOO_SERVICE_BUDDYLIST || list_pack.GetService() == YAHOO_SERVICE_LIST);	
 	//get online buddies
 	if(list_pack.GetService() == YAHOO_SERVICE_BUDDYLIST_ONLINE)
 	{
 		//TODO
+		//debug --- print the list
+		for(unsigned int i=0;i<buddylist->GetSize();i++)
+		{
+			cout<<buddylist->GetBuddy(i)->GetName()<<"\n";
+		};
 	}
 
 };
