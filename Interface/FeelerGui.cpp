@@ -6,7 +6,6 @@
 #include <QLineEdit>
 #include <QCommandLinkButton>
 
-
 #include "FeelerGui.h"
 #include "BuddyList.h"
 #include "Login.h"
@@ -60,7 +59,6 @@ FeelerGui::FeelerGui(QWidget *parent)
 	//Login modal window
 	LoginD = new LoginDialog();
 	LoginD->show();
-	
 
 
 	//TODO settings and exit

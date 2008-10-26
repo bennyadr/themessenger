@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'FeelerGui.h'
 **
-** Created: Wed Jul 2 00:05:33 2008
+** Created: Sun Oct 26 20:10:57 2008
 **      by: The Qt Meta Object Compiler version 59 (Qt 4.4.0)
 **
 ** WARNING! All changes made in this file will be lost!

@@ -38,7 +38,7 @@ void Queue<T>::Insert(T &Data)
 };
 
 template <class T>
-T& Queue<T>::Remove()
+T Queue<T>::Remove()
 {
 	Element *node;
 	T info;

@@ -1,14 +1,18 @@
 #include "login.h"
 #include "bits.h"
+
+extern "C"
+{
 #include "md5.h"
 #include "sha.h"
 #include "magic_shit.h"
-#include "BuddyList.h"
+}
 
 
-c_Login::c_Login(c_Socket *socket,char* username,char* password)
+c_Login::c_Login(c_Socket *socket,const char* username,const char* password)
 	:c_Action(HIGH,CREATED),
-	m_cSocket(socket)
+	m_cSocket(socket),
+	m_BuddyList(NULL)
 {
 	m_sUsername = strdup(username);
 	m_sPassword = strdup(password);
@@ -135,14 +139,14 @@ void c_Login::Execute()
 {
 	CreateSendFirstAuthPacket();
 	RecvAndSendAuthResponse();
-	GetBuddyList();
+	SetBuddyList();
 	m_iStatus = DONE;
 };
 
-void c_Login::GetBuddyList()
+void c_Login::SetBuddyList()
 {
-	c_YPacket list_pack;
-	c_BuddyList *buddylist = new c_BuddyList();
+	c_YPacket list_pack; 
+	m_BuddyList = new c_BuddyList();
 	//read buddies
 	do
 	{
@@ -150,21 +154,10 @@ void c_Login::GetBuddyList()
 		m_cSocket->Read(list_pack);	
 		if(list_pack.GetService() == YAHOO_SERVICE_BUDDYLIST)
 		{
-			buddylist->GetBuddyList(list_pack);
+			m_BuddyList->GetBuddyList(list_pack);
 		}
 	}
 	while(list_pack.GetService() == YAHOO_SERVICE_BUDDYLIST || list_pack.GetService() == YAHOO_SERVICE_LIST);	
-	//get online buddies
-	if(list_pack.GetService() == YAHOO_SERVICE_BUDDYLIST_ONLINE)
-	{
-		//TODO
-		//debug --- print the list
-		for(unsigned int i=0;i<buddylist->GetSize();i++)
-		{
-			cout<<buddylist->GetBuddy(i)->GetName()<<"\n";
-		};
-	}
-
 };
 
 /*this wrapps arround the libyahoo2 auth function;

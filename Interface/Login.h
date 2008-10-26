@@ -31,6 +31,9 @@ private:
     QLabel *UserLabel;
     QPushButton *LoginButton;
 
+private slots:
+	void Login();
+
 public:
 	LoginDialog(QWidget *parent = 0);
 

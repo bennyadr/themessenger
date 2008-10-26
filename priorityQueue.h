@@ -16,7 +16,7 @@ public:
 	Queue();	
 	~Queue();
 	void Insert(T &Data);
-	T& Remove();
+	T Remove();
 	
 	/*****************************************/
 	bool isEmpty()const
@@ -46,6 +46,17 @@ public:
 	
 	void Insert(c_Action *job);
 	c_Action* Remove();
+
+	bool isEmpty()const
+	{
+		if(m_Queue)
+		{
+			return m_Queue->isEmpty();	
+		}
+		else 
+			return true;
+	};
+
 
 private:
 	Queue <c_Action*> *m_Queue;
