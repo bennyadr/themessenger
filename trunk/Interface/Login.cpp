@@ -8,7 +8,7 @@
 #include <QApplication>
 
 #include "Login.h"
-
+#include "../yinstance.h"
 
 LoginDialog::LoginDialog(QWidget *parent)
 {
@@ -51,6 +51,14 @@ LoginDialog::LoginDialog(QWidget *parent)
     KeepRadioButton->setText(QApplication::translate("LoginDialog", "Keep login settings", 0, QApplication::UnicodeUTF8));
     UserLabel->setText(QApplication::translate("LoginDialog", "Username:", 0, QApplication::UnicodeUTF8));
     LoginButton->setText(QApplication::translate("LoginDialog", "Login", 0, QApplication::UnicodeUTF8));
+	connect(LoginButton,SIGNAL(clicked()),this,SLOT(LoginDialog()));
+};
+
+void LoginDialog::Login()
+{
+	c_YInstance* yinstance = c_YInstance::GetInstance();	
+	yinstance->run();
+	close();
 };
 
 

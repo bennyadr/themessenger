@@ -1,5 +1,8 @@
 #include "BuddyList.h"
 #include <assert.h>
+#include <algorithm>
+#include "buddy.h"
+
 
 void c_BuddyList::GetBuddyList(const c_YPacket& recvpack)
 {
@@ -43,10 +46,52 @@ void c_BuddyList::GetBuddyList(const c_YPacket& recvpack)
 
 };
 
-//qsort
-void c_BuddyList::Sort(SortBy sortmethod)const
+void c_BuddyList::GetOnlineBuddies(const c_YPacket& recvpack)
 {
-	//TODO
+	if(recvpack.GetService() == YAHOO_SERVICE_BUDDYLIST)
+	{
+		unsigned int iterator = 0;
+		string name = "";
+		string message_status = "";
+		yahoo_status status = YAHOO_STATUS_AVAILABLE;
+		unsigned int iddle_time = 0;
+		while(iterator<recvpack.GetDataSize())	
+		{
+			unsigned char key[100];
+			unsigned char value[1024];
+			memset(key,0,100*sizeof(unsigned char));
+			memset(value,0,1024*sizeof(unsigned char));
+			iterator = recvpack.GetDataPair(key,value);
+			int ikey =atoi(reinterpret_cast<const char*>(key));
+			switch(ikey)
+			{
+				case 7:
+					if(name != "")  //add previously read buddy with status in the list
+					{
+						AddStatus(name,message_status,status,iddle_time);
+					}
+					//username
+					name = reinterpret_cast<const char*>(value); 
+					break;
+				case 10:
+					if(name == "")
+						break;
+					status = (yahoo_status)atoi(reinterpret_cast<const char*>(value));	
+					break;
+				case 19:
+					if(name == "")
+						break;
+					message_status = reinterpret_cast<const char*>(value);
+					break;
+				case 137:
+					//iddle time
+					if(name == "")
+						break;
+					iddle_time = atoi(reinterpret_cast<const char*>(value));
+					break;
+			}
+		}
+	}
 };
 
 void c_BuddyList::AddGroup(const char* group)
@@ -66,6 +111,21 @@ void c_BuddyList::AddBuddy(const char* buddy_name)
 	m_aBuddies.insert(m_aBuddies.end(),buddy);
 	m_iNumber++;
 	assert(m_aBuddies.size() == m_iNumber);
+};
+
+void c_BuddyList::AddStatus(const string name,const string status_message,yahoo_status status,unsigned int iddle_time = 0)
+{
+	for(unsigned int i=0;i<GetSize();i++)
+	{
+		if(m_aBuddies[i]->GetName() == name)
+		{
+			m_aBuddies[i]->SetStatus(status_message);
+			m_aBuddies[i]->SetYStatus(status);
+			m_aBuddies[i]->SetOnline(true);
+			m_aBuddies[i]->SetIddleTime(iddle_time);
+			break;
+		}
+	}
 };
 
 

@@ -7,14 +7,6 @@
 
 using namespace std;
 
-enum SortBy
-{
-	ByName = 0,
-	ByTalkedRecently,
-	ByStatus,
-	ByJoinedRecently
-};
-
 class c_BuddyList
 {
 public:
@@ -33,7 +25,7 @@ public:
 
 	void GetBuddyList(const c_YPacket& recvpack);
 
-	void Sort(SortBy sortmethod)const;
+	void GetOnlineBuddies(const c_YPacket& recvpack);
 
 	c_Buddy* GetBuddy(unsigned int order)const
 	{
@@ -48,12 +40,12 @@ public:
 private:
 	void AddGroup(const char* group);
 	void AddBuddy(const char* buddy_name);	
+	void AddStatus(const string buddy,const string status_message,yahoo_status status,unsigned int iddletime);
 
 private:
 	vector<c_Buddy*> m_aBuddies;
 	unsigned int m_iNumber;
 	char* m_sAddedGroup;
-
 };
 
 

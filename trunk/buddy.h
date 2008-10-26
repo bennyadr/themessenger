@@ -10,25 +10,27 @@ class c_Buddy
 {
 public:
 
-	c_Buddy(const string &name,const string& group,const unsigned int order,const string status = "",
+	c_Buddy(const string name,const string group,const unsigned int order,const string status = "",
 			yahoo_status ystatus = YAHOO_STATUS_OFFLINE)
 		:m_iOrder(order),
 		m_sGroup(group),
 		m_sName(name),
 		m_sStatus(status),
-		m_iYStatus(ystatus)
+		m_iYStatus(ystatus),
+		m_bisOnline(false),
+		m_iIdleTime(0)
 	{		};
 
 	~c_Buddy()	{		};
 
 
-	void SetName(const string& name)
+	void SetName(const string name)
 	{	m_sName = name;	  };
 
 	const string& GetName()const
 	{	return m_sName;	  };
 
-	void SetGroup(const string& group)
+	void SetGroup(const string group)
 	{	m_sGroup = group;	};
 
 	const string& GetGroup()const
@@ -41,11 +43,25 @@ public:
 	{	m_iOrder = order;	};
 
 	void SetYStatus(yahoo_status  status)
-	{	m_iYStatus = status;	  };
+	{	m_iYStatus = status;  };
+
+	void SetStatus(const string status)
+	{	m_sStatus = status;   };
 
 	yahoo_status GetYahooStatus()const
 	{	return m_iYStatus;	};
 
+	void SetOnline(const bool online)
+	{	m_bisOnline = online;	};
+
+	bool isOnline()const
+	{	return m_bisOnline;	  };
+
+	void SetIddleTime(unsigned int iddle_time)
+	{	m_iIdleTime = iddle_time;	};
+
+	unsigned int GetIddleTime()const
+	{	return m_iIdleTime;	  };
 
 private:
 	unsigned int m_iOrder;
@@ -55,7 +71,6 @@ private:
 	yahoo_status m_iYStatus;
 	bool m_bisOnline;
 	unsigned int m_iIdleTime;
-
 };
 #endif
 

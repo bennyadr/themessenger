@@ -44,6 +44,9 @@ public:
 	virtual	void Connect();
 	void Disconnect();
 
+	void MakeBlocking();
+	void MakeNonBlocking();
+
 	void Write(const c_Message& message );
 	void Send(const c_Message& ,const int flag);
 
@@ -55,10 +58,15 @@ public:
 	void Read(c_YPacket& packet);
 	void Recv(c_YPacket& packet,const int flag);
 
+	bool ReadNonBlocking(c_YPacket& packet);
+
 	bool is_Opened()const
 				{ return m_bStatus;	};
+	
 
-
+private:
+	bool isAvailableData()const;
+	void Select();
 
 private:
 	unsigned int m_iPort;
@@ -95,12 +103,10 @@ public:
 	{
 		if(m_sErrorMessage)
 		{	
-			cout<<"bunica\n";
 			cout<<"Error message :: "<<*m_sUserMessage<<*m_sErrorMessage<<endl;
 		}
 		else
 		{
-			cout<<"bunica2\n";
 			cout<<"Error message :: "<<*m_sUserMessage;
 		}
 	};

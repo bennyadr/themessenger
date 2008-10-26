@@ -66,6 +66,25 @@ void c_Socket::Disconnect()
 
 /*****************************************/
 
+void c_Socket::MakeBlocking()
+{
+	int O_BLOCK = ~ O_NONBLOCK;
+	int ret = fcntl(m_iSocketFd,F_SETFL,O_BLOCK);
+	if(ret == -1)
+		throw c_Error_Socket(ret,"error makeing socket blocking : ");
+};
+
+/*****************************************/
+
+void c_Socket::MakeNonBlocking()
+{
+	int ret = fcntl(m_iSocketFd,F_SETFL,O_NONBLOCK);
+	if(ret == -1)
+		throw c_Error_Socket(ret,"error makeing socket non-blocking : ");
+};
+
+/*****************************************/
+
 void c_Socket::Write(const c_Message& data)
 {
 	int ret_write = write(m_iSocketFd,data.GetBuffer(),data.GetSize());
@@ -163,6 +182,40 @@ void c_Socket::Read(c_YPacket& packet)
 	}
 	assert(size==0);
 	packet.Deserialize(reinterpret_cast<unsigned char*>(buffer_1));	
-}
+};
+
+/*****************************************/
+
+bool c_Socket::ReadNonBlocking(c_YPacket& packet)
+{
+	unsigned char buffer[20];
+	int ret_read = read(m_iSocketFd,buffer,20);
+	if(ret_read < 0)
+	{
+		if(errno == EWOULDBLOCK)
+			return false;
+		else
+			throw c_Error_Socket(ret_read,"error reading from non-blocking socket : ");
+	};
+	if(0 != strncmp(reinterpret_cast<const char*>(buffer),"YMSG",4))
+	{
+		throw c_Error_Socket(1,"wrong yahoo packet");
+	}
+	unsigned short size = GetYPackSize(buffer);
+	char buffer_1[size+YAHOO_HEADER_SIZE];
+	memcpy(buffer_1,buffer,YAHOO_HEADER_SIZE);
+	int offset = YAHOO_HEADER_SIZE;
+	while(size>0)
+	{
+		ret_read = read(m_iSocketFd,(buffer_1+offset),size);
+		if(ret_read<0)
+			throw c_Error_Socket(ret_read,"error receiving data");
+		size -= ret_read;
+		offset += ret_read;
+	}
+	assert(size==0);
+	packet.Deserialize(reinterpret_cast<unsigned char*>(buffer_1));	
+	return true;
+};
 
 
