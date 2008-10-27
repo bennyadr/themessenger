@@ -4,7 +4,7 @@
 #include "buddy.h"
 
 
-void c_BuddyList::GetBuddyList(const c_YPacket& recvpack)
+void c_BuddyList::GetBuddyList(c_YPacket& recvpack)
 {
 	if(recvpack.GetService() == YAHOO_SERVICE_BUDDYLIST)
 	{
@@ -43,7 +43,6 @@ void c_BuddyList::GetBuddyList(const c_YPacket& recvpack)
 	}
 	else
 		throw c_Error_YPacket("GetBuddyList :: invalid buddy packet");
-
 };
 
 void c_BuddyList::GetOnlineBuddies(const c_YPacket& recvpack)

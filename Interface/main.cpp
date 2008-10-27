@@ -1,6 +1,5 @@
 #include <QApplication>
 #include "FeelerGui.h"
-#include "../yinstance.h"
 
 int main(int argc , char** argv)
 {

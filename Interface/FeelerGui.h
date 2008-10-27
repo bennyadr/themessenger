@@ -48,10 +48,6 @@ private:
 
 	//Login modal window
 	LoginDialog *LoginD;
-
-
-	//settings dialog (TODO)
-
 };
 
 
