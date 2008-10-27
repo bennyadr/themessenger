@@ -23,7 +23,7 @@ public:
 		}
 	};
 
-	void GetBuddyList(const c_YPacket& recvpack);
+	void GetBuddyList(c_YPacket& recvpack);
 
 	void GetOnlineBuddies(const c_YPacket& recvpack);
 

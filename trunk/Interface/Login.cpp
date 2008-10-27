@@ -57,7 +57,7 @@ LoginDialog::LoginDialog(QWidget *parent)
 void LoginDialog::Login()
 {
 	c_YInstance* yinstance = c_YInstance::GetInstance();	
-	yinstance->run();
+	yinstance->Run();
 	close();
 };
 
