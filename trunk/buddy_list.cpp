@@ -1,4 +1,4 @@
-#include "BuddyList.h"
+#include "buddy_list.h"
 #include <assert.h>
 #include <algorithm>
 #include "buddy.h"

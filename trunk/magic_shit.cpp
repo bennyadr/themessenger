@@ -1,6 +1,4 @@
 #include "magic_shit.h"
-#include "md5.h"
-#include "sha.h"
 #include <string.h>
 #include <stdlib.h>
 

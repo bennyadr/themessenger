@@ -10,6 +10,8 @@
 #ifndef LOGIN_H
 #define LOGIN_H
 
+#include <QDialog>
+
 class QGroupBox;
 class QLineEdit;
 class QLabel;
@@ -20,6 +22,8 @@ class QDialog;
 
 class LoginDialog : public QDialog
 {
+	Q_OBJECT
+
 private:
 
 	QGroupBox *LoginGroupBox;
@@ -32,7 +36,7 @@ private:
     QPushButton *LoginButton;
 
 private slots:
-	void Login();
+	void LoginSlot();
 
 public:
 	LoginDialog(QWidget *parent = 0);

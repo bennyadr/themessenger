@@ -1,3 +1,9 @@
+#ifndef _MAGIC_SHIT
+#define _MAGIC_SHIT  
+
+#include "md5.h"
+#include "sha.h"
+
 #define IDENT  1 /* identify function */
 #define XOR    2 /* xor with arg1 */
 #define MULADD 3 /* multipy by arg1 then add arg2 */
@@ -24,3 +30,7 @@ struct yahoo_fn
 int yahoo_xfrm( int table, int depth, int seed );
 char *yahoo_crypt(char *key, char *salt);
 void to_y64(unsigned char *out, const unsigned char *in, int inlen);
+
+
+#endif
+

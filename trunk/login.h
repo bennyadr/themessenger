@@ -7,7 +7,7 @@
 #include "ypacket.h"
 #include "action.h"
 #include "socket.h"
-#include "BuddyList.h"
+#include "buddy_list.h"
 
 using namespace Action;
 using namespace YPacket;
