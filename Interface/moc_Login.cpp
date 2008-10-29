@@ -1,15 +1,15 @@
 /****************************************************************************
-** Meta object code from reading C++ file 'FeelerGui.h'
+** Meta object code from reading C++ file 'Login.h'
 **
-** Created: Tue Oct 28 23:29:17 2008
+** Created: Tue Oct 28 23:29:18 2008
 **      by: The Qt Meta Object Compiler version 59 (Qt 4.4.0)
 **
 ** WARNING! All changes made in this file will be lost!
 *****************************************************************************/
 
-#include "FeelerGui.h"
+#include "Login.h"
 #if !defined(Q_MOC_OUTPUT_REVISION)
-#error "The header file 'FeelerGui.h' doesn't include <QObject>."
+#error "The header file 'Login.h' doesn't include <QObject>."
 #elif Q_MOC_OUTPUT_REVISION != 59
 #error "This file was generated using the moc from 4.4.0. It"
 #error "cannot be used with the include files from this version of Qt."
@@ -17,7 +17,7 @@
 #endif
 
 QT_BEGIN_MOC_NAMESPACE
-static const uint qt_meta_data_FeelerGui[] = {
+static const uint qt_meta_data_LoginDialog[] = {
 
  // content:
        1,       // revision
@@ -28,41 +28,41 @@ static const uint qt_meta_data_FeelerGui[] = {
        0,    0, // enums/sets
 
  // slots: signature, parameters, type, tag, flags
-      11,   10,   10,   10, 0x08,
+      13,   12,   12,   12, 0x08,
 
        0        // eod
 };
 
-static const char qt_meta_stringdata_FeelerGui[] = {
-    "FeelerGui\0\0showBudies()\0"
+static const char qt_meta_stringdata_LoginDialog[] = {
+    "LoginDialog\0\0LoginSlot()\0"
 };
 
-const QMetaObject FeelerGui::staticMetaObject = {
-    { &QDialog::staticMetaObject, qt_meta_stringdata_FeelerGui,
-      qt_meta_data_FeelerGui, 0 }
+const QMetaObject LoginDialog::staticMetaObject = {
+    { &QDialog::staticMetaObject, qt_meta_stringdata_LoginDialog,
+      qt_meta_data_LoginDialog, 0 }
 };
 
-const QMetaObject *FeelerGui::metaObject() const
+const QMetaObject *LoginDialog::metaObject() const
 {
     return &staticMetaObject;
 }
 
-void *FeelerGui::qt_metacast(const char *_clname)
+void *LoginDialog::qt_metacast(const char *_clname)
 {
     if (!_clname) return 0;
-    if (!strcmp(_clname, qt_meta_stringdata_FeelerGui))
-	return static_cast<void*>(const_cast< FeelerGui*>(this));
+    if (!strcmp(_clname, qt_meta_stringdata_LoginDialog))
+	return static_cast<void*>(const_cast< LoginDialog*>(this));
     return QDialog::qt_metacast(_clname);
 }
 
-int FeelerGui::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
+int LoginDialog::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
 {
     _id = QDialog::qt_metacall(_c, _id, _a);
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
         switch (_id) {
-        case 0: showBudies(); break;
+        case 0: LoginSlot(); break;
         }
         _id -= 1;
     }

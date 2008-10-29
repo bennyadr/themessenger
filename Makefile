@@ -1,7 +1,7 @@
 CFLAGS=-c -Wall
 CPPFLAGS = -g -c -Wall
 CC=g++
-SOURCES= sha.cpp md5.cpp magic_shit.cpp ypacket.cpp socket.cpp BuddyList.cpp login.cpp thread.cpp 
+SOURCES= sha.cpp md5.cpp magic_shit.cpp ypacket.cpp socket.cpp buddy_list.cpp login.cpp priorityQueue.cpp yinstance.cpp 
 OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=ymess
 

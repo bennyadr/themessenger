@@ -1,13 +1,6 @@
 #include "login.h"
 #include "bits.h"
-
-extern "C"
-{
-#include "md5.h"
-#include "sha.h"
 #include "magic_shit.h"
-}
-
 
 c_Login::c_Login(c_Socket *socket,const char* username,const char* password)
 	:c_Action(HIGH,CREATED),

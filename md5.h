@@ -40,7 +40,7 @@
  */
 
 #ifndef md5_INCLUDED
-#  define md5_INCLUDED
+#define md5_INCLUDED
 
 /*
  * This code has some adaptations for the Ghostscript environment, but it
