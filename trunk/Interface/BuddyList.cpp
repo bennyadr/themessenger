@@ -1,9 +1,8 @@
 #include <QApplication>
-#include <QListWidget>
 #include <QComboBox>
 
 #include "BuddyList.h"
-
+#include "yinstance.h"
 
 BuddyListWidget::BuddyListWidget(QWidget *parent)
 	:QWidget(parent)
@@ -19,7 +18,46 @@ BuddyListWidget::BuddyListWidget(QWidget *parent)
     StatusCB->setGeometry(QRect(10, 10, 231, 22));
 
     this->setWindowTitle(QApplication::translate("BuddyListWidget", "Form", 0, QApplication::UnicodeUTF8));
+	c_YInstance* yinstance = c_YInstance::GetInstance();	
+	connect(yinstance,SIGNAL(SetBuddyList(c_BuddyList *)),this,SLOT(ShowBuddies(c_BuddyList*)));
+	connect(yinstance,SIGNAL(SetOnlineBuddies(c_BuddyList *)),this,SLOT(ShowOnline(c_BuddyList*)));
+	connect(BuddyListLW,SIGNAL(itemDoubleClicked(QListWidgetItem*)),parent,SLOT(StartTalk(QListWidgetItem*)));
     Q_UNUSED(this);
 };
 
+void BuddyListWidget::ShowBuddies(c_BuddyList* buddylist)
+{
+	QString group ="";
+	QColor color(20,100,200,50);				//blue 
+	QFont font( "Newyork", 14 );
+	for(unsigned int iterator = 0;iterator < buddylist->c_BuddyList::GetSize();iterator++)
+	{
+		if(buddylist->GetBuddy(iterator))
+		{
+			if(group == QString::fromStdString(buddylist->GetBuddy(iterator)->GetGroup()))
+			{
+				BuddyListLW->addItem(QString::fromStdString(buddylist->GetBuddy(iterator)->GetName()));
+			}
+			else
+			{
+				group = QString::fromStdString(buddylist->GetBuddy(iterator)->GetGroup());
+				BuddyListLW->addItem(group);
+				BuddyListLW->item(iterator)->setBackgroundColor(color);
+				BuddyListLW->item(iterator)->setFont(font);
+			}
+		}
+	}
 
+};
+
+void BuddyListWidget::ShowOnline(c_BuddyList* buddylist)
+{
+	QColor color(20,240,20,50);
+	for(unsigned int iterator = 0;iterator < buddylist->c_BuddyList::GetSize();iterator++)
+	{
+		if(buddylist->GetBuddy(iterator)->c_Buddy::isOnline())
+		{
+			BuddyListLW->item(iterator)->setBackgroundColor(color);
+		}
+	}
+};

@@ -45,8 +45,62 @@ c_YPacket::c_YPacket()
 
 c_YPacket::~c_YPacket()
 {
-	delete [] m_ypack.ydata;
+	if(m_ypack.ydata != NULL)
+		delete [] m_ypack.ydata;
+};
 
+/*****************************************/
+
+c_YPacket::c_YPacket(const c_YPacket& ypack)
+{
+	if(m_sBuffer==NULL)
+		c_Message::c_Message(ypack.GetDataSize()+YAHOO_HEADER_SIZE);
+	else
+	{
+		delete[] m_sBuffer;
+		c_Message::c_Message(ypack.GetDataSize()+YAHOO_HEADER_SIZE);
+	}
+	m_ypack.size = ypack.GetDataSize();
+	m_ypack.service = ypack.GetService();	
+	m_ypack.status = ypack.GetStatus();
+	m_ypack.id = ypack.GetId();
+	if(m_ypack.ydata == NULL)
+		m_ypack.ydata = new unsigned char [m_ypack.size];
+	else
+	{
+		delete [] m_ypack.ydata;
+		m_ypack.ydata = new unsigned char [m_ypack.size];
+	}
+	memcpy(m_ypack.ydata,ypack.GetData(),m_ypack.size);
+};
+
+/***************************************/
+
+c_YPacket& c_YPacket::operator=(const c_YPacket& ypack)
+{
+	if(this!=&ypack)
+	{
+		if(m_sBuffer==NULL)
+			c_Message::c_Message(ypack.GetDataSize()+YAHOO_HEADER_SIZE);
+		else
+		{
+			delete[] m_sBuffer;
+			c_Message::c_Message(ypack.GetDataSize()+YAHOO_HEADER_SIZE);
+		}
+		m_ypack.size = ypack.GetDataSize();
+		m_ypack.service = ypack.GetService();	
+		m_ypack.status = ypack.GetStatus();
+		m_ypack.id = ypack.GetId();
+		if(m_ypack.ydata == NULL)
+			m_ypack.ydata = new unsigned char [m_ypack.size];
+		else
+		{
+			delete [] m_ypack.ydata;
+			m_ypack.ydata = new unsigned char [m_ypack.size];
+		}
+		memcpy(m_ypack.ydata,ypack.GetData(),m_ypack.size);
+	}
+	return *this; 
 };
 
 /*****************************************
@@ -76,7 +130,7 @@ unsigned int c_YPacket::GetDataPair(unsigned char* const key,unsigned char* cons
 	bool foundvalue = false;
 	unsigned int i = 0;
 	unsigned int j = 0;
-	while( m_iByteIterator != m_ypack.size && !foundvalue)
+	while( m_iByteIterator < (m_ypack.size-1) && !foundvalue)
 	{
 		if(Bits::GetUShortInt(m_ypack.ydata+m_iByteIterator) == YAHOO_STD_SEPARATOR)
 		{
@@ -164,6 +218,7 @@ void c_YPacket::Clear()
 	m_ypack.status = 0;
 	m_ypack.id = 0;
 	delete [] m_ypack.ydata;
-
+	m_ypack.ydata = NULL;
 };
+
 

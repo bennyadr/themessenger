@@ -5,10 +5,13 @@
 #include <QTextBrowser>
 #include <QLineEdit>
 #include <QCommandLinkButton>
+#include <QObjectCleanupHandler>
 
 #include "FeelerGui.h"
 #include "BuddyList.h"
 #include "Login.h"
+
+#include "yinstance.h"
 
 
 FeelerGui::FeelerGui(QWidget *parent)
@@ -37,6 +40,7 @@ FeelerGui::FeelerGui(QWidget *parent)
     TextBrowser = new QTextBrowser(tab);
     TextBrowser->setObjectName(QString::fromUtf8("TextBrowser"));
     TextBrowser->setGeometry(QRect(10, 10, 301, 271));
+	connect(this,SIGNAL(PrintText(const QString&)),TextBrowser,SLOT(append(const QString&)))
     TextEdit = new QLineEdit(tab);
     TextEdit->setObjectName(QString::fromUtf8("TextEdit"));
     TextEdit->setGeometry(QRect(10, 290, 301, 21));
@@ -94,4 +98,55 @@ void FeelerGui::showBudies()
 	}
 };
 
+bool FeelerGui::close()
+{
+	c_YInstance* yinstance = c_YInstance::GetInstance();
+	yinstance->stop();
+	yinstance->wait();
+	QWidget::close();	
+	return true;
+};
+
+void FeelerGui::StartTalk(QListWidgetItem *Item)
+{
+	if(Item != NULL )
+	{
+		for(int iterator = 0;iterator<TalkWidget->count();iterator++)
+		{
+			if(Item->text() == TalkWidget->tabText(iterator))
+			{
+				TalkWidget->setCurrentIndex(iterator);
+				return;
+			}
+		}
+		QWidget *tab = new QWidget();
+   		tab->setObjectName(QString::fromUtf8("tab"));
+ 		tab->setGeometry(QRect(0, 0, 327, 327));
+		QPushButton *closebutton = new QPushButton("X",tab);
+		closebutton->setGeometry(QRect(313,1,13,13));
+		connect(closebutton,SIGNAL(clicked()),this,SLOT(CloseTalk()));
+  		QTextBrowser *TextBrowser = new QTextBrowser(tab);
+   		TextBrowser->setObjectName(QString::fromUtf8("TextBrowser"));
+   		TextBrowser->setGeometry(QRect(10, 10, 301, 271));
+   		QLineEdit *TextEdit = new QLineEdit(tab);
+   		TextEdit->setObjectName(QString::fromUtf8("TextEdit"));
+   		TextEdit->setGeometry(QRect(10, 290, 301, 21));
+   	 	TalkWidget->addTab(tab, Item->text());
+		TalkWidget->setCurrentWidget(tab);
+	}
+};
+
+void FeelerGui::CloseTalk()
+{
+	QWidget *currentwidget = TalkWidget->currentWidget();
+	TalkWidget->removeTab(TalkWidget->indexOf(currentwidget));
+	cleaner->add(currentwidget);
+	cleaner->deleteLater();
+};
+
+void FeelerGui::SendMessage(QString& from,QString& text)
+{
+	QString send_text = from + ":" + text + "\n";
+	emit PrintText(send_text);
+};
 

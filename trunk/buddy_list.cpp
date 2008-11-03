@@ -9,7 +9,7 @@ void c_BuddyList::GetBuddyList(c_YPacket& recvpack)
 	if(recvpack.GetService() == YAHOO_SERVICE_BUDDYLIST)
 	{
 		unsigned int iterator = 0;
-		while(iterator<recvpack.GetDataSize())	
+		while(iterator<recvpack.GetDataSize()-1)	
 		{
 			unsigned char key[100];
 			unsigned char value[1024];
@@ -47,7 +47,7 @@ void c_BuddyList::GetBuddyList(c_YPacket& recvpack)
 
 void c_BuddyList::GetOnlineBuddies(const c_YPacket& recvpack)
 {
-	if(recvpack.GetService() == YAHOO_SERVICE_BUDDYLIST)
+	if(recvpack.GetService() == YAHOO_SERVICE_BUDDYLIST_ONLINE)
 	{
 		unsigned int iterator = 0;
 		string name = "";

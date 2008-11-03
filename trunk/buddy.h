@@ -27,13 +27,13 @@ public:
 	void SetName(const string name)
 	{	m_sName = name;	  };
 
-	const string& GetName()const
+	const string GetName()const
 	{	return m_sName;	  };
 
 	void SetGroup(const string group)
 	{	m_sGroup = group;	};
 
-	const string& GetGroup()const
+	const string GetGroup()const
 	{	return m_sGroup;	};
 
 	unsigned int GetOrder()const

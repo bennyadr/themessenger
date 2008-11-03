@@ -5,13 +5,16 @@ c_YInstance::c_YInstance()
 	:m_username(NULL),
 	m_password(NULL),
 	m_PQueue(NULL),
-	m_Buddy_list(NULL)
+	m_Buddy_list(NULL),
+	m_stopped(false)
 {
 		m_PQueue = new PriorityQueue(3);
 };
 
 c_YInstance::~c_YInstance()
 {
+	stop();
+	wait();
 	delete m_username;
 	delete m_password;
 	delete m_Buddy_list;
@@ -22,43 +25,59 @@ void c_YInstance::run()
 {
 	try
 	{
-		cout<<"kkt";
 		m_socket.Connect();	
-		c_Login login(&m_socket,m_username->c_str(),m_password->c_str());
-	/*	login.Execute();
-		if(login.GetStatus() == DONE)
+		c_Login *login = new c_Login(&m_socket,m_username->c_str(),m_password->c_str());
+	   	login->Execute();
+		c_YPacket y_pack; 
+		if(login->GetStatus() == DONE)
 		{
 			m_bConnected = true;			
-			m_Buddy_list = login.GetBuddyList(); 
+			m_Buddy_list = login->GetBuddyList(); 
+			emit SetBuddyList(m_Buddy_list);
+			y_pack = login->GetLeftPack();
+			//get online buddies
+			if(y_pack.GetService() == YAHOO_SERVICE_BUDDYLIST_ONLINE)
+			{
+				m_Buddy_list->GetOnlineBuddies(y_pack);
+				emit SetOnlineBuddies(m_Buddy_list);
+			}
+			m_socket.MakeNonBlocking();
 		}
-		
-		/*while(true)			
+		else
 		{
+			delete login;
+			return;
+		}
+
+		delete login;
+	}
+	catch()
+		while(!m_stopped)			
+		{
+				
+			//process incoming messages from the server
+			if(!m_socket.ReadNonBlocking(y_pack))
+				continue;
+
+			//get online buddies
+			if(y_pack.GetService() == YAHOO_SERVICE_BUDDYLIST_ONLINE)
+			{
+				m_Buddy_list->GetOnlineBuddies(y_pack);
+				emit SetOnlineBuddies(m_Buddy_list);
+			}
+			
 			//process user actions
 			//mutex here TODO
 			if(!m_PQueue->isEmpty())
 			{
 				c_Action* action = m_PQueue->Remove();
 				//mutex end
-			//	action.Execute();
+			//action.Execute();
 			}
 			//mutex here	
-			
-			//process incoming messages from the server
-			c_YPacket y_pack;
-			m_socket.MakeNonBlocking();
-			if(m_socket.ReadNonBlocking(y_pack));
-				break;
 
-			//get online buddies
-			
-			if(y_pack.GetService() == YAHOO_SERVICE_BUDDYLIST_ONLINE)
-			{
-				m_Buddy_list->GetOnlineBuddies(y_pack);
-			}
-			//handle different packets --TODO
-	
-		}*/
+			y_pack.Clear();
+		}
 
 	}
 	catch(...)
@@ -87,3 +106,9 @@ c_YInstance* c_YInstance::GetInstance()
 	static c_YInstance instance;
 	return &instance;
 };
+
+void c_YInstance::stop()
+{
+	m_stopped = true;
+};
+

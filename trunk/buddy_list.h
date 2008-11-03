@@ -17,7 +17,7 @@ public:
 
 	~c_BuddyList()
 	{
-		for(unsigned int i=0;i<=m_aBuddies.size();i++)
+		for(unsigned int i=0;i<m_aBuddies.size();i++)
 		{
 			delete m_aBuddies[i];
 		}

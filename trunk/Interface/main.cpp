@@ -4,8 +4,8 @@
 int main(int argc , char** argv)
 {
 	QApplication mainApp(argc,argv);
-	FeelerGui *gui = new FeelerGui;
-	gui->show();
+	FeelerGui gui;
+	gui.show();
 	return mainApp.exec();
 };
 

@@ -22,6 +22,8 @@ class c_Login : public c_Action
 
 		c_BuddyList* GetBuddyList()const
 		{	return m_BuddyList;   };
+		const c_YPacket& GetLeftPack()const
+		{	return m_leftPack;	  };
 
 
 	private:
@@ -38,6 +40,7 @@ class c_Login : public c_Action
 		char* m_sUsername;
 		char* m_sPassword;
 		c_BuddyList* m_BuddyList;
+		c_YPacket m_leftPack;
 };
 
 

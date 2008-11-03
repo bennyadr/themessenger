@@ -119,6 +119,10 @@ class  c_YPacket : public c_Message
 		virtual ~c_YPacket();
 
 		void Clear();
+
+		c_YPacket(const c_YPacket& ypack);
+		c_YPacket& operator=(const c_YPacket& ypack);
+
 	
 		void SetData(unsigned char* data) 
 		{	m_ypack.ydata = reinterpret_cast<unsigned char*> (strdup( reinterpret_cast<const char*>(data) ));	};
