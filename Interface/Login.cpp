@@ -52,11 +52,18 @@ LoginDialog::LoginDialog(QWidget *parent)
     UserLabel->setText(QApplication::translate("LoginDialog", "Username:", 0, QApplication::UnicodeUTF8));
     LoginButton->setText(QApplication::translate("LoginDialog", "Login", 0, QApplication::UnicodeUTF8));
 	connect(LoginButton,SIGNAL(clicked()),this,SLOT(LoginSlot()));
+
+	//setting the tab order 
+	setTabOrder(UserEdit,PasswordEdit);	
+	Q_UNUSED(parent);
 };
 
 void LoginDialog::LoginSlot()
 {
+	if(UserEdit->text().isEmpty() || PasswordEdit->text().isEmpty())
+		return;
 	c_YInstance* yinstance = c_YInstance::GetInstance();	
+	yinstance->SetUserPass(UserEdit->text().toStdString(),PasswordEdit->text().toStdString());
 	yinstance->start();
 	close();
 };

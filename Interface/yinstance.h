@@ -17,12 +17,21 @@ class c_YInstance : public QThread
 	public:
 		static c_YInstance* GetInstance();
 		void run();
+		void stop();
 
 		void AddAction(c_Action *action);
 
 		void SetUserPass(string username,string password);
 
 		~c_YInstance();
+
+	signals:
+		void SetBuddyList(c_BuddyList *buddylist);
+		void SetOnlineBuddies(c_BuddyList *buddylist);
+		void BuddyQuited();
+		void BuddyJoined();
+		void NewMessage(string message);
+
 	private:
 		c_YInstance();
 		
@@ -38,6 +47,7 @@ class c_YInstance : public QThread
 		PriorityQueue *m_PQueue;
 		bool m_bConnected;
 		c_BuddyList *m_Buddy_list;
+		volatile bool m_stopped;
 };
 
 #endif

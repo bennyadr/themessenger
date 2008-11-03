@@ -1,0 +1,75 @@
+/****************************************************************************
+** Meta object code from reading C++ file 'BuddyList.h'
+**
+** Created: Sun Nov 2 23:55:01 2008
+**      by: The Qt Meta Object Compiler version 59 (Qt 4.4.0)
+**
+** WARNING! All changes made in this file will be lost!
+*****************************************************************************/
+
+#include "BuddyList.h"
+#if !defined(Q_MOC_OUTPUT_REVISION)
+#error "The header file 'BuddyList.h' doesn't include <QObject>."
+#elif Q_MOC_OUTPUT_REVISION != 59
+#error "This file was generated using the moc from 4.4.0. It"
+#error "cannot be used with the include files from this version of Qt."
+#error "(The moc has changed too much.)"
+#endif
+
+QT_BEGIN_MOC_NAMESPACE
+static const uint qt_meta_data_BuddyListWidget[] = {
+
+ // content:
+       1,       // revision
+       0,       // classname
+       0,    0, // classinfo
+       2,   10, // methods
+       0,    0, // properties
+       0,    0, // enums/sets
+
+ // slots: signature, parameters, type, tag, flags
+      27,   17,   16,   16, 0x08,
+      53,   17,   16,   16, 0x08,
+
+       0        // eod
+};
+
+static const char qt_meta_stringdata_BuddyListWidget[] = {
+    "BuddyListWidget\0\0buddylist\0"
+    "ShowBuddies(c_BuddyList*)\0"
+    "ShowOnline(c_BuddyList*)\0"
+};
+
+const QMetaObject BuddyListWidget::staticMetaObject = {
+    { &QWidget::staticMetaObject, qt_meta_stringdata_BuddyListWidget,
+      qt_meta_data_BuddyListWidget, 0 }
+};
+
+const QMetaObject *BuddyListWidget::metaObject() const
+{
+    return &staticMetaObject;
+}
+
+void *BuddyListWidget::qt_metacast(const char *_clname)
+{
+    if (!_clname) return 0;
+    if (!strcmp(_clname, qt_meta_stringdata_BuddyListWidget))
+	return static_cast<void*>(const_cast< BuddyListWidget*>(this));
+    return QWidget::qt_metacast(_clname);
+}
+
+int BuddyListWidget::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
+{
+    _id = QWidget::qt_metacall(_c, _id, _a);
+    if (_id < 0)
+        return _id;
+    if (_c == QMetaObject::InvokeMetaMethod) {
+        switch (_id) {
+        case 0: ShowBuddies((*reinterpret_cast< c_BuddyList*(*)>(_a[1]))); break;
+        case 1: ShowOnline((*reinterpret_cast< c_BuddyList*(*)>(_a[1]))); break;
+        }
+        _id -= 2;
+    }
+    return _id;
+}
+QT_END_MOC_NAMESPACE

@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'FeelerGui.h'
 **
-** Created: Tue Oct 28 23:29:17 2008
+** Created: Sun Nov 2 23:55:04 2008
 **      by: The Qt Meta Object Compiler version 59 (Qt 4.4.0)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,18 +23,21 @@ static const uint qt_meta_data_FeelerGui[] = {
        1,       // revision
        0,       // classname
        0,    0, // classinfo
-       1,   10, // methods
+       3,   10, // methods
        0,    0, // properties
        0,    0, // enums/sets
 
  // slots: signature, parameters, type, tag, flags
       11,   10,   10,   10, 0x08,
+      24,   10,   10,   10, 0x08,
+      41,   36,   10,   10, 0x0a,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_FeelerGui[] = {
-    "FeelerGui\0\0showBudies()\0"
+    "FeelerGui\0\0showBudies()\0CloseTalk()\0"
+    "Item\0StartTalk(QListWidgetItem*)\0"
 };
 
 const QMetaObject FeelerGui::staticMetaObject = {
@@ -63,8 +66,10 @@ int FeelerGui::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_c == QMetaObject::InvokeMetaMethod) {
         switch (_id) {
         case 0: showBudies(); break;
+        case 1: CloseTalk(); break;
+        case 2: StartTalk((*reinterpret_cast< QListWidgetItem*(*)>(_a[1]))); break;
         }
-        _id -= 1;
+        _id -= 3;
     }
     return _id;
 }

@@ -11,6 +11,7 @@
 #define FEELERGUI_H
 
 #include <QDialog>
+#include <QListWidgetItem>
 
 //forword declarations
 class QPushButton;
@@ -27,9 +28,18 @@ class FeelerGui : public QDialog
 
 public:
 	FeelerGui(QWidget *parent = 0);
+	virtual bool close(); 
 
 private slots:
 	void showBudies();
+	void CloseTalk();	
+
+public slots:
+	void StartTalk(QListWidgetItem *Item);
+	void SendMessage(QString &from,QString &text);
+
+private signals:
+	void PrintText(const QString&);
 
 private:
     QPushButton *SettingsButtton;
@@ -48,6 +58,9 @@ private:
 
 	//Login modal window
 	LoginDialog *LoginD;
+
+	//clean-up handler
+	QObjectCleanupHandler cleaner;
 };
 
 

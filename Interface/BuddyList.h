@@ -10,18 +10,28 @@
 #ifndef BUDDYLIST_H
 #define BUDDYLIST_H
 
-class QListWidget;
+
+#include <QObject>
+#include <QListWidget>
+#include "../buddy_list.h"
+
 class QComboBox;
 
 
 class BuddyListWidget : public QWidget
 {
+	Q_OBJECT
+
 public:
     BuddyListWidget(QWidget *parent = 0);
 
 private:
     QListWidget *BuddyListLW;
     QComboBox *StatusCB;
+
+private slots:
+	void ShowBuddies(c_BuddyList *buddylist);
+	void ShowOnline(c_BuddyList *buddylist);
 
 };
 

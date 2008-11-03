@@ -138,19 +138,18 @@ void c_Login::Execute()
 
 void c_Login::SetBuddyList()
 {
-	c_YPacket list_pack; 
 	m_BuddyList = new c_BuddyList();
 	//read buddies
 	do
 	{
-		list_pack.Clear();
-		m_cSocket->Read(list_pack);	
-		if(list_pack.GetService() == YAHOO_SERVICE_BUDDYLIST)
+		m_leftPack.Clear();
+		m_cSocket->Read(m_leftPack);	
+		if(m_leftPack.GetService() == YAHOO_SERVICE_BUDDYLIST)
 		{
-			m_BuddyList->GetBuddyList(list_pack);
+			m_BuddyList->GetBuddyList(m_leftPack);
 		}
 	}
-	while(list_pack.GetService() == YAHOO_SERVICE_BUDDYLIST || list_pack.GetService() == YAHOO_SERVICE_LIST);	
+	while(m_leftPack.GetService() == YAHOO_SERVICE_BUDDYLIST || m_leftPack.GetService() == YAHOO_SERVICE_LIST);	
 };
 
 /*this wrapps arround the libyahoo2 auth function;
@@ -167,12 +166,12 @@ void c_Login::MagicShit(unsigned char* seed,unsigned char *magic_shit,unsigned c
 	SHA_CTX            ctx1;
 	SHA_CTX            ctx2;
 
-	char *alphabet1 = "FBZDWAGHrJTLMNOPpRSKUVEXYChImkwQ";
-	char *alphabet2 = "F0E1D2C3B4A59687abcdefghijklmnop";
+	const char *alphabet1 = "FBZDWAGHrJTLMNOPpRSKUVEXYChImkwQ";
+	const char *alphabet2 = "F0E1D2C3B4A59687abcdefghijklmnop";
 
-	char *challenge_lookup = "qzec2tb3um1olpar8whx4dfgijknsvy5";
-	char *operand_lookup = "+|&%/*^-";
-	char *delimit_lookup = ",;";
+	const char *challenge_lookup = "qzec2tb3um1olpar8whx4dfgijknsvy5";
+	const char *operand_lookup = "+|&%/*^-";
+	const char *delimit_lookup = ",;";
 
 	unsigned char password_hash[26];
 	unsigned char crypt_hash[26];
