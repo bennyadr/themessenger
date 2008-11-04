@@ -52,7 +52,7 @@ void c_BuddyList::GetOnlineBuddies(const c_YPacket& recvpack)
 		string message_status = "";
 		yahoo_status status = YAHOO_STATUS_AVAILABLE;
 		unsigned int iddle_time = 0;
-		while(iterator<recvpack.GetDataSize())	
+		while(iterator<recvpack.GetDataSize()-1)	
 		{
 			unsigned char key[100];
 			unsigned char value[1024];
@@ -108,6 +108,7 @@ void c_BuddyList::AddGroup(const char* group)
 		throw allocerr;		
 	}
 	strncpy(m_sAddedGroup,group,size);
+	m_iGroup++;
 };
 
 void c_BuddyList::AddBuddy(const char* buddy_name)
@@ -116,6 +117,7 @@ void c_BuddyList::AddBuddy(const char* buddy_name)
 	const string groupname(m_sAddedGroup);
 
 	c_Buddy *buddy = new c_Buddy(name,groupname,m_iNumber);
+	buddy->SetGroupNum(m_iGroup);
 	m_aBuddies.insert(m_aBuddies.end(),buddy);
 	m_iNumber++;
 	assert(m_aBuddies.size() == m_iNumber);

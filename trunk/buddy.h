@@ -13,6 +13,7 @@ public:
 	c_Buddy(const string name,const string group,const unsigned int order,const string status = "",
 			yahoo_status ystatus = YAHOO_STATUS_OFFLINE)
 		:m_iOrder(order),
+		m_iGroup(0),
 		m_sGroup(group),
 		m_sName(name),
 		m_sStatus(status),
@@ -63,8 +64,15 @@ public:
 	unsigned int GetIddleTime()const
 	{	return m_iIdleTime;	  };
 
+	void SetGroupNum(unsigned int group)
+	{	m_iGroup = group;	};
+
+	unsigned int GetGroupNum()const
+	{	return m_iGroup;	};
+
 private:
 	unsigned int m_iOrder;
+	unsigned int m_iGroup;
 	string m_sGroup;
 	string m_sName;
 	string m_sStatus;
