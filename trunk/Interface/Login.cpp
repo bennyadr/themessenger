@@ -44,6 +44,7 @@ LoginDialog::LoginDialog(QWidget *parent)
     LoginButton->setGeometry(QRect(150, 100, 75, 24));
 
 	this->setModal(true);
+	//setAttribute(Qt::WA_DeleteOnClose);
 
     this->setWindowTitle(QApplication::translate("LoginDialog", "Login", 0, QApplication::UnicodeUTF8));
     LoginGroupBox->setTitle(QApplication::translate("LoginDialog", "Login", 0, QApplication::UnicodeUTF8));
@@ -65,6 +66,8 @@ void LoginDialog::LoginSlot()
 	c_YInstance* yinstance = c_YInstance::GetInstance();	
 	yinstance->SetUserPass(UserEdit->text().toStdString(),PasswordEdit->text().toStdString());
 	yinstance->start();
+	UserEdit->clear();
+	PasswordEdit->clear();
 	close();
 };
 

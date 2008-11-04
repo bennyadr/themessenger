@@ -32,6 +32,8 @@ using namespace unix_std_space;
 using namespace std;
 using namespace config;
 
+#define WARNING 1
+#define ERROR 2
 
 using namespace YPacket;
 
@@ -70,7 +72,7 @@ private:
 
 private:
 	unsigned int m_iPort;
-	string *m_sAddress ;
+	string m_sAddress ;
 	int m_iSocketFd;
 	sockaddr_in m_tAddress;
 	bool m_bStatus;
@@ -82,38 +84,51 @@ private:
 class c_Error_Socket
 {
 public:
-	c_Error_Socket(int ret,const string user_message)
-		:m_sErrorMessage(NULL),
-		 m_sUserMessage(NULL)
+	c_Error_Socket(int ret,const string user_message,int type = ERROR)
+		:m_iType(type)
 	{
-		m_sUserMessage = new string(user_message);
+		m_sUserMessage = string(user_message);
 		if(ret<0)
 		{
-			m_sErrorMessage = new string(strerror(errno));
+			m_sErrorMessage = string(strerror(errno));
+		}
+		else
+		{
+			m_sErrorMessage = "";
 		}
 	};
 
 	~c_Error_Socket()
 	{
-		delete(m_sErrorMessage);
-		delete(m_sUserMessage);
 	};
 	
 	void PrintError()
 	{
-		if(m_sErrorMessage)
+		if(m_sErrorMessage != "")
 		{	
-			cout<<"Error message :: "<<*m_sUserMessage<<*m_sErrorMessage<<endl;
+			cout<<"Error message :: "<<m_sUserMessage<<m_sErrorMessage<<endl;
 		}
 		else
 		{
-			cout<<"Error message :: "<<*m_sUserMessage;
+			cout<<"Error message :: "<<m_sUserMessage;
 		}
 	};
 
+	string& GetErrorMessage()
+	{
+		m_sUserMessage = m_sUserMessage + m_sErrorMessage + "\n";
+		return  m_sUserMessage;
+	};
+	
+	int GetType()const
+	{
+		return m_iType;
+	};
+
 private:
-	string *m_sErrorMessage;
-	string *m_sUserMessage;
+	int m_iType;
+	string m_sErrorMessage;
+	string m_sUserMessage;
 
 
 };

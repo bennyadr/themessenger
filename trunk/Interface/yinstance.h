@@ -6,6 +6,7 @@
 #include "../login.h"
 #include "../priorityQueue.h"
 #include <QThread>
+#include <QString>
 
 using namespace YPacket;
 
@@ -30,7 +31,7 @@ class c_YInstance : public QThread
 		void SetOnlineBuddies(c_BuddyList *buddylist);
 		void BuddyQuited();
 		void BuddyJoined();
-		void NewMessage(string message);
+		void SendText(QString from,QString text);
 
 	private:
 		c_YInstance();
@@ -41,7 +42,6 @@ class c_YInstance : public QThread
 		c_YInstance& operator=(const c_YInstance&);
 
 	private:
-		c_Socket m_socket;
 		string *m_username;
 		string *m_password;
 		PriorityQueue *m_PQueue;

@@ -169,27 +169,6 @@ class  c_YPacket : public c_Message
  
 };
 
-class c_Error_YPacket
-{
-public:
-	c_Error_YPacket(const string& user_message)
-	{
-		m_sUserMessage = new string(user_message);
-	};
-
-	~c_Error_YPacket()
-	{
-		delete(m_sUserMessage);
-	};
-	
-	void PrintError()
-	{
-		cout<<"Error message :: YPacket error"<<*m_sUserMessage<<endl;
-	};
-
-private:
-	string *m_sUserMessage;
-};
 
 };
 

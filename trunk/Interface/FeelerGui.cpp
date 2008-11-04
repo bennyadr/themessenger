@@ -5,7 +5,6 @@
 #include <QTextBrowser>
 #include <QLineEdit>
 #include <QCommandLinkButton>
-#include <QObjectCleanupHandler>
 
 #include "FeelerGui.h"
 #include "BuddyList.h"
@@ -40,7 +39,7 @@ FeelerGui::FeelerGui(QWidget *parent)
     TextBrowser = new QTextBrowser(tab);
     TextBrowser->setObjectName(QString::fromUtf8("TextBrowser"));
     TextBrowser->setGeometry(QRect(10, 10, 301, 271));
-	connect(this,SIGNAL(PrintText(const QString&)),TextBrowser,SLOT(append(const QString&)))
+	connect(this,SIGNAL(PrintText(const QString&)),TextBrowser,SLOT(append(const QString&)));
     TextEdit = new QLineEdit(tab);
     TextEdit->setObjectName(QString::fromUtf8("TextEdit"));
     TextEdit->setGeometry(QRect(10, 290, 301, 21));
@@ -61,7 +60,7 @@ FeelerGui::FeelerGui(QWidget *parent)
 
 
 	//Login modal window
-	LoginD = new LoginDialog();
+	LoginD = new LoginDialog(this);
 	LoginD->show();
 
 
@@ -78,6 +77,9 @@ FeelerGui::FeelerGui(QWidget *parent)
     Exit->setText(QApplication::translate("FeelerGui", "Exit", 0, QApplication::UnicodeUTF8));
     BuddyListButton->setText(QApplication::translate("FeelerGui", "BuddyList", 0, QApplication::UnicodeUTF8));
     TalkWidget->setTabText(TalkWidget->indexOf(tab), QApplication::translate("FeelerGui", "Stats", 0, QApplication::UnicodeUTF8));
+
+	c_YInstance* yinstance = c_YInstance::GetInstance();
+	connect(yinstance,SIGNAL(SendText(QString ,QString )),this,SLOT(SendMessage(QString ,QString )));
 
 };
 
@@ -140,12 +142,16 @@ void FeelerGui::CloseTalk()
 {
 	QWidget *currentwidget = TalkWidget->currentWidget();
 	TalkWidget->removeTab(TalkWidget->indexOf(currentwidget));
-	cleaner->add(currentwidget);
-	cleaner->deleteLater();
+	currentwidget->deleteLater();
 };
 
-void FeelerGui::SendMessage(QString& from,QString& text)
+void FeelerGui::SendMessage(QString from,QString text)
 {
+	if(from == "Error")
+	{
+		//Login modal window
+		LoginD->show();
+	}
 	QString send_text = from + ":" + text + "\n";
 	emit PrintText(send_text);
 };

@@ -12,6 +12,7 @@
 
 #include <QDialog>
 #include <QListWidgetItem>
+#include <QObjectCleanupHandler>
 
 //forword declarations
 class QPushButton;
@@ -36,9 +37,9 @@ private slots:
 
 public slots:
 	void StartTalk(QListWidgetItem *Item);
-	void SendMessage(QString &from,QString &text);
+	void SendMessage(QString from,QString text);
 
-private signals:
+signals:
 	void PrintText(const QString&);
 
 private:
@@ -59,8 +60,6 @@ private:
 	//Login modal window
 	LoginDialog *LoginD;
 
-	//clean-up handler
-	QObjectCleanupHandler cleaner;
 };
 
 

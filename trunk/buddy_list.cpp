@@ -41,8 +41,6 @@ void c_BuddyList::GetBuddyList(c_YPacket& recvpack)
 			}
 		}
 	}
-	else
-		throw c_Error_YPacket("GetBuddyList :: invalid buddy packet");
 };
 
 void c_BuddyList::GetOnlineBuddies(const c_YPacket& recvpack)
@@ -97,7 +95,18 @@ void c_BuddyList::AddGroup(const char* group)
 {
 	delete [] (m_sAddedGroup);	
 	int size = strlen(group)+1;
-	m_sAddedGroup = new char[size];
+	try
+	{
+		m_sAddedGroup = new char[size];
+	}
+	catch(bad_alloc &allocerr)
+	{
+		for(unsigned int i=0;i<m_aBuddies.size();i++)
+		{
+			delete m_aBuddies[i];
+		}
+		throw allocerr;		
+	}
 	strncpy(m_sAddedGroup,group,size);
 };
 

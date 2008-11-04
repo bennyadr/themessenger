@@ -27,10 +27,10 @@ class c_Login : public c_Action
 
 
 	private:
-		inline void CreateSendFirstAuthPacket();
-		inline void RecvAndSendAuthResponse();
-		inline void	CreateAuthResponse(c_YPacket& packet);
-		void SetBuddyList();
+		void CreateSendFirstAuthPacket();
+		bool RecvAndSendAuthResponse();
+		bool CreateAuthResponse(c_YPacket& packet);
+		bool SetBuddyList();
 		
 		//magic shit from pidgin
 		inline void MagicShit(unsigned char*,unsigned char *,unsigned char *);
