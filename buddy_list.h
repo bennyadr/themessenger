@@ -12,7 +12,8 @@ class c_BuddyList
 public:
 	c_BuddyList()
 		:m_iNumber(0),
-		m_sAddedGroup(NULL)
+		m_sAddedGroup(NULL),
+		m_iGroup(0)
 	{		};
 
 	~c_BuddyList()
@@ -46,6 +47,7 @@ private:
 	vector<c_Buddy*> m_aBuddies;
 	unsigned int m_iNumber;
 	char* m_sAddedGroup;
+	unsigned int m_iGroup;
 };
 
 

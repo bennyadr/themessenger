@@ -34,17 +34,14 @@ void BuddyListWidget::ShowBuddies(c_BuddyList* buddylist)
 	{
 		if(buddylist->GetBuddy(iterator))
 		{
-			if(group == QString::fromStdString(buddylist->GetBuddy(iterator)->GetGroup()))
-			{
-				BuddyListLW->addItem(QString::fromStdString(buddylist->GetBuddy(iterator)->GetName()));
-			}
-			else
+			if(group != QString::fromStdString(buddylist->GetBuddy(iterator)->GetGroup()))
 			{
 				group = QString::fromStdString(buddylist->GetBuddy(iterator)->GetGroup());
 				BuddyListLW->addItem(group);
 				BuddyListLW->item(iterator)->setBackgroundColor(color);
 				BuddyListLW->item(iterator)->setFont(font);
 			}
+			BuddyListLW->addItem(QString::fromStdString(buddylist->GetBuddy(iterator)->GetName()));
 		}
 	}
 
@@ -57,7 +54,7 @@ void BuddyListWidget::ShowOnline(c_BuddyList* buddylist)
 	{
 		if(buddylist->GetBuddy(iterator)->c_Buddy::isOnline())
 		{
-			BuddyListLW->item(iterator)->setBackgroundColor(color);
+			BuddyListLW->item(iterator + buddylist->GetBuddy(iterator)->GetGroupNum())->setBackgroundColor(color);
 		}
 	}
 };
