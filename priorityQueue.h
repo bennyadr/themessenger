@@ -2,6 +2,7 @@
 #define _PRIORITY_QUEUE_H
 
 #include <cstdio>
+#include <new>
 #include "action.h"
 
 using namespace Action;

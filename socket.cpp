@@ -6,10 +6,9 @@
 
 c_Socket::c_Socket()
 	:m_iPort(PORT),
-	m_sAddress(NULL),
  	m_iSocketFd(-1)
  {
- 	m_sAddress = new string(SERVER_ADDRESS);
+ 	m_sAddress = string(SERVER_ADDRESS);
 	memset( &m_tAddress , 0 , sizeof(m_tAddress) );
 	m_bStatus = false;
 };
@@ -18,7 +17,6 @@ c_Socket::c_Socket()
 
 c_Socket::~c_Socket()
 {
-	delete(m_sAddress);
 };
 
 /*****************************************/
@@ -33,13 +31,15 @@ void c_Socket::Connect()
 	m_tAddress.sin_addr.s_addr = INADDR_ANY;
 	m_tAddress.sin_port = htons ( m_iPort );
 
-        int on = 1;
-	setsockopt(m_iSocketFd,IPPROTO_TCP,SO_REUSEADDR, &on, sizeof(on));
+	struct timeval tv;
+	tv.tv_sec = 5;
+	tv.tv_usec = 0;
 
-	int status = inet_pton ( AF_INET, m_sAddress->c_str(), &m_tAddress.sin_addr );
+	int retsockopt = setsockopt(m_iSocketFd,SOL_SOCKET,SO_RCVTIMEO,(char*)&tv,sizeof(tv));
+	if(retsockopt < 0)
+		throw c_Error_Socket(retsockopt,"error setting socket timeout : ");
 
-
-
+	int status = inet_pton ( AF_INET, m_sAddress.c_str(), &m_tAddress.sin_addr );
 	if(status<0)
 		throw c_Error_Socket(status , "error creating network address structure : ");
 	if(status<1)

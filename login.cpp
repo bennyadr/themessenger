@@ -22,7 +22,7 @@ void c_Login::CreateSendFirstAuthPacket()
 {
 
 	unsigned int user_name_size = strlen(m_sUsername);
-	c_YPacket first_packet(15,YAHOO_SERVICE_AUTH,YAHOO_STATUS_AVAILABLE,0);
+	c_YPacket first_packet(5+user_name_size,YAHOO_SERVICE_AUTH,YAHOO_STATUS_AVAILABLE,0);
 	
 	unsigned char data[14];
 
@@ -43,21 +43,38 @@ void c_Login::CreateSendFirstAuthPacket()
 	
 };
 
-void c_Login::RecvAndSendAuthResponse()
+bool c_Login::RecvAndSendAuthResponse()
 {
 	c_YPacket receive_packet;
 	m_cSocket->Read(receive_packet);
-	CreateAuthResponse(receive_packet);
+	if(!CreateAuthResponse(receive_packet))
+	{
+		m_iStatus =	FAILED;
+		return false;	
+	}
+	return true;
 };
 
-void c_Login::CreateAuthResponse(c_YPacket& packet)
+bool c_Login::CreateAuthResponse(c_YPacket& packet)
 {
-	unsigned char *data_recv = packet.GetData();
+	//unsigned char *data_recv = packet.GetData();
 	unsigned char *seed = NULL;
-	int isUsername = memcmp(data_recv+3,m_sUsername,strlen(m_sUsername));
-	if(*(data_recv+15) == '9' && *(data_recv+16) == '4' && *(data_recv)=='1' && !isUsername )
+	unsigned char key[100];
+	unsigned char value[1024];
+	memset(key,0,100*sizeof(unsigned char));
+	memset(value,0,1024*sizeof(unsigned char));
+	packet.GetDataPair(key,value);
+	int ikey = atoi(reinterpret_cast<const char*>(key));
+	//if(*(data_recv+15) == '9' && *(data_recv+16) == '4' && *(data_recv)=='1' && !isUsername )
+	if(packet.GetService() == YAHOO_SERVICE_AUTH && ikey && !strncmp(reinterpret_cast<const char*>(value),m_sUsername,strlen(m_sUsername))) 
 	{
-		seed = data_recv+19;
+		memset(key,0,100*sizeof(unsigned char));
+		memset(value,0,1024*sizeof(unsigned char));
+		packet.GetDataPair(key,value);
+		ikey = atoi(reinterpret_cast<const char*>(key));
+		if(ikey != 94)
+			return false;
+		seed = value;	//data_recv+19;
 		unsigned char magic_shit6[128];
 		unsigned char magic_shit96[128];
 		MagicShit(seed,magic_shit6,magic_shit96);
@@ -121,35 +138,56 @@ void c_Login::CreateAuthResponse(c_YPacket& packet)
 		{
 			m_cSocket->Write(auth_packet);
 		}
-
+		return true;
     }
 	else
-		cout<<"CreateAuthResponse::invalid authentication method"<<endl;
-	
+		return false;	
 };
 
 void c_Login::Execute()
 {
 	CreateSendFirstAuthPacket();
-	RecvAndSendAuthResponse();
-	SetBuddyList();
+	if(!RecvAndSendAuthResponse())
+		return;		
+	if(!SetBuddyList())
+		return;
 	m_iStatus = DONE;
 };
 
-void c_Login::SetBuddyList()
+bool c_Login::SetBuddyList()
 {
-	m_BuddyList = new c_BuddyList();
-	//read buddies
-	do
+	try
 	{
-		m_leftPack.Clear();
-		m_cSocket->Read(m_leftPack);	
-		if(m_leftPack.GetService() == YAHOO_SERVICE_BUDDYLIST)
-		{
-			m_BuddyList->GetBuddyList(m_leftPack);
-		}
+		m_BuddyList = new c_BuddyList();
 	}
-	while(m_leftPack.GetService() == YAHOO_SERVICE_BUDDYLIST || m_leftPack.GetService() == YAHOO_SERVICE_LIST);	
+	catch(bad_alloc& allocerr)
+	{
+		delete [] m_sUsername;
+		delete [] m_sPassword;
+		throw allocerr;
+	}
+	//read buddies
+	m_cSocket->Read(m_leftPack);
+	if(m_leftPack.GetService() == YAHOO_SERVICE_BUDDYLIST || m_leftPack.GetService() == YAHOO_SERVICE_LIST)	
+	{
+		do
+		{
+			if(m_leftPack.GetService() == YAHOO_SERVICE_BUDDYLIST)
+			{
+				m_BuddyList->GetBuddyList(m_leftPack);
+			}
+			m_leftPack.Clear();
+			m_cSocket->Read(m_leftPack);	
+		}
+		while(m_leftPack.GetService() == YAHOO_SERVICE_BUDDYLIST || m_leftPack.GetService() == YAHOO_SERVICE_LIST);	
+		return true;
+	}
+	else
+	{
+		m_iStatus = FAILED;
+		return false;
+	}
+
 };
 
 /*this wrapps arround the libyahoo2 auth function;
@@ -558,24 +596,7 @@ void c_Login::MagicShit(unsigned char* seed,unsigned char *magic_shit,unsigned c
 		sprintf(byte, "%c", delimit_lookup[lookup]);
 		strcat(resp_96, byte);
 	}
-	/*	for(unsigned int i=0;i<100;i++)
-				fprintf(stdout, "%02X ", resp_6[i]);
-			cout<<endl;
-		for(unsigned int i=0;i<100;i++)
-			fprintf(stdout,"%02X ",resp_96[i]);
-			cout<<endl;*/
 		memcpy(magic_shit,resp_6,50);
 		memcpy(magic_shit1,resp_96,50);
-/*
-	pack = yahoo_packet_new(YAHOO_SERVICE_AUTHRESP, yd->initial_status, yd->session_id);
-	yahoo_packet_hash(pack, 0, sn);
-	yahoo_packet_hash(pack, 6, resp_6);
-	yahoo_packet_hash(pack, 96, resp_96);
-	yahoo_packet_hash(pack, 1, sn);
-	yahoo_send_packet(yid, pack, 0);
-	yahoo_packet_free(pack);
-
-	free(password_hash);
-	free(crypt_hash);*/
 };
 

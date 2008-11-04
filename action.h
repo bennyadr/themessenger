@@ -8,7 +8,8 @@ namespace Action
 		CREATED = 0,
 		DONE,
 		PENDING,
-		STARTED
+		STARTED,
+		FAILED
 	};
 	enum ActionType
 	{

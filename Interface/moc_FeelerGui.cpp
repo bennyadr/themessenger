@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'FeelerGui.h'
 **
-** Created: Sun Nov 2 23:55:04 2008
+** Created: Tue Nov 4 21:28:10 2008
 **      by: The Qt Meta Object Compiler version 59 (Qt 4.4.0)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,21 +23,27 @@ static const uint qt_meta_data_FeelerGui[] = {
        1,       // revision
        0,       // classname
        0,    0, // classinfo
-       3,   10, // methods
+       5,   10, // methods
        0,    0, // properties
        0,    0, // enums/sets
 
+ // signals: signature, parameters, type, tag, flags
+      11,   10,   10,   10, 0x05,
+
  // slots: signature, parameters, type, tag, flags
-      11,   10,   10,   10, 0x08,
-      24,   10,   10,   10, 0x08,
-      41,   36,   10,   10, 0x0a,
+      30,   10,   10,   10, 0x08,
+      43,   10,   10,   10, 0x08,
+      60,   55,   10,   10, 0x0a,
+      98,   88,   10,   10, 0x0a,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_FeelerGui[] = {
-    "FeelerGui\0\0showBudies()\0CloseTalk()\0"
-    "Item\0StartTalk(QListWidgetItem*)\0"
+    "FeelerGui\0\0PrintText(QString)\0"
+    "showBudies()\0CloseTalk()\0Item\0"
+    "StartTalk(QListWidgetItem*)\0from,text\0"
+    "SendMessage(QString,QString)\0"
 };
 
 const QMetaObject FeelerGui::staticMetaObject = {
@@ -65,12 +71,21 @@ int FeelerGui::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
         switch (_id) {
-        case 0: showBudies(); break;
-        case 1: CloseTalk(); break;
-        case 2: StartTalk((*reinterpret_cast< QListWidgetItem*(*)>(_a[1]))); break;
+        case 0: PrintText((*reinterpret_cast< const QString(*)>(_a[1]))); break;
+        case 1: showBudies(); break;
+        case 2: CloseTalk(); break;
+        case 3: StartTalk((*reinterpret_cast< QListWidgetItem*(*)>(_a[1]))); break;
+        case 4: SendMessage((*reinterpret_cast< QString(*)>(_a[1])),(*reinterpret_cast< QString(*)>(_a[2]))); break;
         }
-        _id -= 3;
+        _id -= 5;
     }
     return _id;
+}
+
+// SIGNAL 0
+void FeelerGui::PrintText(const QString & _t1)
+{
+    void *_a[] = { 0, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
+    QMetaObject::activate(this, &staticMetaObject, 0, _a);
 }
 QT_END_MOC_NAMESPACE

@@ -1,7 +1,6 @@
 
 #include "priorityQueue.h"
-#include "action.h"
-
+#include <new>
 
 
 /*****************************************
@@ -32,7 +31,21 @@ template <class T>
 void Queue<T>::Insert(T &Data)
 {
 	m_Head->Data = Data;
-	m_Head->Next = new Element;
+	try
+	{
+		m_Head->Next = new Element;
+	}
+	catch(std::bad_alloc &allocerr)
+	{
+		Element *node;
+		while(m_Tail != NULL)
+		{
+			node = m_Tail;
+			m_Tail = m_Tail->Next;
+			delete (node);
+		}
+		throw allocerr;
+	}
 	m_Head = m_Head->Next;
 	m_Head->Next = NULL;
 };
