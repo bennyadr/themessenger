@@ -11,6 +11,7 @@
 #include "Login.h"
 
 #include "yinstance.h"
+#include "../sendMessage.h"
 
 
 FeelerGui::FeelerGui(QWidget *parent)
@@ -80,6 +81,8 @@ FeelerGui::FeelerGui(QWidget *parent)
 
 	c_YInstance* yinstance = c_YInstance::GetInstance();
 	connect(yinstance,SIGNAL(SendText(QString ,QString )),this,SLOT(SendMessage(QString ,QString )));
+	
+	connect(Exit,SIGNAL(clicked()),this,SLOT(close()));
 
 };
 
@@ -124,16 +127,17 @@ void FeelerGui::StartTalk(QListWidgetItem *Item)
 		QWidget *tab = new QWidget();
    		tab->setObjectName(QString::fromUtf8("tab"));
  		tab->setGeometry(QRect(0, 0, 327, 327));
+		QLineEdit *TextEdit = new QLineEdit(tab);
+		connect(TextEdit,(SIGNAL(returnPressed())),this,SLOT(SendMessage()));
+   		TextEdit->setObjectName(QString::fromUtf8("TextEdit"));
+   		TextEdit->setGeometry(QRect(10, 290, 301, 21));
 		QPushButton *closebutton = new QPushButton("X",tab);
 		closebutton->setGeometry(QRect(313,1,13,13));
 		connect(closebutton,SIGNAL(clicked()),this,SLOT(CloseTalk()));
   		QTextBrowser *TextBrowser = new QTextBrowser(tab);
    		TextBrowser->setObjectName(QString::fromUtf8("TextBrowser"));
    		TextBrowser->setGeometry(QRect(10, 10, 301, 271));
-   		QLineEdit *TextEdit = new QLineEdit(tab);
-   		TextEdit->setObjectName(QString::fromUtf8("TextEdit"));
-   		TextEdit->setGeometry(QRect(10, 290, 301, 21));
-   	 	TalkWidget->addTab(tab, Item->text());
+   		TalkWidget->addTab(tab, Item->text());
 		TalkWidget->setCurrentWidget(tab);
 	}
 };
@@ -147,12 +151,36 @@ void FeelerGui::CloseTalk()
 
 void FeelerGui::SendMessage(QString from,QString text)
 {
-	if(from == "Error")
+	QString send_text = from + " : " + text;
+	if(from == "Error" || from == "Log")
 	{
 		//Login modal window
 		LoginD->show();
+		emit PrintText(send_text);
 	}
-	QString send_text = from + ":" + text + "\n";
-	emit PrintText(send_text);
+	else
+	{
+		QWidget *currentwid = TalkWidget->currentWidget();
+		QTextBrowser *cur_txt_brows = dynamic_cast<QTextBrowser*>(currentwid->children().last());
+		cur_txt_brows->append(send_text);
+	}
+};
+
+void FeelerGui::SendMessage()
+{
+	QWidget *currentwid = TalkWidget->currentWidget();
+	c_YInstance* yinstance = c_YInstance::GetInstance();	
+	QString from = yinstance->GetUserName();
+	QString to = TalkWidget->tabText(TalkWidget->currentIndex()); 
+	QLineEdit *cur_line_edit = dynamic_cast<QLineEdit*>(currentwid->children().first());
+	QString text;
+	if(cur_line_edit)
+	{
+		text = cur_line_edit->text();
+		cur_line_edit->clear();
+	}
+	SendMessage(from,text);
+	c_SendMessage *sendmess = new c_SendMessage(yinstance->GetSocket(),from.toStdString(),to.toStdString(),text.toStdString(),YAHOO_STATUS_OFFLINE);
+	yinstance->AddAction(sendmess);
 };
 

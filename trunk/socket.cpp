@@ -85,7 +85,7 @@ void c_Socket::MakeNonBlocking()
 
 /*****************************************/
 
-void c_Socket::Write(const c_Message& data)
+void c_Socket::Write(const c_Message& data)const
 {
 	int ret_write = write(m_iSocketFd,data.GetBuffer(),data.GetSize());
 	if(ret_write==-1)
@@ -96,7 +96,7 @@ void c_Socket::Write(const c_Message& data)
 
 /*****************************************/
 
-void c_Socket::Write(const c_YPacket& data)
+void c_Socket::Write(const c_YPacket& data)const
 {
 	if(!data.isSerialized())
 	{

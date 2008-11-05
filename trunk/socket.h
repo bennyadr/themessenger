@@ -49,10 +49,10 @@ public:
 	void MakeBlocking();
 	void MakeNonBlocking();
 
-	void Write(const c_Message& message );
+	void Write(const c_Message& message )const;
 	void Send(const c_Message& ,const int flag);
 
-	void Write(const c_YPacket& data);
+	void Write(const c_YPacket& data)const;
 
 	void Read(c_Message& message,const unsigned int count);
 	void Recv(c_Message& message,const unsigned int count,const int flag);

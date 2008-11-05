@@ -1,4 +1,5 @@
 #include "yinstance.h"
+#include "../sendMessage.h"
 
 
 c_YInstance::c_YInstance()
@@ -24,7 +25,6 @@ c_YInstance::~c_YInstance()
 void c_YInstance::run()
 {
 	c_YPacket y_pack;
-	c_Socket m_socket;
 	try
 	{
 		m_socket.Connect();	
@@ -79,6 +79,22 @@ void c_YInstance::run()
 
 		try
 		{		
+			//process user actions
+			mutex.lock();
+			if(!m_PQueue->isEmpty())
+			{
+				c_Action* action = m_PQueue->Remove();
+				mutex.unlock();
+				c_SendMessage *sendmess_act = dynamic_cast<c_SendMessage*>(action);
+				if(sendmess_act)
+				{
+					sendmess_act->Execute();
+					delete sendmess_act;
+				}
+					
+			}
+			mutex.unlock();
+
 			//process incoming messages from the server
 			if(!m_socket.ReadNonBlocking(y_pack))
 				continue;
@@ -89,17 +105,7 @@ void c_YInstance::run()
 				m_Buddy_list->GetOnlineBuddies(y_pack);
 				emit SetOnlineBuddies(m_Buddy_list);
 			}
-			
-			//process user actions
-			//mutex here TODO
-			if(!m_PQueue->isEmpty())
-			{
-				c_Action* action = m_PQueue->Remove();
-				//mutex end
-			//action.Execute();
-			}
-			//mutex here	
-
+			//handle the shit
 			y_pack.Clear();
 		}
 		catch(c_Error_Socket &error)
@@ -121,9 +127,9 @@ void c_YInstance::run()
 
 void c_YInstance::AddAction(c_Action *action)
 {
-	//mutex here
+	mutex.lock();
 	m_PQueue->Insert(action);	
-	//mutex here
+	mutex.unlock();
 };
 void c_YInstance::SetUserPass(string username,string password)	
 {
@@ -139,6 +145,16 @@ void c_YInstance::SetUserPass(string username,string password)
 		m_username = new string(username);
 		m_password = new string (password);
 	}
+};
+
+QString c_YInstance::GetUserName()const
+{
+	return QString::fromStdString(*m_username);
+};
+
+const c_Socket* c_YInstance::GetSocket()const
+{
+	return &m_socket;
 };
 
 c_YInstance* c_YInstance::GetInstance()

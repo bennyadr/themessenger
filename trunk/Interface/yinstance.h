@@ -7,6 +7,7 @@
 #include "../priorityQueue.h"
 #include <QThread>
 #include <QString>
+#include <QMutex>
 
 using namespace YPacket;
 
@@ -23,6 +24,9 @@ class c_YInstance : public QThread
 		void AddAction(c_Action *action);
 
 		void SetUserPass(string username,string password);
+
+		QString GetUserName()const;
+		const c_Socket *GetSocket()const;
 
 		~c_YInstance();
 
@@ -48,6 +52,8 @@ class c_YInstance : public QThread
 		bool m_bConnected;
 		c_BuddyList *m_Buddy_list;
 		volatile bool m_stopped;
+		c_Socket m_socket;
+		QMutex mutex;
 };
 
 #endif
