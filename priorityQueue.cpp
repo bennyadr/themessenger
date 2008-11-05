@@ -87,7 +87,7 @@ void PriorityQueue::Insert(c_Action *job)
 
 c_Action* PriorityQueue::Remove()
 {
-	for(short int index = m_Priorities;index >= 0;index--)
+	for(short int index = m_Priorities-1;index >= 0;index--)
 	{
 		if(!m_Queue[index].isEmpty())
 			return m_Queue[index].Remove();

@@ -7,13 +7,14 @@ using namespace YPacket;
 c_YPacket::c_YPacket(const unsigned int size,enum yahoo_service service,enum yahoo_status status,int id)
 	:c_Message(size+YAHOO_HEADER_SIZE),
 	m_iPriority(0),
-	m_bSerialized(false)
+	m_bSerialized(false),
+	m_iByteIterator(0)
 {
 	m_ypack.size = size;
 	m_ypack.service = service;
 	m_ypack.status = status;	
 	m_ypack.id = id;
-	m_ypack.ydata = NULL;
+	m_ypack.ydata = new unsigned char [m_ypack.size];
 };
 
 /*****************************************/
@@ -21,11 +22,12 @@ c_YPacket::c_YPacket(const unsigned int size,enum yahoo_service service,enum yah
 c_YPacket::c_YPacket(const unsigned int size)
 	:c_Message(size+YAHOO_HEADER_SIZE),
 	m_iPriority(0),
-	m_bSerialized(false)
+	m_bSerialized(false),
+	m_iByteIterator(0)
 {
 	memset(&m_ypack,0,sizeof(ypacket));
 	m_ypack.size = size;
-	m_ypack.ydata = NULL;
+	m_ypack.ydata = new unsigned char [m_ypack.size];
 };
 
 /*****************************************/
@@ -115,13 +117,17 @@ c_YPacket& c_YPacket::operator=(const c_YPacket& ypack)
 void c_YPacket::AddDataPair(unsigned char* key,unsigned char* value)
 {
 	int size = strlen(reinterpret_cast<const char*>(key));
+	int value_size = strlen(reinterpret_cast<const char*>(value));
+	if(m_ypack.ydata == NULL || (m_iByteIterator + size + value_size)>m_ypack.size)
+		return;
 	memcpy(m_ypack.ydata+m_iByteIterator,key,size);
 	m_iByteIterator += size;
 	Bits::memset_short(m_ypack.ydata+m_iByteIterator,YAHOO_STD_SEPARATOR,2);
 	m_iByteIterator += 2;
-	int value_size = strlen(reinterpret_cast<const char*>(value));
 	memcpy(m_ypack.ydata+m_iByteIterator,value,value_size);
 	m_iByteIterator += value_size;
+	Bits::memset_short(m_ypack.ydata+m_iByteIterator,YAHOO_STD_SEPARATOR,2);
+	m_iByteIterator += 2;
 };
 
 unsigned int c_YPacket::GetDataPair(unsigned char* const key,unsigned char* const value)const

@@ -21,7 +21,7 @@ public:
 	
 	/*****************************************/
 	bool isEmpty()const
-	{	return (m_Tail != NULL) ? true : false ;	};
+	{	return (m_Tail != m_Head) ? false : true ;	};
 
 
 private:
@@ -52,7 +52,12 @@ public:
 	{
 		if(m_Queue)
 		{
-			return m_Queue->isEmpty();	
+			for(int i=0;i<m_Priorities;i++)
+			{
+				if(!m_Queue[i].isEmpty())
+					return false;
+			}
+			return true;
 		}
 		else 
 			return true;

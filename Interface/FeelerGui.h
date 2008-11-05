@@ -34,6 +34,7 @@ public:
 private slots:
 	void showBudies();
 	void CloseTalk();	
+	void SendMessage();
 
 public slots:
 	void StartTalk(QListWidgetItem *Item);
