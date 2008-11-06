@@ -30,7 +30,7 @@ void BuddyListWidget::ShowBuddies(c_BuddyList* buddylist)
 	QString group ="";
 	QColor color(20,100,200,50);				//blue 
 	QFont font( "Newyork", 14 );
-	for(unsigned int iterator = 0;iterator < buddylist->c_BuddyList::GetSize();iterator++)
+	for(unsigned int iterator = 0;iterator < buddylist->GetSize();iterator++)
 	{
 		if(buddylist->GetBuddy(iterator))
 		{
@@ -49,7 +49,7 @@ void BuddyListWidget::ShowBuddies(c_BuddyList* buddylist)
 
 void BuddyListWidget::ShowOnline(c_BuddyList* buddylist)
 {
-	QColor color(20,240,20,50);
+	QColor color(20,240,20,50);			//green
 	for(unsigned int iterator = 0;iterator < buddylist->c_BuddyList::GetSize();iterator++)
 	{
 		if(buddylist->GetBuddy(iterator)->c_Buddy::isOnline())

@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'yinstance.h'
 **
-** Created: Wed Nov 5 22:06:50 2008
+** Created: Thu Nov 6 01:34:06 2008
 **      by: The Qt Meta Object Compiler version 59 (Qt 4.4.0)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ static const uint qt_meta_data_c_YInstance[] = {
        1,       // revision
        0,       // classname
        0,    0, // classinfo
-       5,   10, // methods
+       6,   10, // methods
        0,    0, // properties
        0,    0, // enums/sets
 
@@ -33,6 +33,7 @@ static const uint qt_meta_data_c_YInstance[] = {
       81,   12,   12,   12, 0x05,
       95,   12,   12,   12, 0x05,
      119,  109,   12,   12, 0x05,
+     145,  109,   12,   12, 0x05,
 
        0        // eod
 };
@@ -43,6 +44,7 @@ static const char qt_meta_stringdata_c_YInstance[] = {
     "SetOnlineBuddies(c_BuddyList*)\0"
     "BuddyQuited()\0BuddyJoined()\0from,text\0"
     "SendText(QString,QString)\0"
+    "RecvText(QString,QString)\0"
 };
 
 const QMetaObject c_YInstance::staticMetaObject = {
@@ -75,8 +77,9 @@ int c_YInstance::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
         case 2: BuddyQuited(); break;
         case 3: BuddyJoined(); break;
         case 4: SendText((*reinterpret_cast< QString(*)>(_a[1])),(*reinterpret_cast< QString(*)>(_a[2]))); break;
+        case 5: RecvText((*reinterpret_cast< QString(*)>(_a[1])),(*reinterpret_cast< QString(*)>(_a[2]))); break;
         }
-        _id -= 5;
+        _id -= 6;
     }
     return _id;
 }
@@ -112,5 +115,12 @@ void c_YInstance::SendText(QString _t1, QString _t2)
 {
     void *_a[] = { 0, const_cast<void*>(reinterpret_cast<const void*>(&_t1)), const_cast<void*>(reinterpret_cast<const void*>(&_t2)) };
     QMetaObject::activate(this, &staticMetaObject, 4, _a);
+}
+
+// SIGNAL 5
+void c_YInstance::RecvText(QString _t1, QString _t2)
+{
+    void *_a[] = { 0, const_cast<void*>(reinterpret_cast<const void*>(&_t1)), const_cast<void*>(reinterpret_cast<const void*>(&_t2)) };
+    QMetaObject::activate(this, &staticMetaObject, 5, _a);
 }
 QT_END_MOC_NAMESPACE
