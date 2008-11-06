@@ -39,6 +39,7 @@ private slots:
 public slots:
 	void StartTalk(QListWidgetItem *Item);
 	void SendMessage(QString from,QString text);
+	void RecvMessage(QString from,QString text);
 
 signals:
 	void PrintText(const QString&);

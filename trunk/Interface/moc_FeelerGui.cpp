@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'FeelerGui.h'
 **
-** Created: Wed Nov 5 22:06:47 2008
+** Created: Thu Nov 6 01:34:03 2008
 **      by: The Qt Meta Object Compiler version 59 (Qt 4.4.0)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ static const uint qt_meta_data_FeelerGui[] = {
        1,       // revision
        0,       // classname
        0,    0, // classinfo
-       6,   10, // methods
+       7,   10, // methods
        0,    0, // properties
        0,    0, // enums/sets
 
@@ -36,6 +36,7 @@ static const uint qt_meta_data_FeelerGui[] = {
       55,   10,   10,   10, 0x08,
       74,   69,   10,   10, 0x0a,
      112,  102,   10,   10, 0x0a,
+     141,  102,   10,   10, 0x0a,
 
        0        // eod
 };
@@ -45,6 +46,7 @@ static const char qt_meta_stringdata_FeelerGui[] = {
     "showBudies()\0CloseTalk()\0SendMessage()\0"
     "Item\0StartTalk(QListWidgetItem*)\0"
     "from,text\0SendMessage(QString,QString)\0"
+    "RecvMessage(QString,QString)\0"
 };
 
 const QMetaObject FeelerGui::staticMetaObject = {
@@ -78,8 +80,9 @@ int FeelerGui::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
         case 3: SendMessage(); break;
         case 4: StartTalk((*reinterpret_cast< QListWidgetItem*(*)>(_a[1]))); break;
         case 5: SendMessage((*reinterpret_cast< QString(*)>(_a[1])),(*reinterpret_cast< QString(*)>(_a[2]))); break;
+        case 6: RecvMessage((*reinterpret_cast< QString(*)>(_a[1])),(*reinterpret_cast< QString(*)>(_a[2]))); break;
         }
-        _id -= 6;
+        _id -= 7;
     }
     return _id;
 }

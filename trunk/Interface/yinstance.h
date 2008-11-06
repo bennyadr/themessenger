@@ -27,6 +27,7 @@ class c_YInstance : public QThread
 
 		QString GetUserName()const;
 		const c_Socket *GetSocket()const;
+		c_BuddyList *GetBuddyList()const;
 
 		~c_YInstance();
 
@@ -36,6 +37,7 @@ class c_YInstance : public QThread
 		void BuddyQuited();
 		void BuddyJoined();
 		void SendText(QString from,QString text);
+		void RecvText(QString from,QString text);
 
 	private:
 		c_YInstance();

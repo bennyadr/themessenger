@@ -1,5 +1,6 @@
 #include "yinstance.h"
 #include "../sendMessage.h"
+#include "../recvMessage.h"
 
 
 c_YInstance::c_YInstance()
@@ -105,7 +106,16 @@ void c_YInstance::run()
 				m_Buddy_list->GetOnlineBuddies(y_pack);
 				emit SetOnlineBuddies(m_Buddy_list);
 			}
-			//handle the shit
+			//handle received message
+			if(y_pack.GetService() == YAHOO_SERVICE_MESSAGE)
+			{
+				c_RecvMessage receive_mess(y_pack);
+				receive_mess.Execute();
+				QString from(QString::fromStdString(receive_mess.GetFrom()));
+				QString text(QString::fromStdString(receive_mess.GetText()));
+				emit RecvText(from,text);	
+
+			};
 			y_pack.Clear();
 		}
 		catch(c_Error_Socket &error)
@@ -155,6 +165,11 @@ QString c_YInstance::GetUserName()const
 const c_Socket* c_YInstance::GetSocket()const
 {
 	return &m_socket;
+};
+
+c_BuddyList* c_YInstance::GetBuddyList()const
+{
+	return m_Buddy_list;
 };
 
 c_YInstance* c_YInstance::GetInstance()

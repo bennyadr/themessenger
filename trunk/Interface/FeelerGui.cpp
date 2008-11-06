@@ -81,6 +81,7 @@ FeelerGui::FeelerGui(QWidget *parent)
 
 	c_YInstance* yinstance = c_YInstance::GetInstance();
 	connect(yinstance,SIGNAL(SendText(QString ,QString )),this,SLOT(SendMessage(QString ,QString )));
+	connect(yinstance,SIGNAL(RecvText(QString ,QString )),this,SLOT(RecvMessage(QString ,QString )));
 	
 	connect(Exit,SIGNAL(clicked()),this,SLOT(close()));
 
@@ -162,8 +163,42 @@ void FeelerGui::SendMessage(QString from,QString text)
 	{
 		QWidget *currentwid = TalkWidget->currentWidget();
 		QTextBrowser *cur_txt_brows = dynamic_cast<QTextBrowser*>(currentwid->children().last());
+		cur_txt_brows->setTextColor(QColor(0,0,0));
 		cur_txt_brows->append(send_text);
 	}
+};
+
+void FeelerGui::RecvMessage(QString from,QString text)
+{
+	QString send_text = from + " : " + text;
+	for(int iterator = 0;iterator<TalkWidget->count();iterator++)
+	{
+		if(from == TalkWidget->tabText(iterator))
+		{
+			QWidget *wid = TalkWidget->widget(iterator);
+			QTextBrowser *txt_brows = dynamic_cast<QTextBrowser*>(wid->children().last());
+			txt_brows->setTextColor(QColor(20,40,255));
+			txt_brows->append(send_text);
+			return;
+		}
+	}
+	QWidget *tab = new QWidget();
+	tab->setObjectName(QString::fromUtf8("tab"));
+	tab->setGeometry(QRect(0, 0, 327, 327));
+	QLineEdit *TextEdit = new QLineEdit(tab);
+	connect(TextEdit,(SIGNAL(returnPressed())),this,SLOT(SendMessage()));
+	TextEdit->setObjectName(QString::fromUtf8("TextEdit"));
+	TextEdit->setGeometry(QRect(10, 290, 301, 21));
+	QPushButton *closebutton = new QPushButton("X",tab);
+	closebutton->setGeometry(QRect(313,1,13,13));
+	connect(closebutton,SIGNAL(clicked()),this,SLOT(CloseTalk()));
+	QTextBrowser *TextBrowser = new QTextBrowser(tab);
+	TextBrowser->setTextColor(QColor(20,40,255));
+	TextBrowser->append(send_text);
+	TextBrowser->setObjectName(QString::fromUtf8("TextBrowser"));
+	TextBrowser->setGeometry(QRect(10, 10, 301, 271));
+	TalkWidget->addTab(tab, from);
+
 };
 
 void FeelerGui::SendMessage()
