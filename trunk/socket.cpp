@@ -2,6 +2,18 @@
 #include "bits.h"
 #include <assert.h>
 
+
+/*****************************************/
+/*****************************************/
+/*****************************************/
+/*          Unix based socket            */
+/*****************************************/
+/*****************************************/
+/*****************************************/
+
+#ifndef WINDOWS
+
+
 /*****************************************/
 
 c_Socket::c_Socket()
@@ -217,5 +229,165 @@ bool c_Socket::ReadNonBlocking(c_YPacket& packet)
 	packet.Deserialize(reinterpret_cast<unsigned char*>(buffer_1));	
 	return true;
 };
+
+#endif
+
+/*****************************************/
+/*****************************************/
+/*****************************************/
+/*       Windows based socket            */
+/*****************************************/
+/*****************************************/
+/*****************************************/
+
+#ifdef WINDOWS
+
+
+/*****************************************/
+
+c_Socket::c_Socket()
+	:m_iPort(PORT),
+ 	m_iSocketFd(-1)
+ {
+ 	m_sAddress = string(SERVER_ADDRESS);
+	memset( &m_tAddress , 0 , sizeof(m_tAddress) );
+	m_bStatus = false;
+};
+
+/*****************************************/
+
+c_Socket::~c_Socket()
+{
+};
+
+/*****************************************/
+
+void c_Socket::Connect()
+{
+	m_iSocketFd=socket(AF_INET,SOCK_STREAM,0);
+	if(m_iSocketFd == INVALID_SOCKET)
+		throw c_Error_Socket(m_iSocketFd , "error creating socket : ");
+
+	m_tAddress.sin_family = AF_INET;
+	m_tAddress.sin_addr.s_addr = INADDR_ANY;
+	m_tAddress.sin_port = htons ( m_iPort );
+
+	int status = connect ( m_iSocketFd , (sockaddr *) &m_tAddress, sizeof(m_tAddress) );
+	if(status == SOCKET_ERROR)
+		throw c_Error_Socket(status, "error connecting socket : ");
+	
+	m_bStatus = true;
+
+};
+
+/*****************************************/
+
+void c_Socket::Disconnect()
+{
+	if(is_Opened())
+	{
+		int close_ret = closesocket(m_iSocketFd);
+	if(close_ret == SOCKET_ERROR)
+		throw c_Error_Socket(close_ret, "error closing socket : ");
+	}
+};
+
+/*****************************************/
+
+void c_Socket::MakeBlocking()
+{
+	u_long iMode = 0;
+	int ret = ioctlsocket(m_iSocketFd,FIONBIO,&iMode);
+	if(ret == SOCKET_ERROR)
+		throw c_Error_Socket(ret,"error makeing socket blocking : ");
+};
+
+/*****************************************/
+
+void c_Socket::MakeNonBlocking()
+{
+	u_long iMode = 0;
+	int ret = ioctlsocket(m_iSocketFd,FIONBIO,&iMode);
+	if(ret == SOCKET_ERROR)
+		throw c_Error_Socket(ret,"error makeing socket non-blocking : ");
+};
+
+/*****************************************/
+
+void c_Socket::Write(const c_YPacket& data)const
+{
+	if(!data.isSerialized())
+	{
+		data.Serialize();
+	}
+	int ret_write = send(m_iSocketFd,reinterpret_cast<char*>(data.GetBuffer()),data.GetSize(),0);
+	if(ret_write == SOCKET_ERROR)
+		throw c_Error_Socket(ret_write,"error sending data : ");
+};
+
+/*****************************************/
+
+void c_Socket::Read(c_YPacket& packet)
+{
+	unsigned char buffer[20];
+	int ret_read = recv(m_iSocketFd,reinterpret_cast<char*>(buffer),20,0);
+	if(ret_read <= 0)
+		throw c_Error_Socket(ret_read,"error receiving data");
+	if(0 != strncmp(reinterpret_cast<const char*>(buffer),"YMSG",4))
+	{
+		throw c_Error_Socket(1,"wrong yahoo packet");
+	}
+	unsigned short size = GetYPackSize(buffer);
+	char buffer_1[size+YAHOO_HEADER_SIZE];
+	memcpy(buffer_1,buffer,YAHOO_HEADER_SIZE);
+	int offset = YAHOO_HEADER_SIZE;
+	while(size>0)
+	{
+		ret_read = recv(m_iSocketFd,reinterpret_cast<char*>(buffer_1+offset),size,0);
+		if(ret_read <= 0)
+			throw c_Error_Socket(ret_read,"error receiving data");
+		size -= ret_read;
+		offset += ret_read;
+	}
+	assert(size==0);
+	packet.Deserialize(reinterpret_cast<unsigned char*>(buffer_1));	
+};
+
+/*****************************************/
+
+bool c_Socket::ReadNonBlocking(c_YPacket& packet)
+{
+	unsigned char buffer[20];
+	int ret_read = recv(m_iSocketFd,reinterpret_cast<char*>(buffer),20,0);
+	if(ret_read <= 0)
+	{
+		if(WSAGetLastError() == WSAEWOULDBLOCK)
+			return false;
+		else
+			throw c_Error_Socket(ret_read,"error reading from non-blocking socket : ");
+	};
+	if(0 != strncmp(reinterpret_cast<const char*>(buffer),"YMSG",4))
+	{
+		throw c_Error_Socket(1,"wrong yahoo packet");
+	}
+	unsigned short size = GetYPackSize(buffer);
+	char buffer_1[size+YAHOO_HEADER_SIZE];
+	memcpy(buffer_1,buffer,YAHOO_HEADER_SIZE);
+	int offset = YAHOO_HEADER_SIZE;
+	while(size>0)
+	{
+		ret_read = recv(m_iSocketFd,reinterpret_cast<char*>(buffer_1+offset),size,0);
+		if(ret_read <= 0)
+			throw c_Error_Socket(ret_read,"error receiving data");
+		size -= ret_read;
+		offset += ret_read;
+	}
+	assert(size==0);
+	packet.Deserialize(reinterpret_cast<unsigned char*>(buffer_1));	
+	return true;
+};
+
+
+#endif
 
 
