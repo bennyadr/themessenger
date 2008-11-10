@@ -23,12 +23,11 @@
 
 #include <iostream>
 #include <string>
-#include "unix_std_space.h"
+
 #include "config.h"
 #include "message_base.h"
 #include "ypacket.h"
 
-using namespace unix_std_space;
 using namespace std;
 using namespace config;
 
@@ -36,6 +35,14 @@ using namespace config;
 #define ERROR 2
 
 using namespace YPacket;
+
+
+#define WINDOWS
+
+//only for unix
+#ifndef WINDOWS
+#include "unix_std_space.h"
+using namespace unix_std_space;
 
 class c_Socket
 {
@@ -80,6 +87,7 @@ private:
 	
 };
 
+/******************************************************************/
 
 class c_Error_Socket
 {
@@ -132,5 +140,103 @@ private:
 
 
 };
+
+#endif
+
+
+#ifdef WINDOWS
+
+#include <winsock2.h>
+#include <windows.h>
+
+class c_Socket
+{
+public:
+	 c_Socket();
+	virtual ~c_Socket();
+
+	virtual	void Connect();
+	void Disconnect();
+
+	void MakeBlocking();
+	void MakeNonBlocking();
+
+	void Write(const c_YPacket& data)const;
+
+	void Read(c_YPacket& packet);
+	
+	bool ReadNonBlocking(c_YPacket& packet);
+
+	bool is_Opened()const
+				{ return m_bStatus;	};
+	
+private:
+	unsigned int m_iPort;
+	string m_sAddress ;
+	int m_iSocketFd;
+	sockaddr_in m_tAddress;
+	bool m_bStatus;
+
+	
+};
+
+/**************************************************************/
+
+class c_Error_Socket
+{
+public:
+	c_Error_Socket(int ret,const string user_message,int type = ERROR)
+		:m_iType(type)
+	{
+		m_sUserMessage = string(user_message);
+		if(ret <= 0)
+		{
+			WCHAR Buffer[200];
+			FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, 0, WSAGetLastError(), LANG_NEUTRAL, Buffer, 200, 0);
+			m_sErrorMessage = string(reinterpret_cast<char*>(Buffer));
+		}
+		else
+		{
+			m_sErrorMessage = "";
+		}
+	};
+
+	~c_Error_Socket()
+	{
+	};
+	
+	void PrintError()
+	{
+		if(m_sErrorMessage != "")
+		{	
+			cout<<"Error message :: "<<m_sUserMessage<<m_sErrorMessage<<endl;
+		}
+		else
+		{
+			cout<<"Error message :: "<<m_sUserMessage;
+		}
+	};
+
+	string& GetErrorMessage()
+	{
+		m_sUserMessage = m_sUserMessage + m_sErrorMessage + "\n";
+		return  m_sUserMessage;
+	};
+	
+	int GetType()const
+	{
+		return m_iType;
+	};
+
+private:
+	int m_iType;
+	string m_sErrorMessage;
+	string m_sUserMessage;
+
+
+};
+
+
+#endif
 
 #endif
