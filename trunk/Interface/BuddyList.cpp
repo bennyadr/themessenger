@@ -22,6 +22,7 @@ BuddyListWidget::BuddyListWidget(QWidget *parent)
 	connect(yinstance,SIGNAL(SetBuddyList(c_BuddyList *)),this,SLOT(ShowBuddies(c_BuddyList*)));
 	connect(yinstance,SIGNAL(SetOnlineBuddies(c_BuddyList *)),this,SLOT(ShowOnline(c_BuddyList*)));
 	connect(BuddyListLW,SIGNAL(itemDoubleClicked(QListWidgetItem*)),parent,SLOT(StartTalk(QListWidgetItem*)));
+	hidden = false;
     Q_UNUSED(this);
 };
 
@@ -38,8 +39,8 @@ void BuddyListWidget::ShowBuddies(c_BuddyList* buddylist)
 			{
 				group = QString::fromStdString(buddylist->GetBuddy(iterator)->GetGroup());
 				BuddyListLW->addItem(group);
-				BuddyListLW->item(iterator)->setBackgroundColor(color);
-				BuddyListLW->item(iterator)->setFont(font);
+				BuddyListLW->item(BuddyListLW->count()-1)->setBackgroundColor(color);
+				BuddyListLW->item(BuddyListLW->count()-1)->setFont(font);
 			}
 			BuddyListLW->addItem(QString::fromStdString(buddylist->GetBuddy(iterator)->GetName()));
 		}
@@ -55,6 +56,47 @@ void BuddyListWidget::ShowOnline(c_BuddyList* buddylist)
 		if(buddylist->GetBuddy(iterator)->c_Buddy::isOnline())
 		{
 			BuddyListLW->item(iterator + buddylist->GetBuddy(iterator)->GetGroupNum())->setBackgroundColor(color);
+			BuddyListLW->item(iterator + buddylist->GetBuddy(iterator)->GetGroupNum())->setToolTip(QString::fromStdString(buddylist->GetBuddy(iterator)->GetStatus()));
 		}
 	}
+};
+
+void BuddyListWidget::HideOffline()
+{
+	if(hidden == true)
+	{
+		c_YInstance *yinstance = c_YInstance::GetInstance();
+		c_BuddyList *buddylist = yinstance->GetBuddyList();
+		if(buddylist == NULL)
+			return;
+		for(unsigned int iterator = 0;iterator < buddylist->c_BuddyList::GetSize();iterator++)
+		{
+			if(!buddylist->GetBuddy(iterator)->c_Buddy::isOnline())
+			{
+				BuddyListLW->item(iterator + buddylist->GetBuddy(iterator)->GetGroupNum())->setHidden(false);
+			}
+		}
+		hidden = false;
+	}
+	else
+	{
+		c_YInstance *yinstance = c_YInstance::GetInstance();
+		c_BuddyList *buddylist = yinstance->GetBuddyList();
+		if(buddylist == NULL)
+			return;
+		for(unsigned int iterator = 0;iterator < buddylist->c_BuddyList::GetSize();iterator++)
+		{
+			if(!buddylist->GetBuddy(iterator)->c_Buddy::isOnline())
+			{
+				BuddyListLW->item(iterator + buddylist->GetBuddy(iterator)->GetGroupNum())->setHidden(true);
+			}
+		}
+		hidden = true;
+	}
+
+};
+
+void BuddyListWidget::Clear()
+{
+	BuddyListLW->clear();
 };

@@ -64,6 +64,9 @@ public:
 	unsigned int GetIddleTime()const
 	{	return m_iIdleTime;	  };
 
+	string GetStatus()const
+	{	return m_sStatus;	};
+
 	void SetGroupNum(unsigned int group)
 	{	m_iGroup = group;	};
 

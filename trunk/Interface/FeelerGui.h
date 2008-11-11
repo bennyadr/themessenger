@@ -35,6 +35,8 @@ private slots:
 	void showBudies();
 	void CloseTalk();	
 	void SendMessage();
+	void SendNotify(QString mes);
+	void Logout();
 
 public slots:
 	void StartTalk(QListWidgetItem *Item);
@@ -46,6 +48,8 @@ signals:
 
 private:
     QPushButton *SettingsButtton;
+	QPushButton *HideShowB;
+	QPushButton *LogoutButton;
     QPushButton *Exit;
     QCommandLinkButton *BuddyListButton;
     QTabWidget *TalkWidget;

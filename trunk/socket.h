@@ -37,7 +37,6 @@ using namespace config;
 using namespace YPacket;
 
 
-#define WINDOWS
 
 //only for unix
 #ifndef WINDOWS

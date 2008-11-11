@@ -88,6 +88,7 @@ void c_BuddyList::GetOnlineBuddies(const c_YPacket& recvpack)
 					break;
 			}
 		}
+		AddStatus(name,message_status,status,iddle_time);
 	}
 };
 

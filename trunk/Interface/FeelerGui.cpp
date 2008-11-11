@@ -22,36 +22,55 @@ FeelerGui::FeelerGui(QWidget *parent)
 	if (this->objectName().isEmpty())
         this->setObjectName(QString::fromUtf8("FeelerGui"));
     this->resize(432, 377);
+
     SettingsButtton = new QPushButton(this);
     SettingsButtton->setObjectName(QString::fromUtf8("SettingsButtton"));
     SettingsButtton->setGeometry(QRect(350, 30, 75, 24));
+
+	HideShowB = new QPushButton(this);
+    HideShowB->setObjectName(QString::fromUtf8("HideOfflineButton"));
+    HideShowB->setGeometry(QRect(350, 95, 75, 24));
+	
+	LogoutButton = new QPushButton(this);
+   	LogoutButton->setObjectName(QString::fromUtf8("LogoutButton"));
+    LogoutButton->setGeometry(QRect(350, 240, 75, 24));
+
+
     Exit = new QPushButton(this);
     Exit->setObjectName(QString::fromUtf8("Exit"));
     Exit->setGeometry(QRect(350, 340, 75, 24));
+
     BuddyListButton = new QCommandLinkButton(this);
     BuddyListButton->setObjectName(QString::fromUtf8("BuddyListButton"));
     BuddyListButton->setGeometry(QRect(340, 160, 91, 41));
+
     TalkWidget = new QTabWidget(this);
     TalkWidget->setObjectName(QString::fromUtf8("TalkWidget"));
     TalkWidget->setGeometry(QRect(10, 10, 331, 351));
+
     tab = new QWidget();
     tab->setObjectName(QString::fromUtf8("tab"));
     tab->setGeometry(QRect(0, 0, 327, 327));
+
     TextBrowser = new QTextBrowser(tab);
     TextBrowser->setObjectName(QString::fromUtf8("TextBrowser"));
     TextBrowser->setGeometry(QRect(10, 10, 301, 271));
+
 	connect(this,SIGNAL(PrintText(const QString&)),TextBrowser,SLOT(append(const QString&)));
+
     TextEdit = new QLineEdit(tab);
     TextEdit->setObjectName(QString::fromUtf8("TextEdit"));
     TextEdit->setGeometry(QRect(10, 290, 301, 21));
     TalkWidget->addTab(tab, QString());
-    QWidget::setTabOrder(SettingsButtton, BuddyListButton);
-    QWidget::setTabOrder(BuddyListButton, Exit);
+    TalkWidget->setCurrentIndex(0);
+
+    QWidget::setTabOrder(SettingsButtton, HideShowB);
+	QWidget::setTabOrder(HideShowB,BuddyListButton);
+    QWidget::setTabOrder(BuddyListButton, LogoutButton);
     QWidget::setTabOrder(Exit, TextEdit);
     QWidget::setTabOrder(TextEdit, TextBrowser);
     QWidget::setTabOrder(TextBrowser, TalkWidget);
 
-    TalkWidget->setCurrentIndex(0);
 
 	//buddylist extension initialization
 	BuddyListWid = new BuddyListWidget(this);
@@ -75,6 +94,8 @@ FeelerGui::FeelerGui(QWidget *parent)
 #endif // QT_NO_TOOLTIP
 
     SettingsButtton->setText(QApplication::translate("FeelerGui", "Settings", 0, QApplication::UnicodeUTF8));
+	HideShowB->setText(QApplication::translate("FeelerGui", "HideOffline", 0, QApplication::UnicodeUTF8));
+	LogoutButton->setText(QApplication::translate("FeelerGui", "Logout", 0, QApplication::UnicodeUTF8));
     Exit->setText(QApplication::translate("FeelerGui", "Exit", 0, QApplication::UnicodeUTF8));
     BuddyListButton->setText(QApplication::translate("FeelerGui", "BuddyList", 0, QApplication::UnicodeUTF8));
     TalkWidget->setTabText(TalkWidget->indexOf(tab), QApplication::translate("FeelerGui", "Stats", 0, QApplication::UnicodeUTF8));
@@ -82,8 +103,9 @@ FeelerGui::FeelerGui(QWidget *parent)
 	c_YInstance* yinstance = c_YInstance::GetInstance();
 	connect(yinstance,SIGNAL(SendText(QString ,QString )),this,SLOT(SendMessage(QString ,QString )));
 	connect(yinstance,SIGNAL(RecvText(QString ,QString )),this,SLOT(RecvMessage(QString ,QString )));
-	
 	connect(Exit,SIGNAL(clicked()),this,SLOT(close()));
+	connect(HideShowB,SIGNAL(clicked()),BuddyListWid,SLOT(HideOffline()));
+	connect(LogoutButton,SIGNAL(clicked()),this,SLOT(Logout()));
 
 };
 
@@ -115,7 +137,8 @@ bool FeelerGui::close()
 
 void FeelerGui::StartTalk(QListWidgetItem *Item)
 {
-	if(Item != NULL )
+	QFont font( "Newyork", 14 );
+	if(Item != NULL && Item->font() != font)
 	{
 		for(int iterator = 0;iterator<TalkWidget->count();iterator++)
 		{
@@ -130,6 +153,7 @@ void FeelerGui::StartTalk(QListWidgetItem *Item)
  		tab->setGeometry(QRect(0, 0, 327, 327));
 		QLineEdit *TextEdit = new QLineEdit(tab);
 		connect(TextEdit,(SIGNAL(returnPressed())),this,SLOT(SendMessage()));
+		connect(TextEdit,SIGNAL(textChanged(QString)),this,SLOT(SendNotify(QString)));
    		TextEdit->setObjectName(QString::fromUtf8("TextEdit"));
    		TextEdit->setGeometry(QRect(10, 290, 301, 21));
 		QPushButton *closebutton = new QPushButton("X",tab);
@@ -170,14 +194,25 @@ void FeelerGui::SendMessage(QString from,QString text)
 
 void FeelerGui::RecvMessage(QString from,QString text)
 {
-	QString send_text = from + " : " + text;
+	QString send_text;
+	if(text == "Notify")
+		send_text = from + " " + "is typing ...";
+	else
+		if(text == "Notify_end")
+			send_text = from + " " + "finished typing ...";
+		else	
+			send_text = from + " : " + text;
+
 	for(int iterator = 0;iterator<TalkWidget->count();iterator++)
 	{
 		if(from == TalkWidget->tabText(iterator))
 		{
 			QWidget *wid = TalkWidget->widget(iterator);
 			QTextBrowser *txt_brows = dynamic_cast<QTextBrowser*>(wid->children().last());
-			txt_brows->setTextColor(QColor(20,40,255));
+			if(text == "Notify" || text == "Notify_end")
+				txt_brows->setTextColor(QColor(20,40,200,90));
+			else
+				txt_brows->setTextColor(QColor(20,40,255));
 			txt_brows->append(send_text);
 			return;
 		}
@@ -187,13 +222,17 @@ void FeelerGui::RecvMessage(QString from,QString text)
 	tab->setGeometry(QRect(0, 0, 327, 327));
 	QLineEdit *TextEdit = new QLineEdit(tab);
 	connect(TextEdit,(SIGNAL(returnPressed())),this,SLOT(SendMessage()));
+	connect(TextEdit,SIGNAL(textChanged(QString)),this,SLOT(SendNotify(QString)));
 	TextEdit->setObjectName(QString::fromUtf8("TextEdit"));
 	TextEdit->setGeometry(QRect(10, 290, 301, 21));
 	QPushButton *closebutton = new QPushButton("X",tab);
 	closebutton->setGeometry(QRect(313,1,13,13));
 	connect(closebutton,SIGNAL(clicked()),this,SLOT(CloseTalk()));
 	QTextBrowser *TextBrowser = new QTextBrowser(tab);
-	TextBrowser->setTextColor(QColor(20,40,255));
+	if(text == "Notify" || text == "Notify_end")
+		TextBrowser->setTextColor(QColor(20,40,200,90));
+	else
+		TextBrowser->setTextColor(QColor(20,40,255));
 	TextBrowser->append(send_text);
 	TextBrowser->setObjectName(QString::fromUtf8("TextBrowser"));
 	TextBrowser->setGeometry(QRect(10, 10, 301, 271));
@@ -218,4 +257,53 @@ void FeelerGui::SendMessage()
 	c_SendMessage *sendmess = new c_SendMessage(yinstance->GetSocket(),from.toStdString(),to.toStdString(),text.toStdString(),YAHOO_STATUS_OFFLINE);
 	yinstance->AddAction(sendmess);
 };
+
+void FeelerGui::SendNotify(QString mes)
+{
+	if(mes.length() > 1)
+		return;
+	c_YInstance* yinstance = c_YInstance::GetInstance();	
+	QString from = yinstance->GetUserName();
+	QString to = TalkWidget->tabText(TalkWidget->currentIndex()); 
+	if(mes.length() == 0)
+	{
+		c_SendNotify *sendnotif = new c_SendNotify(yinstance->GetSocket(),from.toStdString(),to.toStdString(),YAHOO_STATUS_OFFLINE,false);
+		yinstance->AddAction(sendnotif);
+	}
+	else
+	{
+		c_SendNotify *sendnotif = new c_SendNotify(yinstance->GetSocket(),from.toStdString(),to.toStdString(),YAHOO_STATUS_OFFLINE,true);
+		yinstance->AddAction(sendnotif);
+	}
+
+};
+
+void FeelerGui::Logout()
+{
+	c_YInstance* yinstance = c_YInstance::GetInstance();		
+	yinstance->stop();
+	yinstance->wait();
+	BuddyListWid->Clear();
+	TalkWidget->clear();
+	tab = new QWidget();
+    tab->setObjectName(QString::fromUtf8("tab"));
+    tab->setGeometry(QRect(0, 0, 327, 327));
+
+    TextBrowser = new QTextBrowser(tab);
+    TextBrowser->setObjectName(QString::fromUtf8("TextBrowser"));
+    TextBrowser->setGeometry(QRect(10, 10, 301, 271));
+
+	connect(this,SIGNAL(PrintText(const QString&)),TextBrowser,SLOT(append(const QString&)));
+
+    TextEdit = new QLineEdit(tab);
+    TextEdit->setObjectName(QString::fromUtf8("TextEdit"));
+    TextEdit->setGeometry(QRect(10, 290, 301, 21));
+    TalkWidget->addTab(tab, QString());
+    TalkWidget->setCurrentIndex(0);
+    TalkWidget->setTabText(TalkWidget->indexOf(tab), QApplication::translate("FeelerGui", "Stats", 0, QApplication::UnicodeUTF8));
+
+	LoginD->show();
+};
+
+
 
