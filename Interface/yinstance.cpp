@@ -1,12 +1,15 @@
 #include "yinstance.h"
 #include "../sendMessage.h"
 #include "../recvMessage.h"
-
+#include "../ypingtime.h"
+#include "../ylog.h"
 
 c_YInstance::c_YInstance()
 	:m_username(NULL),
 	m_password(NULL),
 	m_PQueue(NULL),
+	m_bConnected(false),
+	m_session_id(0),
 	m_Buddy_list(NULL),
 	m_stopped(false)
 {
@@ -33,19 +36,23 @@ void c_YInstance::run()
 	   	login->Execute();
 		if(login->GetStatus() == DONE)
 		{
+			c_Log logger("Login successfull");
 			m_bConnected = true;			
 			m_Buddy_list = login->GetBuddyList(); 
 			emit SetBuddyList(m_Buddy_list);
 			y_pack = login->GetLeftPack();
+			m_session_id = y_pack.GetId();
 			//get online buddies
 			if(y_pack.GetService() == YAHOO_SERVICE_BUDDYLIST_ONLINE)
 			{
 				m_Buddy_list->GetOnlineBuddies(y_pack);
 				emit SetOnlineBuddies(m_Buddy_list);
+				c_Log loggerlist("List successfull");
 			}
 		}
 		else
 		{
+			c_Log logger("invalid Login");
 			delete login;
 			login = NULL;
 			QString error = "Error";
@@ -60,6 +67,7 @@ void c_YInstance::run()
 	}
 	catch(c_Error_Socket &error)
 	{
+		c_Log logger("socket error");
 		QString error_message = QString::fromStdString(error.GetErrorMessage());	
 		QString error = "Error";
 		m_socket.Disconnect();
@@ -75,11 +83,15 @@ void c_YInstance::run()
 	}
 	
 	m_socket.MakeNonBlocking();
+	
+	//start ping timer --ping every 30 sec
+	c_PingTimer pingtimer(30,&m_socket);
+
 	while(!m_stopped)			
 	{
-
 		try
-		{		
+		{	
+			pingtimer.SendPing();			
 			//process user actions
 			mutex.lock();
 			if(!m_PQueue->isEmpty())
@@ -89,10 +101,19 @@ void c_YInstance::run()
 				c_SendMessage *sendmess_act = dynamic_cast<c_SendMessage*>(action);
 				if(sendmess_act)
 				{
+					c_Log logger("send message!");
 					sendmess_act->Execute();
 					delete sendmess_act;
+					continue;
 				}
-					
+				c_SendNotify *sendnotif_act = dynamic_cast<c_SendNotify*>(action);
+				if(sendnotif_act)
+				{
+					c_Log logger("send notify!");
+					sendnotif_act->Execute();
+					delete(sendnotif_act);
+					continue;
+				}
 			}
 			mutex.unlock();
 
@@ -114,8 +135,27 @@ void c_YInstance::run()
 				QString from(QString::fromStdString(receive_mess.GetFrom()));
 				QString text(QString::fromStdString(receive_mess.GetText()));
 				emit RecvText(from,text);	
+				c_Log logger("receive message!");
 
 			};
+			if(y_pack.GetService() == YAHOO_SERVICE_NOTIFY)
+			{
+				c_RecvNotify receive_notif(y_pack);
+				receive_notif.Execute();
+				QString from(QString::fromStdString(receive_notif.GetFromN()));
+				if(receive_notif.GetStateN() == 1)
+				{
+					QString typing("Notify");
+					emit RecvText(from,typing);	
+					c_Log logger("received notify");
+				}
+				else
+				{
+					QString typing("Notify_end");
+					emit RecvText(from,typing);	
+					c_Log logger("received notify");
+				}
+			}
 			y_pack.Clear();
 		}
 		catch(c_Error_Socket &error)
@@ -124,6 +164,7 @@ void c_YInstance::run()
 			QString error = "Error";
 			m_socket.Disconnect();
 			emit SendText(error,error_message);
+			c_Log logger("socket error");
 		}
 		catch(bad_alloc)
 		{

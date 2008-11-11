@@ -24,14 +24,18 @@ class BuddyListWidget : public QWidget
 
 public:
     BuddyListWidget(QWidget *parent = 0);
-
+	void Clear();
 private:
     QListWidget *BuddyListLW;
     QComboBox *StatusCB;
+	bool hidden;
 
 private slots:
 	void ShowBuddies(c_BuddyList *buddylist);
 	void ShowOnline(c_BuddyList *buddylist);
+
+public slots:
+	void HideOffline();
 
 };
 

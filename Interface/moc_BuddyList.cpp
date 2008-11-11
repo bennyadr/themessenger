@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'BuddyList.h'
 **
-** Created: Thu Nov 6 01:34:01 2008
+** Created: Wed Nov 12 01:08:39 2008
 **      by: The Qt Meta Object Compiler version 59 (Qt 4.4.0)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,13 +23,14 @@ static const uint qt_meta_data_BuddyListWidget[] = {
        1,       // revision
        0,       // classname
        0,    0, // classinfo
-       2,   10, // methods
+       3,   10, // methods
        0,    0, // properties
        0,    0, // enums/sets
 
  // slots: signature, parameters, type, tag, flags
       27,   17,   16,   16, 0x08,
       53,   17,   16,   16, 0x08,
+      78,   16,   16,   16, 0x0a,
 
        0        // eod
 };
@@ -37,7 +38,7 @@ static const uint qt_meta_data_BuddyListWidget[] = {
 static const char qt_meta_stringdata_BuddyListWidget[] = {
     "BuddyListWidget\0\0buddylist\0"
     "ShowBuddies(c_BuddyList*)\0"
-    "ShowOnline(c_BuddyList*)\0"
+    "ShowOnline(c_BuddyList*)\0HideOffline()\0"
 };
 
 const QMetaObject BuddyListWidget::staticMetaObject = {
@@ -67,8 +68,9 @@ int BuddyListWidget::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
         switch (_id) {
         case 0: ShowBuddies((*reinterpret_cast< c_BuddyList*(*)>(_a[1]))); break;
         case 1: ShowOnline((*reinterpret_cast< c_BuddyList*(*)>(_a[1]))); break;
+        case 2: HideOffline(); break;
         }
-        _id -= 2;
+        _id -= 3;
     }
     return _id;
 }
