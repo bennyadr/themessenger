@@ -29,6 +29,10 @@ c_Socket::c_Socket()
 
 c_Socket::~c_Socket()
 {
+	if(is_Opened())
+	{
+		close(m_iSocketFd);
+	}
 };
 
 /*****************************************/
@@ -66,7 +70,7 @@ void c_Socket::Connect()
 
 /*****************************************/
 
-void c_Socket::Disconnect()
+void c_Socket::Disconnect()const
 {
 	if(is_Opened())
 	{

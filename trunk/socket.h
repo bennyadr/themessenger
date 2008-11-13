@@ -50,7 +50,7 @@ public:
 	virtual ~c_Socket();
 
 	virtual	void Connect();
-	void Disconnect();
+	void Disconnect()const;
 
 	void MakeBlocking();
 	void MakeNonBlocking();
