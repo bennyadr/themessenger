@@ -28,6 +28,7 @@ c_YInstance::~c_YInstance()
 
 void c_YInstance::run()
 {
+	m_stopped = false;
 	c_YPacket y_pack;
 	try
 	{
@@ -70,7 +71,16 @@ void c_YInstance::run()
 		c_Log logger("socket error");
 		QString error_message = QString::fromStdString(error.GetErrorMessage());	
 		QString error = "Error";
-		m_socket.Disconnect();
+		try
+		{
+			m_socket.Disconnect();
+		}
+		catch(c_Error_Socket &error)
+		{
+			QString error_message1 = QString::fromStdString(error.GetErrorMessage());	
+			QString error1 = "Error";
+			emit SendText(error1,error_message1);
+		}
 		emit SendText(error,error_message);
 		return;
 	}
@@ -127,6 +137,12 @@ void c_YInstance::run()
 				m_Buddy_list->GetOnlineBuddies(y_pack);
 				emit SetOnlineBuddies(m_Buddy_list);
 			}
+			if(y_pack.GetService() == YAHOO_SERVICE_UPDATE_STATUS || y_pack.GetService() == YAHOO_SERVICE_LOGON || y_pack.GetService() == YAHOO_SERVICE_LOGOFF)
+			{
+				m_Buddy_list->UpdateBuddies(y_pack);
+				emit SetOnlineBuddies(m_Buddy_list);
+				c_Log logger("updated list");
+			}
 			//handle received message
 			if(y_pack.GetService() == YAHOO_SERVICE_MESSAGE)
 			{
@@ -160,11 +176,21 @@ void c_YInstance::run()
 		}
 		catch(c_Error_Socket &error)
 		{
+			c_Log logger("socket error");
 			QString error_message = QString::fromStdString(error.GetErrorMessage());	
 			QString error = "Error";
-			m_socket.Disconnect();
+			try
+			{
+				m_socket.Disconnect();
+			}
+			catch(c_Error_Socket &error)
+			{
+				QString error_message1 = QString::fromStdString(error.GetErrorMessage());	
+				QString error1 = "Error";
+				emit SendText(error1,error_message1);
+			}
 			emit SendText(error,error_message);
-			c_Log logger("socket error");
+			return;
 		}
 		catch(bad_alloc)
 		{

@@ -28,9 +28,6 @@ LoginDialog::LoginDialog(QWidget *parent)
     PasswordLabel = new QLabel(LoginGroupBox);
     PasswordLabel->setObjectName(QString::fromUtf8("PasswordLabel"));
     PasswordLabel->setGeometry(QRect(10, 50, 51, 20));
-    KeepRadioButton = new QRadioButton(LoginGroupBox);
-    KeepRadioButton->setObjectName(QString::fromUtf8("KeepRadioButton"));
-    KeepRadioButton->setGeometry(QRect(10, 100, 111, 20));
     VertLine = new QFrame(LoginGroupBox);
     VertLine->setObjectName(QString::fromUtf8("VertLine"));
     VertLine->setGeometry(QRect(10, 80, 221, 16));
@@ -49,7 +46,6 @@ LoginDialog::LoginDialog(QWidget *parent)
     this->setWindowTitle(QApplication::translate("LoginDialog", "Login", 0, QApplication::UnicodeUTF8));
     LoginGroupBox->setTitle(QApplication::translate("LoginDialog", "Login", 0, QApplication::UnicodeUTF8));
     PasswordLabel->setText(QApplication::translate("LoginDialog", "Password:", 0, QApplication::UnicodeUTF8));
-    KeepRadioButton->setText(QApplication::translate("LoginDialog", "Keep login settings", 0, QApplication::UnicodeUTF8));
     UserLabel->setText(QApplication::translate("LoginDialog", "Username:", 0, QApplication::UnicodeUTF8));
     LoginButton->setText(QApplication::translate("LoginDialog", "Login", 0, QApplication::UnicodeUTF8));
 	connect(LoginButton,SIGNAL(clicked()),this,SLOT(LoginSlot()));

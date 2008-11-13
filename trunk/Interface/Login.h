@@ -30,7 +30,6 @@ private:
     QLineEdit *PasswordEdit;
     QLineEdit *UserEdit;
     QLabel *PasswordLabel;
-    QRadioButton *KeepRadioButton;
     QFrame *VertLine;
     QLabel *UserLabel;
     QPushButton *LoginButton;
