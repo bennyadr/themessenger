@@ -50,13 +50,23 @@ void BuddyListWidget::ShowBuddies(c_BuddyList* buddylist)
 
 void BuddyListWidget::ShowOnline(c_BuddyList* buddylist)
 {
-	QColor color(20,240,20,50);			//green
+	QColor green(20,240,20,50);			//green
+	QColor white(255,255,255,0);
 	for(unsigned int iterator = 0;iterator < buddylist->c_BuddyList::GetSize();iterator++)
 	{
 		if(buddylist->GetBuddy(iterator)->c_Buddy::isOnline())
 		{
-			BuddyListLW->item(iterator + buddylist->GetBuddy(iterator)->GetGroupNum())->setBackgroundColor(color);
+			BuddyListLW->item(iterator + buddylist->GetBuddy(iterator)->GetGroupNum())->setBackgroundColor(green);
 			BuddyListLW->item(iterator + buddylist->GetBuddy(iterator)->GetGroupNum())->setToolTip(QString::fromStdString(buddylist->GetBuddy(iterator)->GetStatus()));
+			if(hidden)
+				BuddyListLW->item(iterator + buddylist->GetBuddy(iterator)->GetGroupNum())->setHidden(false);
+		}
+		else
+		{	
+			BuddyListLW->item(iterator + buddylist->GetBuddy(iterator)->GetGroupNum())->setBackgroundColor(white);
+			BuddyListLW->item(iterator + buddylist->GetBuddy(iterator)->GetGroupNum())->setToolTip("Offline");
+			if(hidden)
+				BuddyListLW->item(iterator + buddylist->GetBuddy(iterator)->GetGroupNum())->setHidden(true);
 		}
 	}
 };

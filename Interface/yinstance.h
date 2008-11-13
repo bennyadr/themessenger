@@ -48,6 +48,7 @@ class c_YInstance : public QThread
 		c_YInstance& operator=(const c_YInstance&);
 
 	private:
+		c_Socket m_socket;
 		string *m_username;
 		string *m_password;
 		PriorityQueue *m_PQueue;
@@ -55,7 +56,6 @@ class c_YInstance : public QThread
 		unsigned int m_session_id;
 		c_BuddyList *m_Buddy_list;
 		volatile bool m_stopped;
-		c_Socket m_socket;
 		QMutex mutex;
 };
 

@@ -280,9 +280,6 @@ void FeelerGui::SendNotify(QString mes)
 
 void FeelerGui::Logout()
 {
-	c_YInstance* yinstance = c_YInstance::GetInstance();		
-	yinstance->stop();
-	yinstance->wait();
 	BuddyListWid->Clear();
 	TalkWidget->clear();
 	tab = new QWidget();
@@ -301,7 +298,19 @@ void FeelerGui::Logout()
     TalkWidget->addTab(tab, QString());
     TalkWidget->setCurrentIndex(0);
     TalkWidget->setTabText(TalkWidget->indexOf(tab), QApplication::translate("FeelerGui", "Stats", 0, QApplication::UnicodeUTF8));
-
+	c_YInstance* yinstance = c_YInstance::GetInstance();		
+	yinstance->stop();
+	yinstance->wait();
+	try
+	{
+		yinstance->GetSocket()->Disconnect();
+	}
+	catch(c_Error_Socket &error)
+	{
+		QString error_message1 = QString::fromStdString(error.GetErrorMessage());	
+		QString error1 = "Error";
+		SendMessage(error1,error_message1);
+	}
 	LoginD->show();
 };
 
