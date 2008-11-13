@@ -3,6 +3,24 @@
 #include <algorithm>
 #include "buddy.h"
 
+string c_BuddyList::Status(yahoo_status status)
+{
+	switch(status)
+	{
+		case YAHOO_STATUS_CUSTOM:
+			return " ";
+		case YAHOO_STATUS_AVAILABLE:
+			return "Available";
+		case YAHOO_STATUS_BRB:
+			return "Brb";
+		case YAHOO_STATUS_BUSY:
+			return "Busy";
+		case YAHOO_STATUS_ONVACATION:
+			return "OnVacation";
+		default:
+			return " ";
+	}
+};
 
 void c_BuddyList::GetBuddyList(c_YPacket& recvpack)
 {
@@ -65,6 +83,8 @@ void c_BuddyList::GetOnlineBuddies(const c_YPacket& recvpack)
 				case 7:
 					if(name != "")  //add previously read buddy with status in the list
 					{
+						if(message_status == "")
+							message_status = Status(status);
 						AddStatus(name,message_status,status,iddle_time);
 					}
 					//username
@@ -88,8 +108,56 @@ void c_BuddyList::GetOnlineBuddies(const c_YPacket& recvpack)
 					break;
 			}
 		}
+		if(message_status == "")
+			message_status = Status(status);
 		AddStatus(name,message_status,status,iddle_time);
 	}
+};
+
+void c_BuddyList::UpdateBuddies(const c_YPacket& recvpack)
+{
+	if(recvpack.GetService() == YAHOO_SERVICE_UPDATE_STATUS)
+	{
+		GetOnlineBuddies(recvpack);
+	}
+	if(recvpack.GetService() == YAHOO_SERVICE_LOGON)
+	{
+		GetOnlineBuddies(recvpack);
+	}
+	if(recvpack.GetService() == YAHOO_SERVICE_LOGOFF)
+	{
+		unsigned int iterator = 0;
+		string name = "";
+		string message_status = "";
+		yahoo_status status = YAHOO_STATUS_AVAILABLE;
+		while(iterator<recvpack.GetDataSize()-1)	
+		{
+			unsigned char key[100];
+			unsigned char value[1024];
+			memset(key,0,100*sizeof(unsigned char));
+			memset(value,0,1024*sizeof(unsigned char));
+			iterator = recvpack.GetDataPair(key,value);
+			int ikey =atoi(reinterpret_cast<const char*>(key));
+			switch(ikey)
+			{
+				case 7:
+					if(name != "")  
+					{
+						AddStatus(name,string(""),YAHOO_STATUS_OFFLINE,0);
+					}
+					//username
+					name = reinterpret_cast<const char*>(value); 
+					break;
+				case 10:
+					if(name == "")
+						break;
+					status = (yahoo_status)atoi(reinterpret_cast<const char*>(value));	
+					break;
+			}
+		}
+		AddStatus(name,string(""),YAHOO_STATUS_OFFLINE,0);
+	}
+
 };
 
 void c_BuddyList::AddGroup(const char* group)
@@ -132,7 +200,10 @@ void c_BuddyList::AddStatus(const string name,const string status_message,yahoo_
 		{
 			m_aBuddies[i]->SetStatus(status_message);
 			m_aBuddies[i]->SetYStatus(status);
-			m_aBuddies[i]->SetOnline(true);
+			if(status == YAHOO_STATUS_OFFLINE)
+				m_aBuddies[i]->SetOnline(false);
+			else	
+				m_aBuddies[i]->SetOnline(true);
 			m_aBuddies[i]->SetIddleTime(iddle_time);
 			break;
 		}

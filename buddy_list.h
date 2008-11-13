@@ -28,6 +28,8 @@ public:
 
 	void GetOnlineBuddies(const c_YPacket& recvpack);
 
+	void UpdateBuddies(const c_YPacket& recvpack);
+
 	c_Buddy* GetBuddy(unsigned int order)const
 	{
 		return m_aBuddies[order]; 
@@ -42,6 +44,7 @@ private:
 	void AddGroup(const char* group);
 	void AddBuddy(const char* buddy_name);	
 	void AddStatus(const string buddy,const string status_message,yahoo_status status,unsigned int iddletime);
+	string Status(yahoo_status status);
 
 private:
 	vector<c_Buddy*> m_aBuddies;

@@ -223,6 +223,7 @@ void c_YPacket::Clear()
 	m_ypack.service = 0;
 	m_ypack.status = 0;
 	m_ypack.id = 0;
+	m_iByteIterator = 0;
 	delete [] m_ypack.ydata;
 	m_ypack.ydata = NULL;
 };
