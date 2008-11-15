@@ -38,7 +38,7 @@
  */
 
 #if HAVE_CONFIG_H
-# include <config.h>
+#include <config.h>
 #endif
 
 #include "md5.h"
@@ -52,10 +52,6 @@
 #  define strrchr rindex
 # endif
 char *strchr (), *strrchr ();
-# if !HAVE_MEMCPY
-#  define memcpy(d, s, n) bcopy ((s), (d), (n))
-#  define memmove(d, s, n) bcopy ((s), (d), (n))
-# endif
 #endif
 
 #ifdef TEST

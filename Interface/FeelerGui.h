@@ -34,13 +34,13 @@ public:
 private slots:
 	void showBudies();
 	void CloseTalk();	
-	void SendMessage();
+	void SendMessages();
 	void SendNotify(QString mes);
 	void Logout();
 
 public slots:
 	void StartTalk(QListWidgetItem *Item);
-	void SendMessage(QString from,QString text);
+	void SendMessages(QString from,QString text);
 	void RecvMessage(QString from,QString text);
 
 signals:

@@ -101,7 +101,7 @@ FeelerGui::FeelerGui(QWidget *parent)
     TalkWidget->setTabText(TalkWidget->indexOf(tab), QApplication::translate("FeelerGui", "Stats", 0, QApplication::UnicodeUTF8));
 
 	c_YInstance* yinstance = c_YInstance::GetInstance();
-	connect(yinstance,SIGNAL(SendText(QString ,QString )),this,SLOT(SendMessage(QString ,QString )));
+	connect(yinstance,SIGNAL(SendText(QString ,QString )),this,SLOT(SendMessages(QString ,QString )));
 	connect(yinstance,SIGNAL(RecvText(QString ,QString )),this,SLOT(RecvMessage(QString ,QString )));
 	connect(Exit,SIGNAL(clicked()),this,SLOT(close()));
 	connect(HideShowB,SIGNAL(clicked()),BuddyListWid,SLOT(HideOffline()));
@@ -152,7 +152,7 @@ void FeelerGui::StartTalk(QListWidgetItem *Item)
    		tab->setObjectName(QString::fromUtf8("tab"));
  		tab->setGeometry(QRect(0, 0, 327, 327));
 		QLineEdit *TextEdit = new QLineEdit(tab);
-		connect(TextEdit,(SIGNAL(returnPressed())),this,SLOT(SendMessage()));
+		connect(TextEdit,(SIGNAL(returnPressed())),this,SLOT(SendMessages()));
 		connect(TextEdit,SIGNAL(textChanged(QString)),this,SLOT(SendNotify(QString)));
    		TextEdit->setObjectName(QString::fromUtf8("TextEdit"));
    		TextEdit->setGeometry(QRect(10, 290, 301, 21));
@@ -174,7 +174,7 @@ void FeelerGui::CloseTalk()
 	currentwidget->deleteLater();
 };
 
-void FeelerGui::SendMessage(QString from,QString text)
+void FeelerGui::SendMessages(QString from,QString text)
 {
 	QString send_text = from + " : " + text;
 	if(from == "Error" || from == "Log")
@@ -221,7 +221,7 @@ void FeelerGui::RecvMessage(QString from,QString text)
 	tab->setObjectName(QString::fromUtf8("tab"));
 	tab->setGeometry(QRect(0, 0, 327, 327));
 	QLineEdit *TextEdit = new QLineEdit(tab);
-	connect(TextEdit,(SIGNAL(returnPressed())),this,SLOT(SendMessage()));
+	connect(TextEdit,(SIGNAL(returnPressed())),this,SLOT(SendMessages()));
 	connect(TextEdit,SIGNAL(textChanged(QString)),this,SLOT(SendNotify(QString)));
 	TextEdit->setObjectName(QString::fromUtf8("TextEdit"));
 	TextEdit->setGeometry(QRect(10, 290, 301, 21));
@@ -240,7 +240,7 @@ void FeelerGui::RecvMessage(QString from,QString text)
 
 };
 
-void FeelerGui::SendMessage()
+void FeelerGui::SendMessages()
 {
 	QWidget *currentwid = TalkWidget->currentWidget();
 	c_YInstance* yinstance = c_YInstance::GetInstance();	
@@ -253,7 +253,7 @@ void FeelerGui::SendMessage()
 		text = cur_line_edit->text();
 		cur_line_edit->clear();
 	}
-	SendMessage(from,text);
+	SendMessages(from,text);
 	c_SendMessage *sendmess = new c_SendMessage(yinstance->GetSocket(),from.toStdString(),to.toStdString(),text.toStdString(),YAHOO_STATUS_OFFLINE);
 	yinstance->AddAction(sendmess);
 };
@@ -309,7 +309,7 @@ void FeelerGui::Logout()
 	{
 		QString error_message1 = QString::fromStdString(error.GetErrorMessage());	
 		QString error1 = "Error";
-		SendMessage(error1,error_message1);
+		SendMessages(error1,error_message1);
 	}
 	LoginD->show();
 };
