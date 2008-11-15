@@ -78,6 +78,7 @@ void c_Socket::Disconnect()const
 	if(close_ret == -1)
 		throw c_Error_Socket(close_ret, "error closing socket : ");
 	}
+	m_bStatus = false;
 };
 
 /*****************************************/
@@ -256,25 +257,36 @@ c_Socket::c_Socket()
  	m_sAddress = string(SERVER_ADDRESS);
 	memset( &m_tAddress , 0 , sizeof(m_tAddress) );
 	m_bStatus = false;
+
+	//initialize socket
+	WORD wVersionRequested;
+    WSADATA wsaData;
+	wVersionRequested = MAKEWORD(1, 1);
+	int err = WSAStartup(wVersionRequested, &wsaData);
+	if(err != 0)
+		throw c_Error_Socket(1 , "error requesting socket version ");
 };
 
 /*****************************************/
 
 c_Socket::~c_Socket()
 {
+	WSACleanup();
 };
 
 /*****************************************/
 
 void c_Socket::Connect()
 {
-	m_iSocketFd=socket(AF_INET,SOCK_STREAM,0);
+	m_iSocketFd=socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
 	if(m_iSocketFd == INVALID_SOCKET)
 		throw c_Error_Socket(m_iSocketFd , "error creating socket : ");
 
 	m_tAddress.sin_family = AF_INET;
 	m_tAddress.sin_addr.s_addr = INADDR_ANY;
 	m_tAddress.sin_port = htons ( m_iPort );
+	//m_tAddress.sin_addr.S_un.S_addr = inet_addr(m_sAddress.c_str());
+	m_tAddress.sin_addr.s_addr = inet_addr(m_sAddress.c_str());
 
 	int status = connect ( m_iSocketFd , (sockaddr *) &m_tAddress, sizeof(m_tAddress) );
 	if(status == SOCKET_ERROR)
@@ -286,7 +298,7 @@ void c_Socket::Connect()
 
 /*****************************************/
 
-void c_Socket::Disconnect()
+void c_Socket::Disconnect()const
 {
 	if(is_Opened())
 	{
@@ -294,6 +306,7 @@ void c_Socket::Disconnect()
 	if(close_ret == SOCKET_ERROR)
 		throw c_Error_Socket(close_ret, "error closing socket : ");
 	}
+	m_bStatus = false;
 };
 
 /*****************************************/
@@ -310,7 +323,7 @@ void c_Socket::MakeBlocking()
 
 void c_Socket::MakeNonBlocking()
 {
-	u_long iMode = 0;
+	u_long iMode = 1;
 	int ret = ioctlsocket(m_iSocketFd,FIONBIO,&iMode);
 	if(ret == SOCKET_ERROR)
 		throw c_Error_Socket(ret,"error makeing socket non-blocking : ");
@@ -382,7 +395,12 @@ bool c_Socket::ReadNonBlocking(c_YPacket& packet)
 	{
 		ret_read = recv(m_iSocketFd,reinterpret_cast<char*>(buffer_1+offset),size,0);
 		if(ret_read <= 0)
-			throw c_Error_Socket(ret_read,"error receiving data");
+		{
+			if(WSAGetLastError() == WSAEWOULDBLOCK)
+				return false;
+			else
+				throw c_Error_Socket(ret_read,"error reading from non-blocking socket : ");
+		};
 		size -= ret_read;
 		offset += ret_read;
 	}

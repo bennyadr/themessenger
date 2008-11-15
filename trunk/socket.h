@@ -23,6 +23,7 @@
 
 #include <iostream>
 #include <string>
+#include <sstream>
 
 #include "config.h"
 #include "message_base.h"
@@ -30,6 +31,8 @@
 
 using namespace std;
 using namespace config;
+
+#define WINDOWS
 
 #define WARNING 1
 #define ERROR 2
@@ -155,7 +158,7 @@ public:
 	virtual ~c_Socket();
 
 	virtual	void Connect();
-	void Disconnect();
+	void Disconnect()const;
 
 	void MakeBlocking();
 	void MakeNonBlocking();
@@ -174,7 +177,7 @@ private:
 	string m_sAddress ;
 	int m_iSocketFd;
 	sockaddr_in m_tAddress;
-	bool m_bStatus;
+	mutable bool m_bStatus;
 
 	
 };
@@ -187,12 +190,15 @@ public:
 	c_Error_Socket(int ret,const string user_message,int type = ERROR)
 		:m_iType(type)
 	{
+		WSACleanup();
 		m_sUserMessage = string(user_message);
 		if(ret <= 0)
 		{
-			WCHAR Buffer[200];
-			FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, 0, WSAGetLastError(), LANG_NEUTRAL, Buffer, 200, 0);
-			m_sErrorMessage = string(reinterpret_cast<char*>(Buffer));
+			//WCHAR Buffer[200];
+			//FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, 0, WSAGetLastError(), LANG_NEUTRAL, Buffer, 200, 0);
+			stringstream str;
+			str<<WSAGetLastError();
+			m_sErrorMessage = str.str(); //reinterpret_cast<char*>(Buffer)
 		}
 		else
 		{

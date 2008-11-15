@@ -71,6 +71,7 @@ void c_YInstance::run()
 		c_Log logger("socket error");
 		QString error_message = QString::fromStdString(error.GetErrorMessage());	
 		QString error = "Error";
+		emit SendText(error,error_message);
 		try
 		{
 			m_socket.Disconnect();
@@ -81,7 +82,6 @@ void c_YInstance::run()
 			QString error1 = "Error";
 			emit SendText(error1,error_message1);
 		}
-		emit SendText(error,error_message);
 		return;
 	}
 	catch(bad_alloc)
@@ -179,6 +179,7 @@ void c_YInstance::run()
 			c_Log logger("socket error");
 			QString error_message = QString::fromStdString(error.GetErrorMessage());	
 			QString error = "Error";
+			emit SendText(error,error_message);
 			try
 			{
 				m_socket.Disconnect();
@@ -189,7 +190,6 @@ void c_YInstance::run()
 				QString error1 = "Error";
 				emit SendText(error1,error_message1);
 			}
-			emit SendText(error,error_message);
 			return;
 		}
 		catch(bad_alloc)

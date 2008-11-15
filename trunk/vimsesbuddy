@@ -2,14 +2,14 @@ let SessionLoad = 1
 if &cp | set nocp | endif
 let s:cpo_save=&cpo
 set cpo&vim
-imap <F2> :tabnexti 
-imap <F1> :tabpreviousi 
-nmap  :tabnew 
-map <silent>  :if expand("%") == "":browse confirm w!:else:confirm w!:endif
+imap <F2> :tabnexti 
+imap <F1> :tabpreviousi 
+nmap  :tabnew 
+map <silent>  :if expand("%") == "":browse confirm w!:else:confirm w!:endif
 map Q gq
 nmap gx <Plug>NetrwBrowseX
-map <F2> :tabnext 
-map <F1> :tabprevious 
+map <F2> :tabnext 
+map <F1> :tabprevious 
 nnoremap <silent> <Plug>NetrwBrowseX :call netrw#NetBrowseX(expand("<cWORD>"),0)
 imap  
 imap  :tabnew
