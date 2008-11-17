@@ -89,6 +89,7 @@ void c_BuddyList::GetOnlineBuddies(const c_YPacket& recvpack)
 					}
 					//username
 					name = reinterpret_cast<const char*>(value); 
+					message_status = "";
 					break;
 				case 10:
 					if(name == "")

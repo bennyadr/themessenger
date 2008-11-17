@@ -1,8 +1,8 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'yinstance.h'
 **
-** Created: Thu Nov 13 14:57:58 2008
-**      by: The Qt Meta Object Compiler version 59 (Qt 4.4.0)
+** Created: Mon Nov 17 00:03:39 2008
+**      by: The Qt Meta Object Compiler version 59 (Qt 4.4.3)
 **
 ** WARNING! All changes made in this file will be lost!
 *****************************************************************************/
@@ -11,7 +11,7 @@
 #if !defined(Q_MOC_OUTPUT_REVISION)
 #error "The header file 'yinstance.h' doesn't include <QObject>."
 #elif Q_MOC_OUTPUT_REVISION != 59
-#error "This file was generated using the moc from 4.4.0. It"
+#error "This file was generated using the moc from 4.4.3. It"
 #error "cannot be used with the include files from this version of Qt."
 #error "(The moc has changed too much.)"
 #endif
@@ -61,7 +61,7 @@ void *c_YInstance::qt_metacast(const char *_clname)
 {
     if (!_clname) return 0;
     if (!strcmp(_clname, qt_meta_stringdata_c_YInstance))
-	return static_cast<void*>(const_cast< c_YInstance*>(this));
+        return static_cast<void*>(const_cast< c_YInstance*>(this));
     return QThread::qt_metacast(_clname);
 }
 

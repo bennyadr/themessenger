@@ -32,7 +32,6 @@
 using namespace std;
 using namespace config;
 
-#define WINDOWS
 
 #define WARNING 1
 #define ERROR 2
@@ -84,7 +83,7 @@ private:
 	string m_sAddress ;
 	int m_iSocketFd;
 	sockaddr_in m_tAddress;
-	bool m_bStatus;
+    mutable	bool m_bStatus;
 
 	
 };

@@ -1,8 +1,8 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'BuddyList.h'
 **
-** Created: Thu Nov 13 14:45:51 2008
-**      by: The Qt Meta Object Compiler version 59 (Qt 4.4.0)
+** Created: Mon Nov 17 01:54:06 2008
+**      by: The Qt Meta Object Compiler version 59 (Qt 4.4.3)
 **
 ** WARNING! All changes made in this file will be lost!
 *****************************************************************************/
@@ -11,7 +11,7 @@
 #if !defined(Q_MOC_OUTPUT_REVISION)
 #error "The header file 'BuddyList.h' doesn't include <QObject>."
 #elif Q_MOC_OUTPUT_REVISION != 59
-#error "This file was generated using the moc from 4.4.0. It"
+#error "This file was generated using the moc from 4.4.3. It"
 #error "cannot be used with the include files from this version of Qt."
 #error "(The moc has changed too much.)"
 #endif
@@ -23,14 +23,15 @@ static const uint qt_meta_data_BuddyListWidget[] = {
        1,       // revision
        0,       // classname
        0,    0, // classinfo
-       3,   10, // methods
+       4,   10, // methods
        0,    0, // properties
        0,    0, // enums/sets
 
  // slots: signature, parameters, type, tag, flags
       27,   17,   16,   16, 0x08,
       53,   17,   16,   16, 0x08,
-      78,   16,   16,   16, 0x0a,
+      85,   78,   16,   16, 0x08,
+     103,   16,   16,   16, 0x0a,
 
        0        // eod
 };
@@ -38,7 +39,8 @@ static const uint qt_meta_data_BuddyListWidget[] = {
 static const char qt_meta_stringdata_BuddyListWidget[] = {
     "BuddyListWidget\0\0buddylist\0"
     "ShowBuddies(c_BuddyList*)\0"
-    "ShowOnline(c_BuddyList*)\0HideOffline()\0"
+    "ShowOnline(c_BuddyList*)\0status\0"
+    "ChangeStatus(int)\0HideOffline()\0"
 };
 
 const QMetaObject BuddyListWidget::staticMetaObject = {
@@ -55,7 +57,7 @@ void *BuddyListWidget::qt_metacast(const char *_clname)
 {
     if (!_clname) return 0;
     if (!strcmp(_clname, qt_meta_stringdata_BuddyListWidget))
-	return static_cast<void*>(const_cast< BuddyListWidget*>(this));
+        return static_cast<void*>(const_cast< BuddyListWidget*>(this));
     return QWidget::qt_metacast(_clname);
 }
 
@@ -68,9 +70,10 @@ int BuddyListWidget::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
         switch (_id) {
         case 0: ShowBuddies((*reinterpret_cast< c_BuddyList*(*)>(_a[1]))); break;
         case 1: ShowOnline((*reinterpret_cast< c_BuddyList*(*)>(_a[1]))); break;
-        case 2: HideOffline(); break;
+        case 2: ChangeStatus((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 3: HideOffline(); break;
         }
-        _id -= 3;
+        _id -= 4;
     }
     return _id;
 }

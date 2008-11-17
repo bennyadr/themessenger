@@ -7,7 +7,7 @@
 /***************************************/
 
 
-c_SendMessage::c_SendMessage(const c_Socket *socket,string from,string to,string text,yahoo_status status)
+c_SendMessage::c_SendMessage(const c_Socket *socket,string from,string to,string text,yahoo_status status,int id)
 	:m_cSocket(NULL),
 	m_status(status)
 {
@@ -15,6 +15,7 @@ c_SendMessage::c_SendMessage(const c_Socket *socket,string from,string to,string
 	m_sTo = to;
 	m_sText = text;
 	m_cSocket = socket;
+	m_id = id;
 };
 
 c_SendMessage::~c_SendMessage()
@@ -24,7 +25,7 @@ c_SendMessage::~c_SendMessage()
 void c_SendMessage::Execute()
 {
 	int tst_size = m_sFrom.size() + m_sText.size() + m_sTo.size();
-	c_YPacket sendpack(55+tst_size,YAHOO_SERVICE_MESSAGE,m_status,0);
+	c_YPacket sendpack(55+tst_size,YAHOO_SERVICE_MESSAGE,m_status,m_id);
 	unsigned char key[10];
 	unsigned char value[100];
 	memset(key,0,10);
@@ -72,7 +73,7 @@ void c_SendMessage::Execute()
 /***************************************/
 /***************************************/
 
-c_SendNotify::c_SendNotify(const c_Socket *socket,string from,string to,yahoo_status status,bool on)
+c_SendNotify::c_SendNotify(const c_Socket *socket,string from,string to,yahoo_status status,bool on,int id)
 	:m_socket(NULL),
 	m_status(status),
 	m_on(on)
@@ -80,6 +81,7 @@ c_SendNotify::c_SendNotify(const c_Socket *socket,string from,string to,yahoo_st
 	m_sFrom = from;
 	m_sTo = to;
 	m_socket = socket;
+	m_id = id;
 };
 
 c_SendNotify::~c_SendNotify()
@@ -89,7 +91,7 @@ c_SendNotify::~c_SendNotify()
 void c_SendNotify::Execute()
 {
 	int tst_size = m_sFrom.size() + m_sTo.size();
-	c_YPacket sendpack(46+tst_size,YAHOO_SERVICE_NOTIFY,m_status,0);
+	c_YPacket sendpack(46+tst_size,YAHOO_SERVICE_NOTIFY,m_status,m_id);
 	unsigned char key[10];
 	unsigned char value[100];
 	unsigned char *notify = (unsigned char*) "TYPING";
