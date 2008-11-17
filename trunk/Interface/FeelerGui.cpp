@@ -217,6 +217,8 @@ void FeelerGui::RecvMessage(QString from,QString text)
 			return;
 		}
 	}
+	if(!BuddyListWid->Contains(from))
+		return;
 	QWidget *tab = new QWidget();
 	tab->setObjectName(QString::fromUtf8("tab"));
 	tab->setGeometry(QRect(0, 0, 327, 327));
@@ -254,7 +256,7 @@ void FeelerGui::SendMessages()
 		cur_line_edit->clear();
 	}
 	SendMessages(from,text);
-	c_SendMessage *sendmess = new c_SendMessage(yinstance->GetSocket(),from.toStdString(),to.toStdString(),text.toStdString(),YAHOO_STATUS_OFFLINE);
+	c_SendMessage *sendmess = new c_SendMessage(yinstance->GetSocket(),from.toStdString(),to.toStdString(),text.toStdString(),YAHOO_STATUS_OFFLINE,yinstance->GetId());
 	yinstance->AddAction(sendmess);
 };
 
@@ -267,12 +269,12 @@ void FeelerGui::SendNotify(QString mes)
 	QString to = TalkWidget->tabText(TalkWidget->currentIndex()); 
 	if(mes.length() == 0)
 	{
-		c_SendNotify *sendnotif = new c_SendNotify(yinstance->GetSocket(),from.toStdString(),to.toStdString(),YAHOO_STATUS_OFFLINE,false);
+		c_SendNotify *sendnotif = new c_SendNotify(yinstance->GetSocket(),from.toStdString(),to.toStdString(),YAHOO_STATUS_OFFLINE,false,yinstance->GetId());
 		yinstance->AddAction(sendnotif);
 	}
 	else
 	{
-		c_SendNotify *sendnotif = new c_SendNotify(yinstance->GetSocket(),from.toStdString(),to.toStdString(),YAHOO_STATUS_OFFLINE,true);
+		c_SendNotify *sendnotif = new c_SendNotify(yinstance->GetSocket(),from.toStdString(),to.toStdString(),YAHOO_STATUS_OFFLINE,true,yinstance->GetId());
 		yinstance->AddAction(sendnotif);
 	}
 

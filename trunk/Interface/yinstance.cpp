@@ -42,7 +42,7 @@ void c_YInstance::run()
 			m_Buddy_list = login->GetBuddyList(); 
 			emit SetBuddyList(m_Buddy_list);
 			y_pack = login->GetLeftPack();
-			m_session_id = y_pack.GetId();
+			m_session_id = (int)y_pack.GetId();
 			//get online buddies
 			if(y_pack.GetService() == YAHOO_SERVICE_BUDDYLIST_ONLINE)
 			{

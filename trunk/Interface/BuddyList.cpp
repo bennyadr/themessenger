@@ -3,6 +3,7 @@
 
 #include "BuddyList.h"
 #include "yinstance.h"
+#include "../setStatus.h"
 
 BuddyListWidget::BuddyListWidget(QWidget *parent)
 	:QWidget(parent)
@@ -16,6 +17,22 @@ BuddyListWidget::BuddyListWidget(QWidget *parent)
    	StatusCB = new QComboBox(this);
     StatusCB->setObjectName(QString::fromUtf8("StatusCB"));
     StatusCB->setGeometry(QRect(10, 10, 231, 22));
+	StatusCB->addItem("Available");
+	StatusCB->addItem("BeRightBack");
+	StatusCB->addItem("Busy");
+	StatusCB->addItem("NotAtHome");
+	StatusCB->addItem("NotAtDesk");
+	StatusCB->addItem("NotInOffice");
+	StatusCB->addItem("OnThePhone");
+	StatusCB->addItem("OnVacation");
+	StatusCB->addItem("OutToLunch");
+	StatusCB->addItem("SteppedOut");
+	StatusCB->addItem("Invisible");
+	StatusCB->addItem("Away");
+	StatusCB->addItem("Offline");
+	StatusCB->addItem("Custom...");
+	connect(StatusCB,SIGNAL(activated(int)),this,SLOT(ChangeStatus(int)));
+
 
     this->setWindowTitle(QApplication::translate("BuddyListWidget", "Form", 0, QApplication::UnicodeUTF8));
 	c_YInstance* yinstance = c_YInstance::GetInstance();	
@@ -109,4 +126,37 @@ void BuddyListWidget::HideOffline()
 void BuddyListWidget::Clear()
 {
 	BuddyListLW->clear();
+};
+
+bool BuddyListWidget::Contains(QString name)const
+{
+	for(int iterator = 0;iterator < BuddyListLW->count();iterator++)
+	{
+		if(BuddyListLW->item(iterator)->text() == name)
+			return true;
+	}
+	return false;
+};
+
+
+void BuddyListWidget::ChangeStatus(int status)
+{
+	c_YInstance *yinstance = c_YInstance::GetInstance();
+	if(status >= YAHOO_STATUS_AVAILABLE && status < YAHOO_STATUS_STEPPEDOUT)
+	{
+		c_SetStatus *set_status = new c_SetStatus(yinstance->GetSocket(),"",yahoo_status(status),yinstance->GetId());
+		yinstance->AddAction(set_status);
+	}
+	else
+		if(status == 13) //custom
+		{
+			c_SetStatus *set_status = new c_SetStatus(yinstance->GetSocket(),"Custom",YAHOO_STATUS_CUSTOM,yinstance->GetId());
+			yinstance->AddAction(set_status);
+		}
+		else
+			if(status == 10)  //invisible
+			{
+				c_SetStatus *set_status = new c_SetStatus(yinstance->GetSocket(),"",YAHOO_STATUS_INVISIBLE,yinstance->GetId());
+				yinstance->AddAction(set_status);
+			}
 };

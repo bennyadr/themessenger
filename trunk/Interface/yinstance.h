@@ -28,6 +28,8 @@ class c_YInstance : public QThread
 		QString GetUserName()const;
 		const c_Socket *GetSocket()const;
 		c_BuddyList *GetBuddyList()const;
+		int GetId()const 
+		{	return m_session_id;	};
 
 		~c_YInstance();
 
@@ -53,7 +55,7 @@ class c_YInstance : public QThread
 		string *m_password;
 		PriorityQueue *m_PQueue;
 		bool m_bConnected;
-		unsigned int m_session_id;
+		int m_session_id;
 		c_BuddyList *m_Buddy_list;
 		volatile bool m_stopped;
 		QMutex mutex;

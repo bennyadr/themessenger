@@ -11,7 +11,7 @@ using namespace YPacket;
 class c_SendMessage : public c_Action
 {
 public:
-	c_SendMessage(const c_Socket *socket,string from,string to,string text,yahoo_status status);
+	c_SendMessage(const c_Socket *socket,string from,string to,string text,yahoo_status status,int id);
 	~c_SendMessage();
 
 	void Execute();
@@ -22,13 +22,14 @@ private:
 	string m_sText;
 	const c_Socket *m_cSocket;
 	yahoo_status m_status;
+	int m_id;
 };
 
 
 class c_SendNotify : public c_Action
 {
 public:
-	c_SendNotify(const c_Socket *socket,string from,string to,yahoo_status status,bool on);
+	c_SendNotify(const c_Socket *socket,string from,string to,yahoo_status status,bool on,int id);
 	~c_SendNotify();
 
 	void Execute();
@@ -39,6 +40,7 @@ private:
 	const c_Socket *m_socket;
 	yahoo_status m_status;
 	bool m_on;
+	int m_id;
 
 };
 

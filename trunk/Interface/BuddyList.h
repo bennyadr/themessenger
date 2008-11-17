@@ -25,6 +25,7 @@ class BuddyListWidget : public QWidget
 public:
     BuddyListWidget(QWidget *parent = 0);
 	void Clear();
+	bool Contains(QString name)const;
 private:
     QListWidget *BuddyListLW;
     QComboBox *StatusCB;
@@ -33,6 +34,7 @@ private:
 private slots:
 	void ShowBuddies(c_BuddyList *buddylist);
 	void ShowOnline(c_BuddyList *buddylist);
+	void ChangeStatus(int status);
 
 public slots:
 	void HideOffline();
