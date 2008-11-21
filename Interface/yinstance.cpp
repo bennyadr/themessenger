@@ -1,6 +1,7 @@
 #include "yinstance.h"
 #include "../sendMessage.h"
 #include "../recvMessage.h"
+#include "../setStatus.h"
 #include "../ypingtime.h"
 #include "../ylog.h"
 
@@ -121,6 +122,14 @@ void c_YInstance::run()
 				{
 					c_Log logger("send notify!");
 					sendnotif_act->Execute();
+					delete(sendnotif_act);
+					continue;
+				}
+				c_SetStatus *setstatus_act = dynamic_cast<c_SetStatus*>(action);
+				if(setstatus_act)
+				{
+					c_Log logger("set status!");
+					setstatus_act->Execute();
 					delete(sendnotif_act);
 					continue;
 				}

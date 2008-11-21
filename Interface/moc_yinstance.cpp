@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'yinstance.h'
 **
-** Created: Mon Nov 17 00:03:39 2008
+** Created: Fri Nov 21 14:46:21 2008
 **      by: The Qt Meta Object Compiler version 59 (Qt 4.4.3)
 **
 ** WARNING! All changes made in this file will be lost!
