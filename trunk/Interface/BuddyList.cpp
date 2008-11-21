@@ -146,17 +146,27 @@ void BuddyListWidget::ChangeStatus(int status)
 	{
 		c_SetStatus *set_status = new c_SetStatus(yinstance->GetSocket(),"",yahoo_status(status),yinstance->GetId());
 		yinstance->AddAction(set_status);
+		StatusCB->setEditable(false);
 	}
 	else
-		if(status == 13) //custom
+		if(status >= 13) //custom
 		{
-			c_SetStatus *set_status = new c_SetStatus(yinstance->GetSocket(),"Custom",YAHOO_STATUS_CUSTOM,yinstance->GetId());
-			yinstance->AddAction(set_status);
+			if(StatusCB->isEditable())
+			{
+				c_SetStatus *set_status = new c_SetStatus(yinstance->GetSocket(),this->StatusCB->currentText().toLatin1().data(),YAHOO_STATUS_CUSTOM,yinstance->GetId());
+				yinstance->AddAction(set_status);
+				StatusCB->setEditable(false);
+			}
+			else
+			{
+				StatusCB->setEditable(true);
+			}
 		}
 		else
 			if(status == 10)  //invisible
 			{
 				c_SetStatus *set_status = new c_SetStatus(yinstance->GetSocket(),"",YAHOO_STATUS_INVISIBLE,yinstance->GetId());
 				yinstance->AddAction(set_status);
+				StatusCB->setEditable(false);
 			}
 };

@@ -19,6 +19,7 @@ class QFrame;
 class QPushButton;
 class QRadioButton;
 class QDialog;
+class QGridLayout;
 
 class LoginDialog : public QDialog
 {
@@ -26,11 +27,10 @@ class LoginDialog : public QDialog
 
 private:
 
-	QGroupBox *LoginGroupBox;
+	QGridLayout *GLayout;
     QLineEdit *PasswordEdit;
     QLineEdit *UserEdit;
     QLabel *PasswordLabel;
-    QFrame *VertLine;
     QLabel *UserLabel;
     QPushButton *LoginButton;
 

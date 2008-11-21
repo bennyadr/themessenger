@@ -90,7 +90,7 @@ FeelerGui::FeelerGui(QWidget *parent)
 	setWindowTitle(QApplication::translate("FeelerGui", "Feeler", 0, QApplication::UnicodeUTF8));
 
 #ifndef QT_NO_TOOLTIP
-    setToolTip(QApplication::translate("FeelerGui", "Feeler", 0, QApplication::UnicodeUTF8));
+    //setToolTip(QApplication::translate("FeelerGui", "Feeler", 0, QApplication::UnicodeUTF8));
 #endif // QT_NO_TOOLTIP
 
     SettingsButtton->setText(QApplication::translate("FeelerGui", "Settings", 0, QApplication::UnicodeUTF8));
