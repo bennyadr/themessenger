@@ -47,7 +47,7 @@ signals:
 	void PrintText(const QString&);
 
 private:
-    QPushButton *SettingsButtton;
+	QPushButton *ScanInvisible;
 	QPushButton *HideShowB;
 	QPushButton *LogoutButton;
     QPushButton *Exit;

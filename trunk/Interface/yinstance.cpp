@@ -138,7 +138,10 @@ void c_YInstance::run()
 
 			//process incoming messages from the server
 			if(!m_socket.ReadNonBlocking(y_pack))
+			{
+				sleep(1);			
 				continue;
+			}
 
 			//get online buddies
 			if(y_pack.GetService() == YAHOO_SERVICE_BUDDYLIST_ONLINE)

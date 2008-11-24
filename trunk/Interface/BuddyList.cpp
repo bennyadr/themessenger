@@ -170,3 +170,8 @@ void BuddyListWidget::ChangeStatus(int status)
 				StatusCB->setEditable(false);
 			}
 };
+
+void BuddyListWidget::ScanList()
+{
+
+};

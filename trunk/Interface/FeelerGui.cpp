@@ -5,7 +5,6 @@
 #include <QTextBrowser>
 #include <QLineEdit>
 #include <QCommandLinkButton>
-
 #include "FeelerGui.h"
 #include "BuddyList.h"
 #include "Login.h"
@@ -23,9 +22,10 @@ FeelerGui::FeelerGui(QWidget *parent)
         this->setObjectName(QString::fromUtf8("FeelerGui"));
     this->resize(432, 377);
 
-    SettingsButtton = new QPushButton(this);
-    SettingsButtton->setObjectName(QString::fromUtf8("SettingsButtton"));
-    SettingsButtton->setGeometry(QRect(350, 30, 75, 24));
+	ScanInvisible = new QPushButton(this);
+	ScanInvisible->setObjectName(QString::fromUtf8("ScanBuddies"));
+	ScanInvisible->setGeometry(QRect(350, 40, 75, 24));
+
 
 	HideShowB = new QPushButton(this);
     HideShowB->setObjectName(QString::fromUtf8("HideOfflineButton"));
@@ -64,7 +64,7 @@ FeelerGui::FeelerGui(QWidget *parent)
     TalkWidget->addTab(tab, QString());
     TalkWidget->setCurrentIndex(0);
 
-    QWidget::setTabOrder(SettingsButtton, HideShowB);
+	QWidget::setTabOrder(ScanInvisible,HideShowB);
 	QWidget::setTabOrder(HideShowB,BuddyListButton);
     QWidget::setTabOrder(BuddyListButton, LogoutButton);
     QWidget::setTabOrder(Exit, TextEdit);
@@ -93,7 +93,8 @@ FeelerGui::FeelerGui(QWidget *parent)
     //setToolTip(QApplication::translate("FeelerGui", "Feeler", 0, QApplication::UnicodeUTF8));
 #endif // QT_NO_TOOLTIP
 
-    SettingsButtton->setText(QApplication::translate("FeelerGui", "Settings", 0, QApplication::UnicodeUTF8));
+
+	ScanInvisible->setText(QApplication::translate("FeelerGui", "ScanBuddies", 0, QApplication::UnicodeUTF8));
 	HideShowB->setText(QApplication::translate("FeelerGui", "HideOffline", 0, QApplication::UnicodeUTF8));
 	LogoutButton->setText(QApplication::translate("FeelerGui", "Logout", 0, QApplication::UnicodeUTF8));
     Exit->setText(QApplication::translate("FeelerGui", "Exit", 0, QApplication::UnicodeUTF8));
@@ -105,6 +106,7 @@ FeelerGui::FeelerGui(QWidget *parent)
 	connect(yinstance,SIGNAL(RecvText(QString ,QString )),this,SLOT(RecvMessage(QString ,QString )));
 	connect(Exit,SIGNAL(clicked()),this,SLOT(close()));
 	connect(HideShowB,SIGNAL(clicked()),BuddyListWid,SLOT(HideOffline()));
+	connect(ScanInvisible,SIGNAL(clicked()),BuddyListWid,SLOT(ScanList()));
 	connect(LogoutButton,SIGNAL(clicked()),this,SLOT(Logout()));
 
 };
@@ -315,6 +317,5 @@ void FeelerGui::Logout()
 	}
 	LoginD->show();
 };
-
 
 
