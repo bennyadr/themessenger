@@ -4,6 +4,7 @@
 #include "BuddyList.h"
 #include "yinstance.h"
 #include "../setStatus.h"
+#include "../scanBuddies.h"
 
 BuddyListWidget::BuddyListWidget(QWidget *parent)
 	:QWidget(parent)
@@ -69,11 +70,15 @@ void BuddyListWidget::ShowOnline(c_BuddyList* buddylist)
 {
 	QColor green(20,240,20,50);			//green
 	QColor white(255,255,255,0);
+	QColor gray(80,80,80,80);
 	for(unsigned int iterator = 0;iterator < buddylist->c_BuddyList::GetSize();iterator++)
 	{
 		if(buddylist->GetBuddy(iterator)->c_Buddy::isOnline())
 		{
-			BuddyListLW->item(iterator + buddylist->GetBuddy(iterator)->GetGroupNum())->setBackgroundColor(green);
+			if(buddylist->GetBuddy(iterator)->GetYahooStatus() == YAHOO_STATUS_INVISIBLE)
+				BuddyListLW->item(iterator + buddylist->GetBuddy(iterator)->GetGroupNum())->setBackgroundColor(gray);
+			else
+				BuddyListLW->item(iterator + buddylist->GetBuddy(iterator)->GetGroupNum())->setBackgroundColor(green);
 			BuddyListLW->item(iterator + buddylist->GetBuddy(iterator)->GetGroupNum())->setToolTip(QString::fromStdString(buddylist->GetBuddy(iterator)->GetStatus()));
 			if(hidden)
 				BuddyListLW->item(iterator + buddylist->GetBuddy(iterator)->GetGroupNum())->setHidden(false);
@@ -173,5 +178,17 @@ void BuddyListWidget::ChangeStatus(int status)
 
 void BuddyListWidget::ScanList()
 {
+	c_YInstance *yinstance = c_YInstance::GetInstance();
+	c_BuddyList *buddylist = yinstance->GetBuddyList();
+	if(buddylist == NULL)
+		return;
+	for(unsigned int iterator = 0;iterator < buddylist->c_BuddyList::GetSize();iterator++)
+	{
+		if(!buddylist->GetBuddy(iterator)->c_Buddy::isOnline())
+		{
+			c_ScanBuddies *scanbud = new c_ScanBuddies(yinstance->GetSocket(),yinstance->GetId(),buddylist->GetBuddy(iterator)->GetName(),yinstance->GetUserNameSTL());
+			yinstance->AddAction(scanbud);
+		}
+	}
 
 };

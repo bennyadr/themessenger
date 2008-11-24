@@ -158,6 +158,29 @@ void c_BuddyList::UpdateBuddies(const c_YPacket& recvpack)
 		}
 		AddStatus(name,string(""),YAHOO_STATUS_OFFLINE,0);
 	}
+	if(recvpack.GetService() == YAHOO_SERVICE_PICTURE)
+	{
+		//get invisible buddies
+		unsigned int iterator = 0;
+		string name = "";
+		yahoo_status status = YAHOO_STATUS_INVISIBLE;
+		while(iterator<recvpack.GetDataSize()-1)	
+		{
+			unsigned char key[100];
+			unsigned char value[1024];
+			memset(key,0,100*sizeof(unsigned char));
+			memset(value,0,1024*sizeof(unsigned char));
+			iterator = recvpack.GetDataPair(key,value);
+			int ikey =atoi(reinterpret_cast<const char*>(key));
+			if(ikey == 4)
+			{
+				name = reinterpret_cast<const char*>(value); 
+				AddStatus(name,"Invisible",status,0);
+			}
+		}
+
+		
+	}
 
 };
 
