@@ -31,7 +31,6 @@ void c_ScanBuddies::PeerScan()
 	value[0] = 0x31;
 	sendpack.AddDataPair(key,value);
 	m_socket->Write(sendpack);
-	sleep(0.5);
 
 	/*c_YPacket sendpack1(17+m_buddy.size()+m_username.size(),YAHOO_SERVICE_CHAT7,YAHOO_STATUS_AVAILABLE,m_id);
 	unsigned char key1[10];

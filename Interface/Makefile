@@ -11,8 +11,8 @@
 CC            = gcc
 CXX           = g++
 DEFINES       = -DQT_NO_DEBUG -DQT_GUI_LIB -DQT_CORE_LIB
-CFLAGS        = -pipe -O2 -Wall -W -D_REENTRANT $(DEFINES)
-CXXFLAGS      = -pipe -O2 -Wall -W -D_REENTRANT $(DEFINES)
+CFLAGS        = -pipe -B static -O2 -Wall -W -D_REENTRANT $(DEFINES)
+CXXFLAGS      = -pipe -B static -O2 -Wall -W -D_REENTRANT $(DEFINES)
 INCPATH       = -I/usr/local/Trolltech/Qt-4.4.3/mkspecs/linux-g++ -I. -I/usr/local/Trolltech/Qt-4.4.3/include/QtCore -I/usr/local/Trolltech/Qt-4.4.3/include/QtCore -I/usr/local/Trolltech/Qt-4.4.3/include/QtGui -I/usr/local/Trolltech/Qt-4.4.3/include/QtGui -I/usr/local/Trolltech/Qt-4.4.3/include -I. -I. -I.
 LINK          = g++
 LFLAGS        = -Wl,-rpath,/usr/local/Trolltech/Qt-4.4.3/lib

@@ -188,7 +188,6 @@ void BuddyListWidget::ScanListI()
 		{
 			c_ScanBuddies *scanbud = new c_ScanBuddies(yinstance->GetSocket(),yinstance->GetId(),buddylist->GetBuddy(iterator)->GetName(),yinstance->GetUserNameSTL());
 			yinstance->AddAction(scanbud);
-			sleep(5);
 		}
 	}
 
