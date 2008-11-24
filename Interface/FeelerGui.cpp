@@ -25,24 +25,29 @@ FeelerGui::FeelerGui(QWidget *parent)
 	ScanInvisible = new QPushButton(this);
 	ScanInvisible->setObjectName(QString::fromUtf8("ScanBuddies"));
 	ScanInvisible->setGeometry(QRect(350, 35, 75, 24));
+	ScanInvisible->setAutoDefault(false);
 
 
 	HideShowB = new QPushButton(this);
     HideShowB->setObjectName(QString::fromUtf8("HideOfflineButton"));
     HideShowB->setGeometry(QRect(350, 95, 75, 24));
+	HideShowB->setAutoDefault(false);
 	
 	LogoutButton = new QPushButton(this);
    	LogoutButton->setObjectName(QString::fromUtf8("LogoutButton"));
     LogoutButton->setGeometry(QRect(350, 240, 75, 24));
+	LogoutButton->setAutoDefault(false);
 
 
     Exit = new QPushButton(this);
     Exit->setObjectName(QString::fromUtf8("Exit"));
     Exit->setGeometry(QRect(350, 340, 75, 24));
+	Exit->setAutoDefault(false);
 
     BuddyListButton = new QCommandLinkButton(this);
     BuddyListButton->setObjectName(QString::fromUtf8("BuddyListButton"));
     BuddyListButton->setGeometry(QRect(340, 160, 91, 41));
+	BuddyListButton->setAutoDefault(false);
 
     TalkWidget = new QTabWidget(this);
     TalkWidget->setObjectName(QString::fromUtf8("TalkWidget"));
@@ -106,7 +111,7 @@ FeelerGui::FeelerGui(QWidget *parent)
 	connect(yinstance,SIGNAL(RecvText(QString ,QString )),this,SLOT(RecvMessage(QString ,QString )));
 	connect(Exit,SIGNAL(clicked()),this,SLOT(close()));
 	connect(HideShowB,SIGNAL(clicked()),BuddyListWid,SLOT(HideOffline()));
-	connect(ScanInvisible,SIGNAL(clicked()),BuddyListWid,SLOT(ScanList()));
+	connect(ScanInvisible,SIGNAL(clicked()),BuddyListWid,SLOT(ScanListI()));
 	connect(LogoutButton,SIGNAL(clicked()),this,SLOT(Logout()));
 
 };
@@ -182,7 +187,7 @@ void FeelerGui::SendMessages(QString from,QString text)
 	if(from == "Error" || from == "Log")
 	{
 		//Login modal window
-		LoginD->show();
+		Logout();
 		emit PrintText(send_text);
 	}
 	else
