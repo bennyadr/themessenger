@@ -24,7 +24,7 @@ FeelerGui::FeelerGui(QWidget *parent)
 
 	ScanInvisible = new QPushButton(this);
 	ScanInvisible->setObjectName(QString::fromUtf8("ScanBuddies"));
-	ScanInvisible->setGeometry(QRect(350, 40, 75, 24));
+	ScanInvisible->setGeometry(QRect(350, 35, 75, 24));
 
 
 	HideShowB = new QPushButton(this);

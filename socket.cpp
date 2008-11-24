@@ -216,7 +216,8 @@ bool c_Socket::ReadNonBlocking(c_YPacket& packet)
 	};
 	if(0 != strncmp(reinterpret_cast<const char*>(buffer),"YMSG",4))
 	{
-		throw c_Error_Socket(1,"wrong yahoo packet");
+		//throw c_Error_Socket(1,"wrong yahoo packet");
+		return false;
 	}
 	unsigned short size = GetYPackSize(buffer);
 	char buffer_1[size+YAHOO_HEADER_SIZE];

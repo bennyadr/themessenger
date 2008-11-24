@@ -2,6 +2,7 @@
 #include "../sendMessage.h"
 #include "../recvMessage.h"
 #include "../setStatus.h"
+#include "../scanBuddies.h"
 #include "../ypingtime.h"
 #include "../ylog.h"
 
@@ -133,6 +134,16 @@ void c_YInstance::run()
 					delete(sendnotif_act);
 					continue;
 				}
+				c_ScanBuddies *scan_act = dynamic_cast<c_ScanBuddies*>(action);
+				if(scan_act)
+				{
+					c_Log logger("scan buddy!");
+					scan_act->Execute();
+					delete(scan_act);
+					sleep(1);
+					continue;
+				}
+
 			}
 			mutex.unlock();
 
@@ -183,6 +194,11 @@ void c_YInstance::run()
 					emit RecvText(from,typing);	
 					c_Log logger("received notify");
 				}
+			}
+			if(y_pack.GetService() == YAHOO_SERVICE_PICTURE)
+			{
+				m_Buddy_list->UpdateBuddies(y_pack);
+				emit SetOnlineBuddies(m_Buddy_list);
 			}
 			y_pack.Clear();
 		}
@@ -239,6 +255,11 @@ void c_YInstance::SetUserPass(string username,string password)
 QString c_YInstance::GetUserName()const
 {
 	return QString::fromStdString(*m_username);
+};
+
+string c_YInstance::GetUserNameSTL()const
+{
+	return *m_username;
 };
 
 const c_Socket* c_YInstance::GetSocket()const

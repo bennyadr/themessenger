@@ -26,6 +26,7 @@ class c_YInstance : public QThread
 		void SetUserPass(string username,string password);
 
 		QString GetUserName()const;
+		string GetUserNameSTL()const;
 		const c_Socket *GetSocket()const;
 		c_BuddyList *GetBuddyList()const;
 		int GetId()const 
