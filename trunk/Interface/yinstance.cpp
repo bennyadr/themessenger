@@ -139,6 +139,7 @@ void c_YInstance::run()
 				{
 					c_Log logger("scan buddy!");
 					scan_act->Execute();
+					sleep(1);
 					delete(scan_act);
 					continue;
 				}
