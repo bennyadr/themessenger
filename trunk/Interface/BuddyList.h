@@ -37,7 +37,7 @@ private slots:
 	void ChangeStatus(int status);
 
 public slots:
-	void ScanList();
+	void ScanListI();
 	void HideOffline();
 
 };

@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'BuddyList.h'
 **
-** Created: Mon Nov 24 14:12:30 2008
+** Created: Mon Nov 24 20:26:54 2008
 **      by: The Qt Meta Object Compiler version 59 (Qt 4.4.3)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -32,7 +32,7 @@ static const uint qt_meta_data_BuddyListWidget[] = {
       53,   17,   16,   16, 0x08,
       85,   78,   16,   16, 0x08,
      103,   16,   16,   16, 0x0a,
-     114,   16,   16,   16, 0x0a,
+     115,   16,   16,   16, 0x0a,
 
        0        // eod
 };
@@ -41,7 +41,8 @@ static const char qt_meta_stringdata_BuddyListWidget[] = {
     "BuddyListWidget\0\0buddylist\0"
     "ShowBuddies(c_BuddyList*)\0"
     "ShowOnline(c_BuddyList*)\0status\0"
-    "ChangeStatus(int)\0ScanList()\0HideOffline()\0"
+    "ChangeStatus(int)\0ScanListI()\0"
+    "HideOffline()\0"
 };
 
 const QMetaObject BuddyListWidget::staticMetaObject = {
@@ -72,7 +73,7 @@ int BuddyListWidget::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
         case 0: ShowBuddies((*reinterpret_cast< c_BuddyList*(*)>(_a[1]))); break;
         case 1: ShowOnline((*reinterpret_cast< c_BuddyList*(*)>(_a[1]))); break;
         case 2: ChangeStatus((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 3: ScanList(); break;
+        case 3: ScanListI(); break;
         case 4: HideOffline(); break;
         }
         _id -= 5;

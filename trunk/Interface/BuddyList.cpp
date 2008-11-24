@@ -176,7 +176,7 @@ void BuddyListWidget::ChangeStatus(int status)
 			}
 };
 
-void BuddyListWidget::ScanList()
+void BuddyListWidget::ScanListI()
 {
 	c_YInstance *yinstance = c_YInstance::GetInstance();
 	c_BuddyList *buddylist = yinstance->GetBuddyList();
@@ -188,6 +188,7 @@ void BuddyListWidget::ScanList()
 		{
 			c_ScanBuddies *scanbud = new c_ScanBuddies(yinstance->GetSocket(),yinstance->GetId(),buddylist->GetBuddy(iterator)->GetName(),yinstance->GetUserNameSTL());
 			yinstance->AddAction(scanbud);
+			sleep(5);
 		}
 	}
 
