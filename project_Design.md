@@ -1,0 +1,1 @@
+﻿![http://themessenger.googlecode.com/svn/wiki/img/classdiagram.png](http://themessenger.googlecode.com/svn/wiki/img/classdiagram.png)
